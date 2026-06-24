@@ -842,18 +842,87 @@
   }
 
   /* --- Smart Scoring --- */
+  #ssPanel { box-shadow: inset 0 0 40px rgba(147,51,234,0.08); }
   .ss-top { display: flex; flex-direction: column; gap: 4px; margin-bottom: 4px; }
   .ss-lbl { font-size: 11px; color: var(--text-muted); line-height: 1.25; }
   .ss-score { display: flex; align-items: baseline; gap: 8px; }
-  .ss-num { font-size: 34px; font-weight: 700; color: var(--brand-light); line-height: 1; }
-  .ss-delta { font-size: 13px; font-weight: 600; color: var(--green-accent); }
-  .ss-chart { width: 100%; height: 120px; display: block; margin: 8px 0 14px; }
-  .ss-pills { display: flex; gap: 8px; }
+  .ss-num {
+    font-size: 34px; font-weight: 700; color: var(--brand-light); line-height: 1;
+    will-change: transform, opacity, color;
+  }
+  @keyframes ss-score-lock {
+    0%   { transform: scale(1); }
+    50%  { transform: scale(1.08); }
+    100% { transform: scale(1); }
+  }
+  .ss-num.ss-lock { animation: ss-score-lock 250ms ease-out; }
+  @keyframes ss-breathe {
+    0%, 100% { text-shadow: 0 0 0px transparent; }
+    50%       { text-shadow: 0 0 14px #9333EA; }
+  }
+  .ss-num.ss-breathe { animation: ss-breathe 3s ease-in-out infinite; }
+
+  .ss-delta {
+    font-size: 13px; font-weight: 600; color: var(--green-accent);
+    display: inline-flex; align-items: center; gap: 2px;
+    position: relative;
+    will-change: transform, opacity;
+  }
+  .ss-ripple {
+    position: absolute; left: 50%; top: 50%;
+    width: 22px; height: 22px; border-radius: 50%;
+    border: 1.5px solid var(--green-accent);
+    opacity: 0; pointer-events: none;
+  }
+  @keyframes ss-ripple-go {
+    from { transform: translate(-50%,-50%) scale(1); opacity: 0.5; }
+    to   { transform: translate(-50%,-50%) scale(2.6); opacity: 0; }
+  }
+  .ss-ripple.ss-go { animation: ss-ripple-go 500ms ease-out forwards; }
+
+  .ss-chart-wrap { position: relative; margin: 8px 0 14px; }
+  .ss-chart { width: 100%; height: 120px; display: block; overflow: visible; }
+
+  /* Glow dot transform for pulse */
+  #ssDot { transform-box: fill-box; transform-origin: center; }
+  @keyframes ss-dot-pulse {
+    0%, 100% { transform: scale(1);   opacity: 1; }
+    50%       { transform: scale(1.9); opacity: 0.35; }
+  }
+  #ssDot.ss-dot-pulse { animation: ss-dot-pulse 1.5s ease-in-out infinite; }
+
+  /* Reference line traveling dashes */
+  @keyframes ss-ref-travel {
+    from { stroke-dashoffset: 8; }
+    to   { stroke-dashoffset: 0; }
+  }
+  #ssRefLine.ss-ref-travel { animation: ss-ref-travel 4s linear infinite; }
+
+  /* Reference line brightness flash */
+  @keyframes ss-ref-flash {
+    0%, 100% { stroke: rgba(255,255,255,0.18); }
+    50%       { stroke: rgba(255,255,255,0.72); }
+  }
+  #ssRefLine.ss-ref-flash { animation: ss-ref-flash 400ms ease-in-out; }
+
+  /* Pill row + indicator */
+  .ss-pills {
+    display: flex; gap: 8px;
+    position: relative;
+  }
   .ss-pill {
     flex: 1; text-align: center; font-size: 11px; font-weight: 600;
     color: var(--text-secondary);
     background: rgba(255,255,255,0.03); border: 1px solid var(--bg-card-border);
-    border-radius: 8px; padding: 8px;
+    border-radius: 8px; padding: 8px; cursor: default; user-select: none;
+    transition: background 200ms ease, border-color 200ms ease, color 200ms ease;
+  }
+  .ss-pill.active { color: #fff; }
+  .ss-ind {
+    position: absolute; bottom: -1px; left: 0;
+    height: 2px; border-radius: 1px;
+    background: #9333EA; pointer-events: none;
+    transition: transform 300ms cubic-bezier(0.22,1,0.36,1), background-color 200ms ease, width 0ms;
   }
 
   /* --- Watch Your Whole Market Move (full width) --- */
@@ -1778,25 +1847,45 @@
       </article>
 
       <!-- Card 4: Smart Scoring -->
-      <article class="bento-card" data-reveal>
-        <div class="bc-panel">
+      <article class="bento-card" id="ssCard" data-reveal>
+        <div class="bc-panel" id="ssPanel">
           <div class="ss-top">
             <span class="ss-lbl">Avg. Fit<br />Score</span>
-            <div class="ss-score"><span class="ss-num">92</span><span class="ss-delta">↑ +8</span></div>
+            <div class="ss-score">
+              <span class="ss-num" id="ssNum">92</span>
+              <span class="ss-delta" id="ssDelta">↑ <span id="ssDNum">+8</span><span class="ss-ripple" id="ssRipple"></span></span>
+            </div>
           </div>
-          <svg class="ss-chart" viewBox="0 0 200 120" preserveAspectRatio="none" aria-hidden="true">
-            <defs><linearGradient id="ssFill" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stop-color="rgba(139,77,255,0.45)"/>
-              <stop offset="100%" stop-color="rgba(139,77,255,0)"/>
-            </linearGradient></defs>
-            <line x1="0" y1="58" x2="200" y2="58" stroke="rgba(255,255,255,0.14)" stroke-width="1" stroke-dasharray="4 4"/>
-            <path d="M0,82 C18,80 28,58 42,60 C58,62 64,80 80,82 C96,84 104,72 122,68 C140,64 150,40 166,38 C176,37 184,56 200,66 L200,120 L0,120 Z" fill="url(#ssFill)"/>
-            <path d="M0,82 C18,80 28,58 42,60 C58,62 64,80 80,82 C96,84 104,72 122,68 C140,64 150,40 166,38 C176,37 184,56 200,66" fill="none" stroke="#A576F8" stroke-width="2.5"/>
-          </svg>
-          <div class="ss-pills">
-            <span class="ss-pill">ICP Fit</span>
-            <span class="ss-pill">Intent</span>
-            <span class="ss-pill">Timing</span>
+          <div class="ss-chart-wrap">
+            <svg class="ss-chart" id="ssChartSvg" viewBox="0 0 360 120" preserveAspectRatio="none" aria-hidden="true">
+              <defs>
+                <linearGradient id="ssFillGrad" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" id="ssFillStop" stop-color="#9333EA" stop-opacity="0.4"/>
+                  <stop offset="100%" stop-color="#9333EA" stop-opacity="0"/>
+                </linearGradient>
+                <clipPath id="ssRefClip">
+                  <rect id="ssRefRect" x="0" y="0" width="0" height="120"/>
+                </clipPath>
+              </defs>
+              <line id="ssRefLine"
+                    x1="0" y1="58" x2="360" y2="58"
+                    stroke="rgba(255,255,255,0.18)" stroke-width="1"
+                    stroke-dasharray="4 4"
+                    clip-path="url(#ssRefClip)"/>
+              <path id="ssFillPath"
+                    d="M0,82 C32,80 50,58 76,60 C104,62 115,80 144,82 C173,84 187,72 220,68 C252,64 270,40 299,38 C317,37 331,56 360,66 L360,120 L0,120 Z"
+                    fill="url(#ssFillGrad)" opacity="0"/>
+              <path id="ssLinePath"
+                    d="M0,82 C32,80 50,58 76,60 C104,62 115,80 144,82 C173,84 187,72 220,68 C252,64 270,40 299,38 C317,37 331,56 360,66"
+                    fill="none" stroke="#9333EA" stroke-width="2.5" stroke-linecap="round"/>
+              <circle id="ssDot" cx="0" cy="82" r="4" fill="#9333EA" opacity="0"/>
+            </svg>
+          </div>
+          <div class="ss-pills" id="ssPills">
+            <span class="ss-pill" data-ss-tab="0">ICP Fit</span>
+            <span class="ss-pill" data-ss-tab="1">Intent</span>
+            <span class="ss-pill" data-ss-tab="2">Timing</span>
+            <div class="ss-ind" id="ssInd"></div>
           </div>
         </div>
         <div class="bc-text">
@@ -4171,6 +4260,568 @@
       }
     });
   }, { threshold: 0.3 });
+
+  io.observe(card);
+})();
+</script>
+
+<script>
+/* ============================================================
+   Smart Scoring — live AI scoring engine animation
+   Self-contained. Drives #ssCard only. Scroll-triggered loop.
+   ============================================================ */
+(function () {
+  'use strict';
+
+  // ================================================================
+  // TABS CONFIG — all data and SVG paths per scoring dimension
+  // ================================================================
+  var TABS = [
+    {
+      id: 'icp', label: 'ICP Fit',
+      peakScore: 92, delta: '+8',
+      color: '#9333EA',
+      line: 'M0,82 C32,80 50,58 76,60 C104,62 115,80 144,82 C173,84 187,72 220,68 C252,64 270,40 299,38 C317,37 331,56 360,66',
+      fill: 'M0,82 C32,80 50,58 76,60 C104,62 115,80 144,82 C173,84 187,72 220,68 C252,64 270,40 299,38 C317,37 331,56 360,66 L360,120 L0,120 Z'
+    },
+    {
+      id: 'intent', label: 'Intent',
+      peakScore: 87, delta: '+12',
+      color: '#7C3AED',
+      line: 'M0,70 C50,72 90,78 140,80 C175,82 205,74 240,65 C268,58 290,35 315,28 C335,24 350,32 360,36',
+      fill: 'M0,70 C50,72 90,78 140,80 C175,82 205,74 240,65 C268,58 290,35 315,28 C335,24 350,32 360,36 L360,120 L0,120 Z'
+    },
+    {
+      id: 'timing', label: 'Timing',
+      peakScore: 79, delta: '+5',
+      color: '#6366F1',
+      line: 'M0,76 C70,76 140,74 200,73 C240,72 268,71 298,70 C318,70 334,42 348,15 C352,8 358,16 360,28',
+      fill: 'M0,76 C70,76 140,74 200,73 C240,72 268,71 298,70 C318,70 334,42 348,15 C352,8 358,16 360,28 L360,120 L0,120 Z'
+    }
+  ];
+
+  // ================================================================
+  // INIT — element handles
+  // ================================================================
+  var card     = document.getElementById('ssCard');
+  if (!card) return;
+  var panel    = document.getElementById('ssPanel');
+  var numEl    = document.getElementById('ssNum');
+  var deltaEl  = document.getElementById('ssDelta');
+  var sDNum    = document.getElementById('ssDNum');
+  var rippleEl = document.getElementById('ssRipple');
+  var svgEl    = document.getElementById('ssChartSvg');
+  var refRect  = document.getElementById('ssRefRect');
+  var refLine  = document.getElementById('ssRefLine');
+  var fillPath = document.getElementById('ssFillPath');
+  var linePath = document.getElementById('ssLinePath');
+  var dotEl    = document.getElementById('ssDot');
+  var fillStop = document.getElementById('ssFillStop');
+  var pillsEl  = document.getElementById('ssPills');
+  var pillEls  = pillsEl ? pillsEl.querySelectorAll('.ss-pill') : [];
+  var indEl    = document.getElementById('ssInd');
+
+  var prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  // ================================================================
+  // UTILS
+  // ================================================================
+  function easeOutCubic(t) { return 1 - Math.pow(1 - t, 3); }
+  function easeIn(t) { return t * t; }
+  function lerp(a, b, t) { return a + (b - a) * t; }
+
+  function hexToRgba(hex, a) {
+    var r = parseInt(hex.slice(1, 3), 16);
+    var g = parseInt(hex.slice(3, 5), 16);
+    var b = parseInt(hex.slice(5, 7), 16);
+    return 'rgba(' + r + ',' + g + ',' + b + ',' + a + ')';
+  }
+
+  function lerpColor(fromHex, toHex, t) {
+    var f = [parseInt(fromHex.slice(1,3),16), parseInt(fromHex.slice(3,5),16), parseInt(fromHex.slice(5,7),16)];
+    var d = [parseInt(toHex.slice(1,3),16),   parseInt(toHex.slice(3,5),16),   parseInt(toHex.slice(5,7),16)];
+    return 'rgb('+Math.round(lerp(f[0],d[0],t))+','+Math.round(lerp(f[1],d[1],t))+','+Math.round(lerp(f[2],d[2],t))+')';
+  }
+
+  // ================================================================
+  // CANCELLABLE TOKEN
+  // ================================================================
+  var _tok = null;
+
+  function newToken() { return { cancelled: false, timers: [] }; }
+
+  function cancel() {
+    if (_tok) { _tok.cancelled = true; _tok.timers.forEach(clearTimeout); }
+    _tok = null;
+  }
+
+  function wait(tok, ms) {
+    return new Promise(function (resolve) {
+      if (tok.cancelled) { resolve(); return; }
+      var t = setTimeout(resolve, ms);
+      tok.timers.push(t);
+    });
+  }
+
+  function frameLoop(tok, dur, fn) {
+    return new Promise(function (resolve) {
+      var start = performance.now();
+      (function tick(now) {
+        if (tok.cancelled) { resolve(); return; }
+        var p = dur > 0 ? Math.min(1, (now - start) / dur) : 1;
+        fn(p);
+        if (p < 1) requestAnimationFrame(tick);
+        else resolve();
+      })(start);
+    });
+  }
+
+  // ================================================================
+  // STATE
+  // ================================================================
+  var _curTab  = 0;
+  var _loopNum = 0;
+
+  // ================================================================
+  // HARD RESET — called on scroll-exit; zeros everything
+  // ================================================================
+  function hardReset() {
+    var t0 = TABS[0];
+
+    panel.style.cssText = 'opacity:0;transform:translateY(18px) scale(0.97);transition:none;box-shadow:inset 0 0 40px rgba(147,51,234,0.08);';
+
+    numEl.style.cssText = 'opacity:0;color:' + t0.color + ';';
+    numEl.textContent = '' + t0.peakScore;
+    numEl.classList.remove('ss-lock', 'ss-breathe');
+
+    deltaEl.style.cssText = 'opacity:0;';
+    sDNum.textContent = t0.delta;
+    rippleEl.className = 'ss-ripple';
+
+    svgEl.style.cssText = 'opacity:0;';
+    refRect.setAttribute('width', '0');
+    refLine.setAttribute('class', '');
+
+    linePath.setAttribute('d', t0.line);
+    linePath.setAttribute('stroke', t0.color);
+    linePath.style.cssText = 'opacity:0;';
+
+    fillPath.setAttribute('d', t0.fill);
+    fillPath.style.opacity = '0';
+    if (fillStop) {
+      fillStop.setAttribute('stop-color', t0.color);
+      fillStop.setAttribute('stop-opacity', '0.4');
+    }
+
+    dotEl.setAttribute('cx', '0');
+    dotEl.setAttribute('cy', '82');
+    dotEl.setAttribute('fill', t0.color);
+    dotEl.setAttribute('r', '4');
+    dotEl.style.cssText = 'opacity:0;filter:drop-shadow(0 0 4px ' + t0.color + ');';
+    dotEl.classList.remove('ss-dot-pulse');
+
+    pillsEl.style.cssText = 'opacity:0;transform:translateY(8px);transition:none;';
+    pillEls.forEach(function (p) {
+      p.classList.remove('active');
+      p.style.cssText = '';
+    });
+    positionIndicator(0, false);
+    indEl.style.backgroundColor = t0.color;
+
+    _curTab  = 0;
+    _loopNum = 0;
+  }
+
+  // ================================================================
+  // INDICATOR POSITION
+  // ================================================================
+  function positionIndicator(tabIdx, animate) {
+    var totalW = pillsEl.offsetWidth || 240;
+    var pillW  = (totalW - 16) / 3;
+    var tx     = tabIdx * (pillW + 8);
+    indEl.style.transition = animate
+      ? 'transform 300ms cubic-bezier(0.22,1,0.36,1), background-color 200ms ease, width 0ms'
+      : 'none';
+    indEl.style.width     = pillW + 'px';
+    indEl.style.transform = 'translateX(' + tx + 'px)';
+  }
+
+  // ================================================================
+  // ACTIVATE TAB PILL
+  // ================================================================
+  function activateTab(tabIdx, flash) {
+    var tab = TABS[tabIdx];
+    pillEls.forEach(function (p, i) {
+      if (i === tabIdx) {
+        p.classList.add('active');
+        p.style.background   = hexToRgba(tab.color, flash ? 0.35 : 0.15);
+        p.style.borderColor  = hexToRgba(tab.color, flash ? 0.6  : 0.3);
+        if (flash) {
+          setTimeout(function () {
+            p.style.transition  = 'background 300ms ease, border-color 300ms ease, color 200ms ease';
+            p.style.background  = hexToRgba(tab.color, 0.15);
+            p.style.borderColor = hexToRgba(tab.color, 0.3);
+          }, 60);
+        }
+      } else {
+        p.classList.remove('active');
+        p.style.transition  = 'background 200ms ease, border-color 200ms ease, color 200ms ease';
+        p.style.background  = '';
+        p.style.borderColor = '';
+      }
+    });
+    positionIndicator(tabIdx, tabIdx !== _curTab);
+    indEl.style.backgroundColor = tab.color;
+    _curTab = tabIdx;
+  }
+
+  // ================================================================
+  // DRAW LINE — hero animation; returns promise
+  // ================================================================
+  function drawLine(tok, tabIdx, dur, fromScore) {
+    var tab        = TABS[tabIdx];
+    var startScore = fromScore !== undefined ? fromScore : 0;
+    var refFlashed = false;
+
+    linePath.setAttribute('d', tab.line);
+    linePath.setAttribute('stroke', tab.color);
+    fillPath.setAttribute('d', tab.fill);
+    if (fillStop) {
+      fillStop.setAttribute('stop-color', tab.color);
+    }
+    dotEl.setAttribute('fill', tab.color);
+    dotEl.style.filter = 'drop-shadow(0 0 5px ' + tab.color + ')';
+
+    var len = linePath.getTotalLength() || 420;
+    linePath.style.cssText = 'opacity:1;stroke-dasharray:' + len + ' ' + len + ';stroke-dashoffset:' + len + ';';
+    fillPath.style.opacity = '0';
+    dotEl.style.opacity    = '0';
+    numEl.style.opacity    = '1';
+
+    return frameLoop(tok, dur, function (p) {
+      var e = easeOutCubic(p);
+
+      // Line draws from left to right
+      linePath.style.strokeDashoffset = len * (1 - e);
+
+      // Glow dot tracks the tip of the visible line
+      if (e > 0.02) {
+        var pt = linePath.getPointAtLength(e * len);
+        dotEl.setAttribute('cx', '' + pt.x);
+        dotEl.setAttribute('cy', '' + pt.y);
+        dotEl.style.opacity = '1';
+      }
+
+      // Fill fades in with 200ms delay
+      var fillP = p > 200 / dur ? easeOutCubic((p - 200 / dur) / (1 - 200 / dur)) : 0;
+      fillPath.style.opacity = fillP * 0.52;
+
+      // Score counts up (synced to line progress)
+      var scoreVal = Math.round(lerp(startScore, tab.peakScore, e));
+      numEl.textContent = '' + scoreVal;
+      numEl.style.color = lerpColor('#FFFFFF', tab.color, Math.min(1, e * 1.5));
+
+      // Reference line flashes when score crosses ~75
+      if (!refFlashed && scoreVal >= 74 && scoreVal <= 77) {
+        refFlashed = true;
+        refLine.classList.add('ss-ref-flash');
+        setTimeout(function () { refLine.classList.remove('ss-ref-flash'); }, 420);
+      }
+    });
+  }
+
+  // ================================================================
+  // SHOW DELTA BADGE
+  // ================================================================
+  function showDelta(tok, tab, fast) {
+    sDNum.textContent = tab.delta;
+    var dur = fast ? 260 : 380;
+
+    deltaEl.style.transition = 'none';
+    deltaEl.style.opacity    = '0';
+    deltaEl.style.transform  = 'translateY(8px) scale(0.7)';
+
+    return wait(tok, 16).then(function () {
+      if (tok.cancelled) return;
+      deltaEl.style.transition = 'opacity ' + dur + 'ms ease, transform ' + dur + 'ms cubic-bezier(0.34,1.56,0.64,1)';
+      deltaEl.style.opacity    = '1';
+      deltaEl.style.transform  = 'translateY(0) scale(1)';
+      return wait(tok, dur);
+    }).then(function () {
+      if (tok.cancelled) return;
+      // Score lock
+      numEl.classList.add('ss-lock');
+      var t1 = setTimeout(function () { numEl.classList.remove('ss-lock'); }, 260);
+      if (_tok) _tok.timers.push(t1);
+      // Ripple pulse
+      rippleEl.classList.remove('ss-go');
+      void rippleEl.offsetWidth;
+      rippleEl.classList.add('ss-go');
+      return wait(tok, 120);
+    });
+  }
+
+  // ================================================================
+  // SWITCH TAB
+  // ================================================================
+  function switchTab(tok, toIdx, startScore) {
+    var toTab = TABS[toIdx];
+
+    // Deactivate old pill immediately
+    pillEls[_curTab].classList.remove('active');
+    pillEls[_curTab].style.transition  = 'background 200ms ease, border-color 200ms ease';
+    pillEls[_curTab].style.background  = '';
+    pillEls[_curTab].style.borderColor = '';
+
+    // Activate new pill with flash
+    var newPill = pillEls[toIdx];
+    newPill.classList.add('active');
+    newPill.style.background  = hexToRgba(toTab.color, 0.38);
+    newPill.style.borderColor = hexToRgba(toTab.color, 0.65);
+    setTimeout(function () {
+      if (!tok.cancelled) {
+        newPill.style.transition  = 'background 300ms ease, border-color 300ms ease';
+        newPill.style.background  = hexToRgba(toTab.color, 0.15);
+        newPill.style.borderColor = hexToRgba(toTab.color, 0.3);
+      }
+    }, 60);
+
+    // Slide indicator to new tab
+    positionIndicator(toIdx, true);
+    indEl.style.backgroundColor = toTab.color;
+
+    // Score briefly desaturates; delta fades out
+    numEl.style.transition  = 'color 200ms ease';
+    numEl.style.color       = '#fff';
+    deltaEl.style.transition = 'opacity 200ms ease';
+    deltaEl.style.opacity   = '0';
+
+    // Old curve + dot fade out
+    var curFill = parseFloat(fillPath.style.opacity) || 0.52;
+    return frameLoop(tok, 300, function (p) {
+      var e = easeIn(p);
+      linePath.style.opacity = '' + (1 - e);
+      fillPath.style.opacity = '' + curFill * (1 - e);
+      dotEl.style.opacity    = '' + (1 - e);
+    }).then(function () {
+      if (tok.cancelled) return;
+      numEl.style.transition = '';
+      _curTab = toIdx;
+      return wait(tok, 150);
+    }).then(function () {
+      if (tok.cancelled) return;
+      return drawLine(tok, toIdx, 1400, startScore);
+    }).then(function () {
+      if (tok.cancelled) return;
+      return showDelta(tok, toTab, true);
+    });
+  }
+
+  // ================================================================
+  // IDLE MICRO-ANIMATIONS
+  // ================================================================
+  function startIdle() {
+    dotEl.classList.add('ss-dot-pulse');
+    numEl.classList.add('ss-breathe');
+  }
+  function stopIdle() {
+    dotEl.classList.remove('ss-dot-pulse');
+    numEl.classList.remove('ss-breathe');
+  }
+
+  // ================================================================
+  // MAIN LOOP
+  // ================================================================
+  function runLoop(tok) {
+    var isFirst = (_loopNum === 0);
+    _loopNum++;
+
+    var p = Promise.resolve();
+
+    // Phase 2 — panel entrance (first scroll-in only)
+    if (isFirst) {
+      p = p.then(function () {
+        if (tok.cancelled) return;
+        void panel.offsetHeight;
+        panel.style.transition = 'opacity 520ms cubic-bezier(0.22,1,0.36,1), transform 520ms cubic-bezier(0.22,1,0.36,1)';
+        panel.style.opacity    = '1';
+        panel.style.transform  = 'translateY(0) scale(1)';
+        return wait(tok, 420);
+      });
+    }
+
+    // Phase 3 — SVG visible + ref line draws in
+    p = p.then(function () {
+      if (tok.cancelled) return;
+      svgEl.style.transition = 'opacity 300ms ease';
+      svgEl.style.opacity    = '1';
+      return frameLoop(tok, 600, function (prog) {
+        refRect.setAttribute('width', '' + Math.round(easeOutCubic(prog) * 360));
+      });
+    }).then(function () {
+      if (tok.cancelled) return;
+      refLine.classList.add('ss-ref-travel');
+    });
+
+    // Phase 4 — line draws in (hero)
+    p = p.then(function () {
+      if (tok.cancelled) return;
+      return wait(tok, 80);
+    }).then(function () {
+      if (tok.cancelled) return;
+      return drawLine(tok, 0, 1800, 0);
+    });
+
+    // Phase 5 — delta badge lands
+    p = p.then(function () {
+      if (tok.cancelled) return;
+      return showDelta(tok, TABS[0], false);
+    });
+
+    // Phase 6 — tab row appears; ICP Fit active
+    p = p.then(function () {
+      if (tok.cancelled) return;
+      return wait(tok, 100);
+    }).then(function () {
+      if (tok.cancelled) return;
+      pillsEl.style.transition = 'opacity 350ms ease, transform 350ms ease';
+      pillsEl.style.opacity    = '1';
+      pillsEl.style.transform  = 'translateY(0)';
+      // Re-position indicator now that layout is known
+      positionIndicator(0, false);
+      activateTab(0, false);
+      return wait(tok, 380);
+    });
+
+    // Phase 7 — hold on ICP Fit
+    p = p.then(function () {
+      if (tok.cancelled) return;
+      startIdle();
+      return wait(tok, 1800);
+    });
+
+    // Phase 8 — switch to Intent
+    p = p.then(function () {
+      if (tok.cancelled) return;
+      stopIdle();
+      return switchTab(tok, 1, 62);
+    });
+
+    // Phase 9 — hold on Intent
+    p = p.then(function () {
+      if (tok.cancelled) return;
+      startIdle();
+      return wait(tok, 1500);
+    });
+
+    // Phase 10 — switch to Timing
+    p = p.then(function () {
+      if (tok.cancelled) return;
+      stopIdle();
+      return switchTab(tok, 2, 58);
+    });
+
+    // Phase 11 — hold on Timing
+    p = p.then(function () {
+      if (tok.cancelled) return;
+      startIdle();
+      return wait(tok, 1500);
+    });
+
+    // Phase 12 — loop reset: Timing out, ICP Fit redraws
+    p = p.then(function () {
+      if (tok.cancelled) return;
+      stopIdle();
+
+      // Deactivate Timing; reactivate ICP Fit with flash
+      pillEls[2].classList.remove('active');
+      pillEls[2].style.transition  = 'background 200ms ease, border-color 200ms ease';
+      pillEls[2].style.background  = '';
+      pillEls[2].style.borderColor = '';
+      activateTab(0, true);
+
+      numEl.style.transition  = 'color 200ms ease';
+      numEl.style.color       = '#fff';
+      deltaEl.style.transition = 'opacity 150ms ease';
+      deltaEl.style.opacity   = '0';
+
+      var curFill = parseFloat(fillPath.style.opacity) || 0.52;
+      return frameLoop(tok, 300, function (pr) {
+        var e = easeIn(pr);
+        linePath.style.opacity = '' + (1 - e);
+        fillPath.style.opacity = '' + curFill * (1 - e);
+        dotEl.style.opacity    = '' + (1 - e);
+      });
+    }).then(function () {
+      if (tok.cancelled) return;
+      numEl.style.transition = '';
+      return wait(tok, 150);
+    }).then(function () {
+      if (tok.cancelled) return;
+      return drawLine(tok, 0, 1800, 62);
+    }).then(function () {
+      if (tok.cancelled) return;
+      return showDelta(tok, TABS[0], false);
+    }).then(function () {
+      if (tok.cancelled) return;
+      startIdle();
+      return wait(tok, 800);
+    }).then(function () {
+      if (tok.cancelled) return;
+      stopIdle();
+      cancel();
+      _tok = newToken();
+      runLoop(_tok);
+    });
+  }
+
+  // ================================================================
+  // STATIC FALLBACK (reduced motion / no IO support)
+  // ================================================================
+  function renderStatic() {
+    var t0 = TABS[0];
+    panel.style.cssText = '';
+    svgEl.style.opacity = '1';
+    refRect.setAttribute('width', '360');
+    linePath.style.cssText = 'opacity:1;';
+    fillPath.style.opacity = '0.52';
+    dotEl.style.opacity    = '0';
+    numEl.style.opacity    = '1';
+    numEl.style.color      = t0.color;
+    deltaEl.style.opacity  = '1';
+    deltaEl.style.transform = '';
+    pillsEl.style.cssText  = '';
+    activateTab(0, false);
+  }
+
+  // ================================================================
+  // INTERSECTION OBSERVER
+  // ================================================================
+  if (prefersReduced || !('IntersectionObserver' in window)) {
+    renderStatic();
+    return;
+  }
+
+  hardReset();
+
+  var _active = false;
+  var io = new IntersectionObserver(function (entries) {
+    entries.forEach(function (entry) {
+      if (entry.isIntersecting) {
+        if (!_active) {
+          _active = true;
+          _tok = newToken();
+          runLoop(_tok);
+        }
+      } else {
+        if (_active) {
+          _active = false;
+          cancel();
+          hardReset();
+        }
+      }
+    });
+  }, { threshold: 0.4 });
 
   io.observe(card);
 })();
