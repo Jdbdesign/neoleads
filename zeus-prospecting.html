@@ -177,6 +177,63 @@
     padding: 4px;
   }
 
+  /* ===== Products mega-menu dropdown ===== */
+  .nav-item { position: relative; display: inline-flex; align-items: center; }
+  .nav-trigger {
+    display: inline-flex; align-items: center; gap: 5px;
+    font-family: inherit; font-size: 15px; font-weight: 500;
+    color: #C7CEE2; background: none; border: none; cursor: pointer; padding: 0;
+    transition: color 0.2s ease;
+  }
+  .nav-trigger:hover,
+  .nav-item.open .nav-trigger { color: #fff; }
+  .nav-trigger .caret { display: inline-flex; color: #6B79A8; transition: transform 0.25s ease, color 0.2s ease; }
+  .nav-item.open .nav-trigger .caret { transform: rotate(180deg); color: var(--brand-light); }
+
+  .mega-menu {
+    position: absolute; top: calc(100% + 18px); left: -22px;
+    width: 540px; padding: 14px;
+    background: #080D20;
+    border: 1px solid #1E2647;
+    border-radius: 16px;
+    box-shadow: 0 28px 64px rgba(0, 0, 0, 0.55);
+    z-index: 200;
+    opacity: 0; visibility: hidden; transform: translateY(-8px);
+    transition: opacity 0.2s ease, transform 0.24s cubic-bezier(0.22, 1, 0.36, 1), visibility 0.2s;
+  }
+  .nav-item.open .mega-menu { opacity: 1; visibility: visible; transform: translateY(0); }
+  .mega-menu::before {
+    content: ""; position: absolute; top: -7px; left: 40px;
+    width: 13px; height: 13px; background: #080D20;
+    border-left: 1px solid #1E2647; border-top: 1px solid #1E2647;
+    transform: rotate(45deg);
+  }
+  .mega-grid { position: relative; display: grid; grid-template-columns: 1fr 1fr; gap: 4px; }
+  .mega-item {
+    display: flex; align-items: flex-start; gap: 12px;
+    padding: 12px 14px; border-radius: 12px;
+    transition: background 0.18s ease;
+  }
+  .mega-item:hover { background: rgba(139, 77, 255, 0.08); }
+  .mega-ic {
+    width: 38px; height: 38px; border-radius: 10px; flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+    align-self: flex-start;
+    background: rgba(139, 77, 255, 0.12);
+    border: 1px solid rgba(139, 77, 255, 0.2);
+    color: var(--grow-purple);
+    transition: background 0.18s ease, border-color 0.18s ease;
+  }
+  .mega-ic .lucide { width: 18px; height: 18px; }
+  .mega-item.is-primary .mega-ic {
+    background: linear-gradient(135deg, var(--brand), var(--brand-light));
+    border-color: transparent; color: #fff;
+    box-shadow: 0 4px 16px rgba(108, 43, 223, 0.45);
+  }
+  .mega-text { display: flex; flex-direction: column; gap: 3px; min-width: 0; align-self: flex-start; }
+  .mega-title { font-size: 14px; font-weight: 700; color: #fff; letter-spacing: -0.01em; line-height: 1.2; }
+  .mega-desc { font-size: 12px; line-height: 1.45; color: var(--text-secondary); }
+
   /* =========================================================
      ZEUS HERO (centered)
   ========================================================= */
@@ -1186,6 +1243,57 @@
     .footer-bottom { flex-direction: column; align-items: flex-start; }
   }
 
+  /* =========================================================
+     LARGE SCREENS  ≥1280px & ≥1440px & ≥1600px
+  ========================================================= */
+  @media (min-width: 1280px) {
+    .container { max-width: 1260px; }
+
+    .zeus-hero h1 { font-size: 66px; }
+    .zeus-hero .hero-sub { font-size: 18px; }
+    .zeus-section-head { max-width: 680px; }
+    .zeus-section-head h2 { font-size: 38px; }
+    .section-head { max-width: 680px; }
+    .section-head h2 { font-size: 38px; }
+  }
+
+  @media (min-width: 1440px) {
+    .container { max-width: 1460px; }
+
+    .zeus-hero { padding: 100px 0 110px; }
+    .zeus-hero h1 { font-size: 74px; max-width: 960px; }
+    .zeus-hero .hero-sub { font-size: 19px; max-width: 620px; }
+    .zeus-ctas .btn-primary { padding: 16px 34px; font-size: 16px; }
+    .zeus-ctas .btn-ghost  { padding: 16px 34px; font-size: 16px; }
+    .zeus-section { padding: 110px 0; }
+    .zeus-section-head { max-width: 720px; margin-bottom: 60px; }
+    .zeus-section-head h2 { font-size: 42px; }
+    .zeus-section-head p { font-size: 16px; max-width: 620px; }
+    .map-stage { max-width: 1100px; }
+    .section { padding: 110px 0; }
+    .section-head { max-width: 720px; margin-bottom: 64px; }
+    .section-head h2 { font-size: 42px; }
+    .section-head p { font-size: 16px; max-width: 620px; }
+  }
+
+  @media (min-width: 1600px) {
+    .container { max-width: 1560px; }
+
+    .zeus-hero h1 { font-size: 80px; max-width: 1060px; }
+    .zeus-hero .hero-sub { font-size: 20px; max-width: 660px; }
+    .zeus-ctas .btn-primary { padding: 18px 38px; font-size: 17px; }
+    .zeus-ctas .btn-ghost  { padding: 18px 38px; font-size: 17px; }
+    .zeus-section { padding: 120px 0; }
+    .zeus-section-head { max-width: 780px; }
+    .zeus-section-head h2 { font-size: 46px; }
+    .zeus-section-head p { font-size: 17px; max-width: 680px; }
+    .map-stage { max-width: 1200px; }
+    .section { padding: 120px 0; }
+    .section-head { max-width: 760px; }
+    .section-head h2 { font-size: 46px; }
+    .section-head p { font-size: 17px; max-width: 660px; }
+  }
+
   /* Mobile menu */
   .mobile-menu {
     display: none;
@@ -1203,6 +1311,9 @@
   .mobile-menu.open { display: flex; }
   .mobile-menu a { color: var(--text-secondary); font-size: 14px; padding: 10px 0; }
   .mobile-menu a:hover { color: #fff; }
+  .mobile-group-label { color: var(--text-muted); font-size: 11px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; padding: 8px 0 2px; }
+  .mobile-menu a.mobile-sub { padding: 8px 0 8px 14px; font-weight: 500; color: #C7CEE2; }
+  .mobile-menu a.mobile-sub:hover { color: #fff; }
 
   /* =========================================================
      NETWORK INTELLIGENCE (Zeus map)
@@ -1432,12 +1543,62 @@
   <nav class="container" aria-label="Primary">
     <a class="logo" href="index.html">NeoLeads</a>
     <div class="nav-links">
-      <a href="#">Products <span class="caret" aria-hidden="true"><i data-lucide="chevron-down"></i></span></a>
-      <a href="#">Case Studies <span class="caret" aria-hidden="true"><i data-lucide="chevron-down"></i></span></a>
+      <div class="nav-item" id="productsNav">
+        <button class="nav-trigger" type="button" aria-haspopup="true" aria-expanded="false" aria-controls="productsMenu">
+          Products <span class="caret" aria-hidden="true"><i data-lucide="chevron-down"></i></span>
+        </button>
+        <div class="mega-menu" id="productsMenu" role="menu" aria-label="Products">
+          <div class="mega-grid">
+            <a class="mega-item is-primary" role="menuitem" href="zeus-prospecting.html">
+              <span class="mega-ic"><i data-lucide="search"></i></span>
+              <span class="mega-text">
+                <span class="mega-title">Zeus</span>
+                <span class="mega-desc">Find verified decision-makers before your competitors do</span>
+              </span>
+            </a>
+            <a class="mega-item" role="menuitem" href="index.html#platform">
+              <span class="mega-ic"><i data-lucide="zap"></i></span>
+              <span class="mega-text">
+                <span class="mega-title">Sendrit</span>
+                <span class="mega-desc">AI-written, multichannel sequences that actually get replies</span>
+              </span>
+            </a>
+            <a class="mega-item" role="menuitem" href="index.html#platform">
+              <span class="mega-ic"><i data-lucide="badge-check"></i></span>
+              <span class="mega-text">
+                <span class="mega-title">Verifyrit</span>
+                <span class="mega-desc">Clean every email address before it costs you a bounce</span>
+              </span>
+            </a>
+            <a class="mega-item" role="menuitem" href="index.html#platform">
+              <span class="mega-ic"><i data-lucide="inbox"></i></span>
+              <span class="mega-text">
+                <span class="mega-title">Snaarpmail</span>
+                <span class="mega-desc">Bulletproof sending infrastructure and one inbox for every reply</span>
+              </span>
+            </a>
+            <a class="mega-item" role="menuitem" href="index.html#platform">
+              <span class="mega-ic"><i data-lucide="flame"></i></span>
+              <span class="mega-text">
+                <span class="mega-title">Warmrit</span>
+                <span class="mega-desc">Build sender reputation so your emails land not spam</span>
+              </span>
+            </a>
+            <a class="mega-item" role="menuitem" href="index.html#platform">
+              <span class="mega-ic"><i data-lucide="brain-circuit"></i></span>
+              <span class="mega-text">
+                <span class="mega-title">NeoBrain AI</span>
+                <span class="mega-desc">The AI layer that qualifies leads and scores every conversation</span>
+              </span>
+            </a>
+          </div>
+        </div>
+      </div>
+      <a href="index.html#testimonials">Case Studies <span class="caret" aria-hidden="true"><i data-lucide="chevron-down"></i></span></a>
       <a href="index.html#pricing">Pricing</a>
       <a href="index.html#integrations">Integration</a>
-      <a href="#">Resources <span class="caret" aria-hidden="true"><i data-lucide="chevron-down"></i></span></a>
-      <a href="#">Tools <span class="caret" aria-hidden="true"><i data-lucide="chevron-down"></i></span></a>
+      <a href="index.html#features">Resources <span class="caret" aria-hidden="true"><i data-lucide="chevron-down"></i></span></a>
+      <a href="index.html#features">Tools <span class="caret" aria-hidden="true"><i data-lucide="chevron-down"></i></span></a>
     </div>
     <div class="nav-right">
       <a class="login" href="#">Log In</a>
@@ -1447,12 +1608,18 @@
   </nav>
 </header>
 <div class="mobile-menu" id="mobileMenu">
-  <a href="#">Products</a>
-  <a href="#">Case Studies</a>
+  <span class="mobile-group-label">Products</span>
+  <a class="mobile-sub" href="zeus-prospecting.html">Zeus</a>
+  <a class="mobile-sub" href="index.html#platform">Sendrit</a>
+  <a class="mobile-sub" href="index.html#platform">Verifyrit</a>
+  <a class="mobile-sub" href="index.html#platform">Snaarpmail</a>
+  <a class="mobile-sub" href="index.html#platform">Warmrit</a>
+  <a class="mobile-sub" href="index.html#platform">NeoBrain AI</a>
+  <a href="index.html#testimonials">Case Studies</a>
   <a href="index.html#pricing">Pricing</a>
   <a href="index.html#integrations">Integration</a>
-  <a href="#">Resources</a>
-  <a href="#">Tools</a>
+  <a href="index.html#features">Resources</a>
+  <a href="index.html#features">Tools</a>
   <a href="#">Log In</a>
 </div>
 
@@ -2174,6 +2341,22 @@
         });
       });
     }
+  })();
+
+  // Products mega-menu — click to toggle; closes on outside click or Escape
+  (function () {
+    var nav = document.getElementById('productsNav');
+    if (!nav) { return; }
+    var trigger = nav.querySelector('.nav-trigger');
+    function close() { nav.classList.remove('open'); trigger.setAttribute('aria-expanded', 'false'); }
+    trigger.addEventListener('click', function (e) {
+      e.stopPropagation();
+      var open = nav.classList.toggle('open');
+      trigger.setAttribute('aria-expanded', open ? 'true' : 'false');
+    });
+    document.addEventListener('click', function (e) { if (!nav.contains(e.target)) { close(); } });
+    document.addEventListener('keydown', function (e) { if (e.key === 'Escape') { close(); } });
+    nav.querySelectorAll('.mega-item').forEach(function (item) { item.addEventListener('click', close); });
   })();
 
   // Scroll reveal engine — reusable, Intersection Observer based.
