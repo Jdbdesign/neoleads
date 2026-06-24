@@ -1,0 +1,3296 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>NeoLeads — AI-Powered Outbound Platform</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap');
+
+  :root {
+    --bg-primary: #02071A;
+    --bg-alt: #04081F;
+    --bg-card: #080D1F;
+    --bg-card-border: #1A2040;
+    --brand: #6C2BDF;
+    --brand-light: #8B4DFF;
+    --grow-purple: #A576F8;
+    --brand-glow: rgba(108, 43, 223, 0.3);
+    --text-primary: #FFFFFF;
+    --text-secondary: #8B9CC8;
+    --text-muted: #4A5578;
+    --highlight-yellow: #F5C542;
+    --highlight-orange: #FF6B35;
+    --green-accent: #22C55E;
+    --nav-bg: rgba(2, 7, 26, 0.95);
+    --card-purple-bg: rgba(108, 43, 223, 0.08);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg-primary);
+    color: var(--text-primary);
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    font-size: 15px;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    overflow-x: hidden;
+  }
+
+  a { text-decoration: none; color: inherit; }
+  img { max-width: 100%; }
+  ul { list-style: none; }
+
+  :focus-visible {
+    outline: 2px solid var(--brand);
+    outline-offset: 2px;
+    border-radius: 4px;
+  }
+  :focus:not(:focus-visible) { outline: none; }
+
+  /* ===== Lucide icon defaults ===== */
+  .lucide { width: 20px; height: 20px; stroke-width: 2; flex-shrink: 0; }
+  .feature-icon { color: #fff; }
+  .feature-icon .lucide { width: 20px; height: 20px; }
+  .step-icon .lucide { width: 22px; height: 22px; }
+  .badge .b-icon { display: flex; justify-content: center; }
+  .badge .b-icon .lucide { width: 26px; height: 26px; color: var(--brand-light); }
+  .nav-links .caret .lucide { width: 14px; height: 14px; }
+  .trust-row .item .lucide { width: 18px; height: 18px; color: #C7CEE2; }
+  .price-features .check .lucide,
+  .price-card li .check .lucide { width: 16px; height: 16px; }
+  .stars .lucide { width: 15px; height: 15px; fill: currentColor; }
+  .social-row a .lucide { width: 16px; height: 16px; }
+  .arrow .lucide { width: 18px; height: 18px; }
+  .final-trust .item .lucide { width: 15px; height: 15px; }
+  .flow .sep .lucide { width: 14px; height: 14px; vertical-align: middle; }
+  .vrow .ok { display: inline-flex; align-items: center; gap: 4px; }
+  .vrow .ok .lucide { width: 13px; height: 13px; }
+  .price-features .check, .price-card li .check { display: inline-flex; align-items: center; }
+  .price-card li .check { margin-top: 1px; }
+  .btn-primary .lucide, .btn-light .lucide, .btn-ghost .lucide { width: 16px; height: 16px; }
+  .nav-toggle .lucide { width: 24px; height: 24px; }
+  .hero-badge .lucide { width: 15px; height: 15px; color: var(--grow-purple); }
+
+  /* ===== Container ===== */
+  .container {
+    max-width: 1160px;
+    margin: 0 auto;
+    padding: 0 24px;
+  }
+
+  /* ===== Section label pill ===== */
+  .section-label {
+    display: inline-block;
+    background: rgba(108, 43, 223, 0.12);
+    border: 1px solid rgba(108, 43, 223, 0.35);
+    color: var(--brand);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    border-radius: 20px;
+    padding: 5px 14px;
+    margin-bottom: 20px;
+  }
+  .section-label.green {
+    background: rgba(34, 197, 94, 0.1);
+    border: 1px solid rgba(34, 197, 94, 0.3);
+    color: var(--green-accent);
+  }
+
+  /* ===== Buttons ===== */
+  .btn-primary {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--brand);
+    color: #FFFFFF;
+    border: none;
+    border-radius: 8px;
+    padding: 11px 22px;
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s ease, transform 0.12s ease;
+  }
+  .btn-primary:hover { background: var(--brand-light); }
+  .btn-primary:active { transform: scale(0.97); }
+
+  .btn-ghost {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: transparent;
+    color: #FFFFFF;
+    border: 1px solid var(--bg-card-border);
+    border-radius: 8px;
+    padding: 11px 22px;
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: border-color 0.2s ease, transform 0.12s ease;
+  }
+  .btn-ghost:hover { border-color: var(--brand); }
+  .btn-ghost:active { transform: scale(0.97); }
+
+  /* ===== Card base ===== */
+  .card {
+    background: var(--bg-card);
+    border: 1px solid var(--bg-card-border);
+    border-radius: 12px;
+    padding: 24px;
+  }
+
+  /* ===== Section headers ===== */
+  .section { padding: 100px 0; }
+  .section.alt { background: var(--bg-alt); }
+  .section-head { text-align: center; max-width: 640px; margin: 0 auto 56px; }
+  .section-head h2 {
+    font-size: 36px;
+    font-weight: 700;
+    line-height: 1.2;
+    letter-spacing: -0.02em;
+    margin-bottom: 16px;
+  }
+  .section-head p {
+    color: var(--text-secondary);
+    font-size: 15px;
+    max-width: 560px;
+    margin: 0 auto;
+  }
+
+  /* =========================================================
+     1. NAVBAR
+  ========================================================= */
+  .navbar {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    height: 72px;
+    background: var(--nav-bg);
+    -webkit-backdrop-filter: blur(12px);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(26, 32, 64, 0.6);
+  }
+  .navbar .container {
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+  }
+  .logo {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    font-family: 'Outfit', sans-serif;
+    font-weight: 700;
+    font-size: 23px;
+    letter-spacing: -0.01em;
+    color: #fff;
+  }
+  .logo-mark {
+    width: 22px;
+    height: 22px;
+    border-radius: 6px;
+    background: var(--brand);
+    box-shadow: 0 0 12px var(--brand-glow);
+  }
+  .nav-links {
+    display: flex;
+    align-items: center;
+    gap: 30px;
+  }
+  .nav-links a {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    color: #C7CEE2;
+    font-size: 15px;
+    font-weight: 500;
+    transition: color 0.2s ease;
+  }
+  .nav-links a:hover { color: #fff; }
+  .nav-links .caret { font-size: 10px; color: #6B79A8; }
+
+  /* ===== Products mega-menu dropdown ===== */
+  .nav-item { position: relative; display: inline-flex; align-items: center; }
+  .nav-trigger {
+    display: inline-flex; align-items: center; gap: 5px;
+    font-family: inherit; font-size: 15px; font-weight: 500;
+    color: #C7CEE2; background: none; border: none; cursor: pointer; padding: 0;
+    transition: color 0.2s ease;
+  }
+  .nav-trigger:hover,
+  .nav-item.open .nav-trigger { color: #fff; }
+  .nav-trigger .caret { display: inline-flex; color: #6B79A8; transition: transform 0.25s ease, color 0.2s ease; }
+  .nav-item.open .nav-trigger .caret { transform: rotate(180deg); color: var(--brand-light); }
+
+  .mega-menu {
+    position: absolute; top: calc(100% + 18px); left: -22px;
+    width: 540px; padding: 14px;
+    background: #080D20;
+    border: 1px solid #1E2647;
+    border-radius: 16px;
+    box-shadow: 0 28px 64px rgba(0, 0, 0, 0.55);
+    z-index: 200;
+    opacity: 0; visibility: hidden; transform: translateY(-8px);
+    transition: opacity 0.2s ease, transform 0.24s cubic-bezier(0.22, 1, 0.36, 1), visibility 0.2s;
+  }
+  .nav-item.open .mega-menu { opacity: 1; visibility: visible; transform: translateY(0); }
+  /* small pointer connecting the menu to the trigger */
+  .mega-menu::before {
+    content: ""; position: absolute; top: -7px; left: 40px;
+    width: 13px; height: 13px; background: #080D20;
+    border-left: 1px solid #1E2647; border-top: 1px solid #1E2647;
+    transform: rotate(45deg);
+  }
+  .mega-grid { position: relative; display: grid; grid-template-columns: 1fr 1fr; gap: 4px; }
+  .mega-item {
+    display: flex; align-items: flex-start; gap: 28px;
+    padding: 12px 14px; border-radius: 12px;
+    transition: background 0.18s ease;
+  }
+  .mega-ic { margin-right: 2px; }
+  .mega-item:hover { background: rgba(139, 77, 255, 0.08); }
+  .mega-ic {
+    width: 38px; height: 38px; border-radius: 10px; flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+    background: rgba(139, 77, 255, 0.12);
+    border: 1px solid rgba(139, 77, 255, 0.2);
+    color: var(--grow-purple);
+    transition: background 0.18s ease, border-color 0.18s ease;
+  }
+  .mega-ic .lucide { width: 18px; height: 18px; }
+  .mega-item.is-primary .mega-ic {
+    background: linear-gradient(135deg, var(--brand), var(--brand-light));
+    border-color: transparent; color: #fff;
+    box-shadow: 0 4px 16px rgba(108, 43, 223, 0.45);
+  }
+  .mega-text { display: flex; flex-direction: column; gap: 3px; min-width: 0; }
+  .mega-title { font-size: 14px; font-weight: 700; color: #fff; letter-spacing: -0.01em; }
+  .mega-desc { font-size: 12px; line-height: 1.45; color: var(--text-secondary); }
+  .nav-right {
+    display: flex;
+    align-items: center;
+    gap: 22px;
+  }
+  .nav-right .login {
+    color: #fff;
+    font-size: 15px;
+    font-weight: 500;
+    transition: opacity 0.2s ease;
+  }
+  .nav-right .login:hover { opacity: 0.75; }
+  .nav-right .nav-cta { padding: 10px 22px; font-size: 15px; border-radius: 8px; }
+  .nav-toggle {
+    display: none;
+    background: none;
+    border: none;
+    color: #fff;
+    font-size: 22px;
+    cursor: pointer;
+    padding: 4px;
+  }
+
+  /* =========================================================
+     2. HERO
+  ========================================================= */
+  .hero {
+    position: relative;
+    min-height: 660px;
+    display: flex;
+    align-items: center;
+    padding: 70px 0;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse at 18% 45%, rgba(108, 43, 223, 0.12) 0%, transparent 55%);
+    z-index: 0;
+  }
+  .hero .container {
+    position: relative;
+    z-index: 2;
+    width: 100%;
+  }
+  .hero-left { max-width: 660px; }
+
+  /* AI badge pill */
+  .hero-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(108, 43, 223, 0.35);
+    color: #D7DCEC;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    border-radius: 30px;
+    padding: 8px 16px;
+    margin-bottom: 28px;
+  }
+  .hero-badge svg { width: 15px; height: 15px; color: var(--grow-purple); }
+
+  .hero h1 {
+    font-family: 'Outfit', sans-serif;
+    font-size: 58px;
+    font-weight: 800;
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    white-space: nowrap;
+    margin: 0 0 26px;
+  }
+  .hero h1 .grow { color: var(--grow-purple); }
+  .hero-sub {
+    color: #9AA7C7;
+    font-size: 17px;
+    line-height: 1.65;
+    max-width: 470px;
+    margin-bottom: 36px;
+  }
+  .hero-ctas {
+    display: flex;
+    gap: 16px;
+    margin-bottom: 44px;
+  }
+  .hero-ctas .btn-primary { padding: 14px 28px; font-size: 15px; border-radius: 8px; }
+  .btn-light {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: #FFFFFF;
+    color: #0A0E1A;
+    border: none;
+    border-radius: 8px;
+    padding: 14px 28px;
+    font-family: inherit;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s ease, transform 0.12s ease;
+  }
+  .btn-light:hover { background: #E6E8F0; }
+  .btn-light:active { transform: scale(0.97); }
+
+  .trust-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 32px;
+  }
+  .trust-row .item {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    color: #9AA7C7;
+    font-size: 14px;
+    font-weight: 500;
+  }
+  .trust-row .item svg { width: 18px; height: 18px; color: #C7CEE2; }
+
+  /* Dashboard image bleeding off the right edge */
+  .hero-dash {
+    position: absolute;
+    top: 50%;
+    left: 52%;
+    transform: translateY(-50%);
+    width: 1000px;
+    max-width: none;
+    z-index: 1;
+    pointer-events: none;
+    user-select: none;
+  }
+  .hero-dash img { display: block; width: 100%; height: auto; }
+
+  /* ----- Hero dashboard mock ----- */
+  .dashboard {
+    background: var(--bg-card);
+    border: 1px solid var(--bg-card-border);
+    border-radius: 16px;
+    padding: 20px;
+    box-shadow: 0 20px 60px -20px rgba(108, 43, 223, 0.35);
+  }
+  .dash-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 18px;
+  }
+  .dash-head .title { font-size: 13px; font-weight: 600; color: #fff; }
+  .dash-head .dots { display: flex; gap: 6px; }
+  .dash-head .dots span {
+    width: 9px; height: 9px; border-radius: 50%;
+    background: var(--bg-card-border);
+  }
+  .dash-head .dots span:first-child { background: var(--brand); }
+
+  .dash-chart {
+    display: flex;
+    align-items: flex-end;
+    gap: 9px;
+    height: 110px;
+    padding: 14px;
+    background: rgba(108, 43, 223, 0.05);
+    border: 1px solid var(--bg-card-border);
+    border-radius: 10px;
+    margin-bottom: 16px;
+  }
+  .dash-chart .bar {
+    flex: 1;
+    border-radius: 4px 4px 0 0;
+    background: linear-gradient(180deg, var(--brand-light) 0%, var(--brand) 100%);
+    opacity: 0.9;
+  }
+
+  .dash-stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    margin-bottom: 16px;
+  }
+  .dash-stats .stat {
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid var(--bg-card-border);
+    border-radius: 8px;
+    padding: 12px;
+  }
+  .dash-stats .stat .label {
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--text-muted);
+    margin-bottom: 6px;
+  }
+  .dash-stats .stat .val { font-size: 18px; font-weight: 700; color: #fff; }
+  .dash-stats .stat.green .val { color: var(--green-accent); }
+  .dash-stats .stat.purple .val { color: var(--brand-light); }
+
+  .dash-feed { display: flex; flex-direction: column; gap: 10px; }
+  .feed-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 9px 10px;
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid var(--bg-card-border);
+    border-radius: 8px;
+  }
+  .feed-row .avatar {
+    width: 28px; height: 28px; border-radius: 50%;
+    background: linear-gradient(135deg, var(--brand), var(--brand-light));
+    flex-shrink: 0;
+  }
+  .feed-row .lines { flex: 1; display: flex; flex-direction: column; gap: 5px; }
+  .feed-row .lines span { height: 6px; border-radius: 3px; background: var(--bg-card-border); }
+  .feed-row .lines span:first-child { width: 60%; }
+  .feed-row .lines span:last-child { width: 40%; }
+  .feed-badge {
+    font-size: 10px;
+    font-weight: 600;
+    color: var(--green-accent);
+    background: rgba(34, 197, 94, 0.12);
+    border: 1px solid rgba(34, 197, 94, 0.3);
+    border-radius: 12px;
+    padding: 3px 9px;
+    white-space: nowrap;
+  }
+
+  /* =========================================================
+     3. LOGO BAR
+  ========================================================= */
+  .logobar { padding: 48px 0; border-top: 1px solid rgba(26,32,64,0.5); border-bottom: 1px solid rgba(26,32,64,0.5); }
+  .logobar .label {
+    text-align: center;
+    color: var(--text-muted);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-bottom: 28px;
+  }
+  .logobar .logos {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 40px;
+  }
+  .logobar .logos .brand-logo {
+    height: 26px;
+    width: auto;
+    flex: 0 0 auto;
+    /* Recolor any-colored SVG to a muted white for dark mode */
+    filter: brightness(0) invert(1);
+    opacity: 0.5;
+    transition: opacity 0.2s ease;
+  }
+  .logobar .logos .brand-logo:hover { opacity: 0.9; }
+
+  /* =========================================================
+     4. FEATURES GRID
+  ========================================================= */
+  .grid-3 {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+  }
+  .feature-card { transition: border-color 0.2s ease, transform 0.2s ease; }
+  .feature-card:hover { border-color: var(--brand); transform: translateY(-3px); }
+  .feature-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 19px;
+    margin-bottom: 16px;
+  }
+  .feature-card h3 { font-size: 20px; font-weight: 600; margin-bottom: 10px; }
+  .feature-card p { color: var(--text-secondary); font-size: 14px; }
+
+  .icon-purple { background: var(--brand); }
+  .icon-teal   { background: #14B8A6; }
+  .icon-orange { background: var(--highlight-orange); }
+  .icon-blue   { background: #2563EB; }
+  .icon-purple2{ background: #7C3AED; }
+  .icon-green  { background: var(--green-accent); }
+
+  .center-cta { text-align: center; margin-top: 48px; }
+
+  /* =========================================================
+     5. HOW IT WORKS
+  ========================================================= */
+  .steps-pill {
+    display: inline-flex; align-items: center; gap: 7px;
+    background: rgba(124,92,255,0.14);
+    border: 1px solid rgba(124,92,255,0.32);
+    color: #C4B5F0;
+    font-size: 12px; font-weight: 600;
+    letter-spacing: 0.07em; text-transform: uppercase;
+    padding: 7px 15px; border-radius: 999px;
+    margin-bottom: 22px;
+  }
+  .steps-pill .lucide { width: 14px; height: 14px; color: #C4B5F0; }
+
+  .steps-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0;
+  }
+  .step {
+    position: relative;
+    padding: 48px 36px 52px;
+    text-align: center;
+    border-right: 1px dashed rgba(255,255,255,0.10);
+    border-bottom: 1px dashed rgba(255,255,255,0.10);
+  }
+  .step:nth-child(3n) { border-right: none; }
+  .step:nth-child(n+4) { border-bottom: none; }
+  .step .step-num {
+    position: absolute;
+    top: 22px; right: 26px;
+    font-size: 13px; font-weight: 500;
+    color: #6E7CA8;
+  }
+  .step .step-icon {
+    width: 56px; height: 56px;
+    border-radius: 15px;
+    display: flex; align-items: center; justify-content: center;
+    margin: 0 auto 20px;
+  }
+  .step .step-icon .lucide { width: 26px; height: 26px; }
+  .step h3 { font-size: 18px; font-weight: 700; margin-bottom: 10px; color: #fff; }
+  .step p { color: var(--text-secondary); font-size: 14px; line-height: 1.55; max-width: 230px; margin: 0 auto; }
+
+  /* icon tile color variants */
+  .ic-indigo { background: linear-gradient(150deg, #322A66 0%, #211C45 100%); color: #A78BFA; box-shadow: inset 0 0 0 1px rgba(139,92,246,0.40); }
+  .ic-green  { background: linear-gradient(150deg, #143A2C 0%, #0E2A20 100%); color: #34D399; box-shadow: inset 0 0 0 1px rgba(52,211,153,0.40); }
+  .ic-orange { background: linear-gradient(150deg, #3D2614 0%, #2A1B0F 100%); color: #FB923C; box-shadow: inset 0 0 0 1px rgba(251,146,60,0.42); }
+  .ic-blue   { background: linear-gradient(150deg, #16294F 0%, #102038 100%); color: #60A5FA; box-shadow: inset 0 0 0 1px rgba(96,165,250,0.40); }
+  .ic-purple { background: linear-gradient(150deg, #2F1F56 0%, #221842 100%); color: #C084FC; box-shadow: inset 0 0 0 1px rgba(192,132,252,0.42); }
+
+  /* =========================================================
+     6. ALL-IN-ONE PLATFORM
+  ========================================================= */
+  .grid-2 {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+  }
+  .showcase-card {
+    background: var(--bg-card);
+    border: 1px solid var(--bg-card-border);
+    border-radius: 16px;
+    padding: 28px;
+    transition: border-color 0.2s ease;
+  }
+  .showcase-card:hover { border-color: var(--brand); }
+  .pill-label {
+    display: inline-block;
+    background: var(--brand);
+    color: #fff;
+    font-size: 11px;
+    font-weight: 600;
+    border-radius: 6px;
+    padding: 4px 10px;
+    margin-bottom: 14px;
+  }
+  .showcase-card h3 { font-size: 20px; font-weight: 600; margin-bottom: 10px; }
+  .showcase-card > p { color: var(--text-secondary); font-size: 14px; margin-bottom: 20px; }
+
+  /* mini mock: prospecting lead rows */
+  .mock {
+    background: rgba(108, 43, 223, 0.05);
+    border: 1px solid var(--bg-card-border);
+    border-radius: 10px;
+    padding: 14px;
+  }
+  .lead-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 9px 0;
+    border-bottom: 1px solid rgba(26,32,64,0.6);
+  }
+  .lead-row:last-child { border-bottom: none; }
+  .lead-row .co-icon {
+    width: 28px; height: 28px; border-radius: 7px;
+    background: linear-gradient(135deg, var(--brand), var(--brand-light));
+    flex-shrink: 0;
+  }
+  .lead-row .co-name { flex: 1; font-size: 13px; color: #cdd6ee; }
+  .lead-row .add-btn {
+    font-size: 11px; font-weight: 600; color: #fff;
+    background: var(--brand);
+    border: none; border-radius: 6px; padding: 5px 12px; cursor: pointer;
+    transition: background 0.2s ease;
+  }
+  .lead-row .add-btn:hover { background: var(--brand-light); }
+
+  /* mini mock: verification score */
+  .verify-mock { text-align: center; }
+  .verify-score { font-size: 42px; font-weight: 700; color: var(--green-accent); line-height: 1; margin-bottom: 12px; }
+  .verify-statuses { display: flex; flex-direction: column; gap: 8px; }
+  .verify-statuses .vrow {
+    display: flex; align-items: center; justify-content: space-between;
+    font-size: 12px; color: var(--text-secondary);
+    padding: 7px 10px; background: rgba(255,255,255,0.02);
+    border: 1px solid var(--bg-card-border); border-radius: 7px;
+  }
+  .verify-statuses .vrow .ok { color: var(--green-accent); font-weight: 600; }
+
+  /* mini mock: email sequence flow */
+  .flow { display: flex; align-items: center; flex-wrap: wrap; gap: 8px; justify-content: center; }
+  .flow .node {
+    font-size: 11px; font-weight: 600; color: #fff;
+    background: var(--brand); border-radius: 6px; padding: 8px 12px;
+  }
+  .flow .wait {
+    font-size: 11px; color: var(--text-secondary);
+    background: rgba(255,255,255,0.03); border: 1px solid var(--bg-card-border);
+    border-radius: 6px; padding: 8px 10px;
+  }
+  .flow .sep { color: var(--brand); font-weight: 700; }
+
+  /* mini mock: inbox */
+  .inbox-row {
+    display: flex; align-items: center; gap: 10px;
+    padding: 9px 0; border-bottom: 1px solid rgba(26,32,64,0.6);
+  }
+  .inbox-row:last-child { border-bottom: none; }
+  .inbox-row .av { width: 26px; height: 26px; border-radius: 50%; background: var(--bg-card-border); flex-shrink: 0; }
+  .inbox-row .ibody { flex: 1; min-width: 0; }
+  .inbox-row .iname { font-size: 12px; font-weight: 600; color: #fff; }
+  .inbox-row .isub { font-size: 11px; color: var(--text-secondary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .inbox-row .icount {
+    font-size: 10px; font-weight: 600; color: var(--brand-light);
+    background: rgba(108,43,223,0.15); border-radius: 12px; padding: 3px 8px;
+  }
+
+  /* full-width NeoBrain card */
+  .neobrain-card {
+    margin-top: 20px;
+    background: var(--bg-card);
+    border: 1px solid var(--bg-card-border);
+    border-radius: 16px;
+    padding: 28px;
+    display: block;
+    position: relative;
+    overflow: hidden;
+  }
+  .neobrain-card::before {
+    content: "";
+    position: absolute;
+    right: -60px; top: -60px;
+    width: 280px; height: 280px;
+    background: radial-gradient(circle, rgba(108,43,223,0.18) 0%, transparent 70%);
+    z-index: 0;
+  }
+  .neobrain-card .nb-left { position: relative; z-index: 1; }
+  .neobrain-card .nb-left h3 { font-size: 22px; font-weight: 600; margin-bottom: 10px; }
+  .neobrain-card .nb-left p { color: var(--text-secondary); font-size: 14px; max-width: 540px; }
+  .nb-score {
+    position: relative;
+    z-index: 1;
+    width: 120px; height: 120px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--brand) 0%, #14B8A6 100%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    box-shadow: 0 0 40px rgba(108,43,223,0.4);
+  }
+  .nb-score .big { font-size: 38px; font-weight: 700; line-height: 1; }
+  .nb-score .cap { font-size: 11px; opacity: 0.85; margin-top: 4px; }
+
+  /* ===== Detailed platform card mocks ===== */
+  .card-eyebrow {
+    display: inline-flex; align-items: center; gap: 7px;
+    color: var(--text-secondary); font-size: 13px; font-weight: 500;
+    margin-bottom: 12px;
+  }
+  .card-eyebrow .lucide { width: 15px; height: 15px; color: var(--text-secondary); }
+  .showcase-card h3 { font-size: 21px; }
+  .mock {
+    background: rgba(255,255,255,0.015);
+    border: 1px solid var(--bg-card-border);
+    border-radius: 14px;
+    padding: 16px;
+  }
+
+  /* --- Zeus Prospecting --- */
+  .zeus-search {
+    display: flex; align-items: center; gap: 10px;
+    background: rgba(255,255,255,0.03);
+    border: 1px solid var(--bg-card-border);
+    border-radius: 10px; padding: 11px 14px; margin-bottom: 12px;
+  }
+  .zeus-search .lucide { width: 16px; height: 16px; color: var(--text-muted); }
+  .zeus-search .zs-text { flex: 1; font-size: 13px; color: #cdd6ee; }
+  .zs-live {
+    display: inline-flex; align-items: center; gap: 6px;
+    font-size: 11px; font-weight: 600; color: var(--brand-light);
+    background: rgba(108,43,223,0.15); border: 1px solid rgba(108,43,223,0.4);
+    border-radius: 20px; padding: 4px 10px; white-space: nowrap;
+  }
+  .zs-live .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--brand-light); }
+  .zeus-lead {
+    display: flex; align-items: center; gap: 12px;
+    background: rgba(255,255,255,0.025);
+    border: 1px solid var(--bg-card-border);
+    border-radius: 10px; padding: 11px 12px; margin-top: 10px;
+  }
+  .zl-av {
+    width: 40px; height: 40px; border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 12px; font-weight: 700; color: #fff; flex-shrink: 0;
+  }
+  .zl-av.nv { background: linear-gradient(135deg, #6C2BDF, #8B4DFF); }
+  .zl-av.hx { background: linear-gradient(135deg, #2563EB, #14B8A6); }
+  .zl-info { flex: 1; min-width: 0; }
+  .zl-name { font-size: 13px; font-weight: 600; color: #fff; }
+  .zl-sub { font-size: 12px; color: var(--text-secondary); margin-top: 2px; }
+  .zl-badge {
+    display: inline-flex; align-items: center; gap: 5px;
+    font-size: 11px; font-weight: 600; border-radius: 20px; padding: 5px 11px;
+    white-space: nowrap; flex-shrink: 0;
+  }
+  .zl-badge .lucide { width: 12px; height: 12px; }
+  .zl-badge.hot { background: linear-gradient(135deg, #FF6B35, #C2410C); color: #fff; }
+  .zl-badge.match { background: rgba(34,197,94,0.12); border: 1px solid rgba(34,197,94,0.35); color: var(--green-accent); }
+
+  /* =========================================================
+     ZEUS PROSPECTING CARD — bespoke staggered entrance
+     ---------------------------------------------------------
+     Scoped entirely to .zeus-anim. Entrance is driven by the
+     .in-view class (added once by an Intersection Observer at
+     threshold 0.15). Only opacity + transform animate -> zero
+     layout shift. Badge micro-interactions use @keyframes; the
+     LIVE dot keeps a subtle opacity-only idle pulse afterwards.
+  ========================================================= */
+  /* initial (pre-reveal) states */
+  .zeus-anim .card-eyebrow,
+  .zeus-anim > h3,
+  .zeus-anim > p,
+  .zeus-anim .zeus-mock,
+  .zeus-anim .zeus-search,
+  .zeus-anim .zeus-lead,
+  .zeus-anim .zs-live,
+  .zeus-anim .zl-badge.hot,
+  .zeus-anim .zl-badge.match { opacity: 0; will-change: opacity, transform; }
+
+  /* Phase 1 — text entrance */
+  .zeus-anim .card-eyebrow { transform: translateY(10px); transition: opacity 400ms ease-out, transform 400ms ease-out; transition-delay: 0ms; }
+  .zeus-anim > h3          { transform: translateY(14px); transition: opacity 450ms ease-out, transform 450ms ease-out; transition-delay: 80ms; }
+  .zeus-anim > p           { transform: translateY(10px); transition: opacity 400ms ease-out, transform 400ms ease-out; transition-delay: 180ms; }
+
+  /* Phase 2 — dark mockup panel slides up */
+  .zeus-anim .zeus-mock    { transform: translateY(20px); transition: opacity 500ms ease-out, transform 500ms ease-out; transition-delay: 300ms; }
+
+  /* Phase 3 — rows slide in from the left, one at a time */
+  .zeus-anim .zeus-search                           { transform: translateX(-16px); transition: opacity 400ms ease-out, transform 400ms ease-out; transition-delay: 550ms; }
+  .zeus-anim .zeus-mock > .zeus-lead:nth-of-type(2) { transform: translateX(-16px); transition: opacity 400ms ease-out, transform 400ms ease-out; transition-delay: 750ms; }
+  .zeus-anim .zeus-mock > .zeus-lead:nth-of-type(3) { transform: translateX(-16px); transition: opacity 400ms ease-out, transform 400ms ease-out; transition-delay: 950ms; }
+
+  /* revealed states */
+  .zeus-anim.in-view .card-eyebrow,
+  .zeus-anim.in-view > h3,
+  .zeus-anim.in-view > p,
+  .zeus-anim.in-view .zeus-mock { opacity: 1; transform: translateY(0); }
+  .zeus-anim.in-view .zeus-search,
+  .zeus-anim.in-view .zeus-mock > .zeus-lead { opacity: 1; transform: translateX(0); }
+
+  /* Phase 3 (cont.) — badges via keyframes, sequenced after their row */
+  .zeus-anim.in-view .zs-live        { animation: zeusLiveIn  400ms ease-out  750ms both; }
+  .zeus-anim.in-view .zl-badge.hot   { animation: zeusHighPop 350ms ease-out 1300ms both; }
+  .zeus-anim.in-view .zl-badge.match { animation: zeusMatchIn 350ms ease-out 1500ms both; }
+
+  /* Phase 4 — idle LIVE pulse (opacity only, after entrance) */
+  .zeus-anim.in-view .zs-live .dot { animation: zeusDotPulse 2s ease-in-out 1700ms infinite; will-change: opacity; }
+
+  @keyframes zeusLiveIn  { 0% { opacity: 0; transform: scale(0.8); } 60% { opacity: 1; transform: scale(1.05); } 100% { opacity: 1; transform: scale(1); } }
+  @keyframes zeusHighPop { 0% { opacity: 0; transform: scale(0.7); } 60% { opacity: 1; transform: scale(1.1); }  100% { opacity: 1; transform: scale(1); } }
+  @keyframes zeusMatchIn { 0% { opacity: 0; transform: scale(0.85); } 100% { opacity: 1; transform: scale(1); } }
+  @keyframes zeusDotPulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
+
+  @media (prefers-reduced-motion: reduce) {
+    .zeus-anim .card-eyebrow,
+    .zeus-anim > h3,
+    .zeus-anim > p,
+    .zeus-anim .zeus-mock,
+    .zeus-anim .zeus-search,
+    .zeus-anim .zeus-lead,
+    .zeus-anim .zs-live,
+    .zeus-anim .zl-badge.hot,
+    .zeus-anim .zl-badge.match,
+    .zeus-anim .zs-live .dot { opacity: 1 !important; transform: none !important; animation: none !important; }
+  }
+
+  /* --- Verifyrit & Warmrit --- */
+  .verify2-mock { display: grid; grid-template-columns: 0.8fr 1.2fr; gap: 12px; }
+  .vw-left, .vw-right {
+    background: rgba(255,255,255,0.025); border: 1px solid var(--bg-card-border);
+    border-radius: 12px; padding: 16px;
+  }
+  .vw-left { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; }
+  .vw-ring { position: relative; width: 96px; height: 96px; }
+  .vw-ring svg { width: 100%; height: 100%; }
+  .vw-ring-val {
+    position: absolute; inset: 0; display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    font-size: 19px; font-weight: 700; color: #fff;
+  }
+  .vw-ring-val .vw-inbox { font-size: 9px; font-weight: 600; letter-spacing: 0.1em; color: var(--text-muted); margin-top: 2px; }
+  .vw-spam {
+    font-size: 11px; font-weight: 600; color: var(--green-accent);
+    background: rgba(34,197,94,0.1); border: 1px solid rgba(34,197,94,0.3);
+    border-radius: 20px; padding: 4px 12px;
+  }
+  .vw-right { display: flex; flex-direction: column; justify-content: center; }
+  .vw-rep-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 4px; }
+  .vw-rep-head > span:first-child { font-size: 13px; font-weight: 600; color: #fff; }
+  .vw-warmed { display: inline-flex; align-items: center; gap: 4px; font-size: 12px; font-weight: 600; color: var(--green-accent); }
+  .vw-warmed .lucide { width: 13px; height: 13px; }
+  .vw-chart { width: 100%; height: 58px; display: block; margin: 6px 0; }
+  .vw-score { font-size: 22px; font-weight: 700; color: #fff; display: flex; align-items: baseline; gap: 8px; }
+  .vw-delta { font-size: 12px; font-weight: 600; color: var(--green-accent); }
+
+  /* =========================================================
+     VERIFYRIT & WARMRIT CARD — bespoke cinematic entrance
+     ---------------------------------------------------------
+     Scoped entirely to .verify2-anim. Entrance driven by the
+     .in-view class (added once by an Intersection Observer at
+     threshold 0.15). The ring sweep, % counter and 98/100 score
+     are JS-driven (requestAnimationFrame); everything else is
+     opacity / transform / stroke-dashoffset only -> zero layout
+     shift. Idle shimmer + "Warmed" breathe loop afterwards.
+  ========================================================= */
+  /* initial (pre-reveal) states */
+  .verify2-anim .card-eyebrow,
+  .verify2-anim > h3,
+  .verify2-anim > p,
+  .verify2-anim .verify2-mock,
+  .verify2-anim .vw-spam,
+  .verify2-anim .vw-rep-lbl,
+  .verify2-anim .vw-warmed,
+  .verify2-anim .vw-delta { opacity: 0; will-change: opacity, transform; }
+  .verify2-anim .vw-ring-fill,
+  .verify2-anim .vw-line { will-change: stroke-dashoffset; }
+  .verify2-anim .vw-inbox { opacity: 0; transition: opacity 300ms ease-out; }
+  .verify2-anim .vw-inbox.show { opacity: 1; }
+  .verify2-anim .vw-area { opacity: 0; }
+  .verify2-anim .vw-warmed svg { opacity: 0; }
+  .verify2-anim .vw-ring-shimmer { opacity: 0; transform-box: fill-box; transform-origin: center; }
+
+  /* Phase 1 — text entrance */
+  .verify2-anim .card-eyebrow { transform: translateY(10px); transition: opacity 380ms ease-out, transform 380ms ease-out; transition-delay: 0ms; }
+  .verify2-anim > h3          { transform: translateY(16px); transition: opacity 420ms ease-out, transform 420ms ease-out; transition-delay: 90ms; }
+  .verify2-anim > p           { transform: translateY(10px); transition: opacity 380ms ease-out, transform 380ms ease-out; transition-delay: 200ms; }
+
+  /* Phase 2 — dark inner panel rises + settles */
+  .verify2-anim .verify2-mock { transform: translateY(22px) scale(0.97); transition: opacity 500ms cubic-bezier(0.22,1,0.36,1), transform 500ms cubic-bezier(0.22,1,0.36,1); transition-delay: 350ms; }
+
+  /* Phase 3 — Spam pill lifts up after the ring settles */
+  .verify2-anim .vw-spam { transform: translateY(8px); transition: opacity 350ms ease-out, transform 350ms ease-out; transition-delay: 2400ms; }
+
+  /* Phase 4 — right panel: area fill fades in as the line draws */
+  .verify2-anim .vw-area    { transition: opacity 1600ms ease-in-out; transition-delay: 800ms; }
+  .verify2-anim .vw-rep-lbl { transform: translateY(6px); transition: opacity 360ms ease-out, transform 360ms ease-out; transition-delay: 800ms; }
+  .verify2-anim .vw-warmed  { transition: opacity 360ms ease-out; transition-delay: 1200ms; }
+
+  /* Phase 5 — "+12 in 30d" lands after the score counter finishes */
+  .verify2-anim .vw-delta { transform: translateX(-6px); transition: opacity 300ms ease-out, transform 300ms ease-out; transition-delay: 2500ms; }
+
+  /* revealed states */
+  .verify2-anim.in-view .card-eyebrow,
+  .verify2-anim.in-view > h3,
+  .verify2-anim.in-view > p,
+  .verify2-anim.in-view .verify2-mock { opacity: 1; transform: translateY(0); }
+  .verify2-anim.in-view .verify2-mock { transform: translateY(0) scale(1); }
+  .verify2-anim.in-view .vw-spam     { opacity: 1; transform: translateY(0); }
+  .verify2-anim.in-view .vw-rep-lbl  { opacity: 1; transform: translateY(0); }
+  .verify2-anim.in-view .vw-warmed   { opacity: 1; }
+  .verify2-anim.in-view .vw-area     { opacity: 0.6; }
+  .verify2-anim.in-view .vw-delta    { opacity: 1; transform: translateX(0); }
+
+  /* "Warmed ✓" checkmark springs in just after the badge appears */
+  .verify2-anim.in-view .vw-warmed svg { animation: vwCheckPop 250ms cubic-bezier(0.34,1.56,0.64,1) 1250ms both; }
+
+  /* Phase 6 — idle micro-animations (after the full entrance settles) */
+  .verify2-anim.in-view .vw-ring-shimmer { opacity: 0.12; transition: opacity 1ms linear 2600ms; animation: vwShimmerSweep 4s linear 2600ms infinite; }
+  .verify2-anim.in-view .vw-warmed       { animation: vwWarmedBreathe 3s ease-in-out 2900ms infinite; }
+
+  @keyframes vwCheckPop { 0% { opacity: 0; transform: scale(0.5); } 100% { opacity: 1; transform: scale(1); } }
+  @keyframes vwShimmerSweep { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+  @keyframes vwWarmedBreathe { 0%, 100% { opacity: 1; } 50% { opacity: 0.65; } }
+
+  @media (prefers-reduced-motion: reduce) {
+    .verify2-anim .card-eyebrow,
+    .verify2-anim > h3,
+    .verify2-anim > p,
+    .verify2-anim .verify2-mock,
+    .verify2-anim .vw-spam,
+    .verify2-anim .vw-rep-lbl,
+    .verify2-anim .vw-warmed,
+    .verify2-anim .vw-warmed svg,
+    .verify2-anim .vw-inbox,
+    .verify2-anim .vw-area,
+    .verify2-anim .vw-delta { opacity: 1 !important; transform: none !important; animation: none !important; }
+    .verify2-anim .vw-area { opacity: 0.6 !important; }
+    .verify2-anim .vw-ring-shimmer { opacity: 0 !important; animation: none !important; }
+  }
+
+  /* --- Sendrit Automation --- */
+  .sendrit-mock { display: flex; flex-direction: column; gap: 14px; padding: 18px; }
+  .seq-row { display: flex; align-items: center; gap: 14px; position: relative; }
+  .seq-row:not(:last-child)::before {
+    content: ""; position: absolute; left: 13px; top: 30px; bottom: -16px;
+    border-left: 2px dashed var(--bg-card-border);
+  }
+  .seq-dot {
+    width: 28px; height: 28px; border-radius: 50%; flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+    border: 2px solid var(--bg-card-border); background: var(--bg-card);
+    position: relative; z-index: 1;
+  }
+  .seq-dot.done { background: var(--highlight-orange); border-color: var(--highlight-orange); color: #fff; }
+  .seq-dot.done .lucide { width: 15px; height: 15px; }
+  .seq-dot.active { border-color: var(--text-secondary); }
+  .seq-card {
+    flex: 1; display: flex; align-items: center; justify-content: space-between; gap: 10px;
+    background: rgba(255,255,255,0.025); border: 1px solid var(--bg-card-border);
+    border-radius: 10px; padding: 13px 16px;
+  }
+  .seq-card.muted { opacity: 0.45; }
+  .seq-name { font-size: 13px; font-weight: 600; color: #fff; }
+  .seq-status { font-size: 12px; font-weight: 600; white-space: nowrap; }
+  .seq-status.sent { color: var(--green-accent); }
+  .seq-status.running { color: var(--highlight-orange); }
+  .seq-status.queued { color: var(--text-muted); }
+
+  /* =========================================================
+     SENDRIT AUTOMATION CARD — live-sequence storytelling loop
+     ---------------------------------------------------------
+     Scoped entirely to .sendrit-anim. Text + panel enter once via
+     .in-view; the panel contents are driven by a JS master timeline
+     (requestAnimationFrame) that toggles the state classes below and
+     loops every ~6.8s. Only opacity / transform / stroke-dashoffset /
+     clip-path / width animate -> zero layout shift.
+  ========================================================= */
+  .sendrit-anim { position: relative; }
+
+  /* animated violet border glow (idle, barely-there). Animating the conic-gradient
+     ANGLE (not the element) keeps the masked ring aligned to the card edges. */
+  @property --sendrit-glow { syntax: '<angle>'; initial-value: 0deg; inherits: false; }
+  .sendrit-anim::after {
+    content: ""; position: absolute; inset: 0; border-radius: 16px; padding: 1.5px;
+    background: conic-gradient(from var(--sendrit-glow), transparent 0deg, transparent 250deg,
+      rgba(139,77,255,0.9) 320deg, rgba(180,140,255,0.55) 342deg, transparent 360deg);
+    -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+            mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor; mask-composite: exclude;
+    opacity: 0.18; pointer-events: none; will-change: background;
+    animation: sendritBorderGlow 4s linear infinite;
+  }
+  @keyframes sendritBorderGlow { to { --sendrit-glow: 360deg; } }
+
+  /* Phase 1 — text entrance (once) */
+  .sendrit-anim .card-eyebrow,
+  .sendrit-anim > h3,
+  .sendrit-anim > p,
+  .sendrit-anim .sendrit-mock { opacity: 0; will-change: opacity, transform; }
+  .sendrit-anim .card-eyebrow { transform: translateY(8px);  transition: opacity 350ms ease-out, transform 350ms ease-out; }
+  .sendrit-anim > h3          { transform: translateY(14px); transition: opacity 400ms ease-out, transform 400ms ease-out; transition-delay: 80ms; }
+  .sendrit-anim > p           { transform: translateY(8px);  transition: opacity 350ms ease-out, transform 350ms ease-out; transition-delay: 180ms; }
+  /* Phase 2 — panel slides in (once) */
+  .sendrit-anim .sendrit-mock { transform: translateY(18px) scale(0.98); transition: opacity 480ms cubic-bezier(0.22,1,0.36,1), transform 480ms cubic-bezier(0.22,1,0.36,1); transition-delay: 400ms; }
+  .sendrit-anim.in-view .card-eyebrow,
+  .sendrit-anim.in-view > h3,
+  .sendrit-anim.in-view > p          { opacity: 1; transform: translateY(0); }
+  .sendrit-anim.in-view .sendrit-mock { opacity: 1; transform: translateY(0) scale(1); }
+
+  /* dots become pure SVG; original pseudo connector + dot chrome removed */
+  .sendrit-anim .seq-dot { width: 28px; height: 28px; border: none; background: none; }
+  .sendrit-anim .seq-dot-svg { width: 28px; height: 28px; display: block; overflow: visible; }
+  .sendrit-anim .seq-row:not(:last-child)::before { display: none; }
+  .sendrit-anim .seq-card { position: relative; }
+
+  /* rows breathe between dim (idle) and lit (active) */
+  .sendrit-anim .seq-row { opacity: 0.35; transition: opacity 300ms ease-out; will-change: opacity; }
+  .sendrit-anim .seq-row.lit   { opacity: 1; }
+  .sendrit-anim .seq-row.s3lit { opacity: 0.45; }
+
+  /* Phase 3 — Step 1 dot executes */
+  .sendrit-anim .sd1-ring  { stroke-dasharray: 75.4; stroke-dashoffset: 75.4; transition: stroke-dashoffset 400ms ease-out; will-change: stroke-dashoffset; }
+  .sendrit-anim .sd1-ring.draw { stroke-dashoffset: 0; }
+  .sendrit-anim .sd1-fill  { opacity: 0; transition: opacity 200ms ease-out; will-change: opacity; }
+  .sendrit-anim .sd1-fill.fill { opacity: 1; }
+  .sendrit-anim .sd1-check { stroke-dasharray: 22; stroke-dashoffset: 22; transition: stroke-dashoffset 300ms ease-out; will-change: stroke-dashoffset; }
+  .sendrit-anim .sd1-check.draw { stroke-dashoffset: 0; }
+  .sendrit-anim .sd1-pulse { opacity: 0; transform-box: fill-box; transform-origin: center; }
+  .sendrit-anim .sd1-pulse.pulse { animation: sendritPulse 500ms ease-out; }
+  @keyframes sendritPulse { 0% { opacity: 0.6; transform: scale(1); } 100% { opacity: 0; transform: scale(2.2); } }
+
+  /* Step 1 status — word-by-word reveal + green number pop */
+  .sendrit-anim .sd-anim-status { opacity: 0; transition: opacity 300ms ease-out; }
+  .sendrit-anim .sd-anim-status.show { opacity: 1; }
+  .sendrit-anim .sd-anim-status .sw { display: inline-block; opacity: 0; transform: translateY(4px); transition: opacity 250ms ease-out, transform 250ms ease-out; }
+  .sendrit-anim .sd-anim-status.show .sw1 { transition-delay: 0ms; }
+  .sendrit-anim .sd-anim-status.show .sw2 { transition-delay: 180ms; }
+  .sendrit-anim .sd-anim-status.show .sw  { opacity: 1; transform: translateY(0); }
+  .sendrit-anim .sd-anim-status.show .sw3 { animation: sendritNumPop 360ms ease-out 360ms both; }
+  @keyframes sendritNumPop { 0% { opacity: 0; transform: scale(0.8) translateY(4px); } 60% { opacity: 1; transform: scale(1.08) translateY(0); } 100% { opacity: 1; transform: scale(1); } }
+
+  /* dashed connectors draw downward (clip-path wipe keeps the dashes + reveals top->bottom) */
+  .sendrit-anim .seq-conn { position: absolute; left: 13px; top: 33px; width: 2px; height: 28px; overflow: visible; clip-path: inset(0 0 100% 0); transition: clip-path 400ms ease-in-out, opacity 300ms ease-out; will-change: clip-path; }
+  .sendrit-anim .seq-conn.draw { clip-path: inset(0 0 0% 0); }
+
+  /* Phase 4 — Step 2 in progress */
+  .sendrit-anim .sd2-arc { transform-box: fill-box; transform-origin: center; opacity: 0; will-change: transform; }
+  .sendrit-anim .sendrit-mock.s2-active .sd2-arc  { opacity: 1; animation: sendritSpin 1s linear infinite; }
+  .sendrit-anim .sendrit-mock.s2-active .sd2-ring { animation: sendritBorderPulse 1.5s ease-in-out infinite; }
+  @keyframes sendritSpin { to { transform: rotate(360deg); } }
+  @keyframes sendritBorderPulse { 0%, 100% { stroke: rgba(255,255,255,0.3); } 50% { stroke: rgba(255,255,255,0.9); } }
+  .sendrit-anim .seq-status.running.sd-anim-status.show {
+    background: linear-gradient(100deg, #F97316 35%, #FFD9B8 50%, #F97316 65%);
+    background-size: 220% 100%; -webkit-background-clip: text; background-clip: text;
+    -webkit-text-fill-color: transparent; color: transparent;
+    animation: sendritShimmer 2.5s linear infinite;
+  }
+  @keyframes sendritShimmer { 0% { background-position: 120% 0; } 100% { background-position: -120% 0; } }
+  .sendrit-anim .sd2-prog { position: absolute; left: 16px; right: 16px; bottom: 5px; height: 2px; border-radius: 2px; background: rgba(255,255,255,0.08); overflow: hidden; }
+  .sendrit-anim .sd2-prog-fill { width: 0%; height: 100%; border-radius: 2px; background: #F97316; transition: width 1800ms ease-in-out; will-change: width; }
+  .sendrit-anim .sd2-prog.go .sd2-prog-fill { width: 65%; }
+
+  /* Phase 5 — Step 3 stirs but stays queued */
+  .sendrit-anim .sd3-ring { transform-box: fill-box; transform-origin: center; }
+  .sendrit-anim .sendrit-mock.s3-active .sd3-ring { animation: sendritDim 2s ease-in-out infinite; }
+  @keyframes sendritDim { 0%, 100% { opacity: 0.3; } 50% { opacity: 0.6; } }
+
+  /* Phase 6 — loop reset (tail fade) + instant snap helper */
+  .sendrit-anim .sendrit-mock.resetting .seq-row  { opacity: 0.35; }
+  .sendrit-anim .sendrit-mock.resetting .seq-row.s3lit { opacity: 0.35; }
+  .sendrit-anim .sendrit-mock.resetting .seq-conn { opacity: 0; }
+  .sendrit-anim .sendrit-mock.resetting .sd2-arc  { animation-play-state: paused; }
+  .sendrit-anim .sendrit-mock.no-trans,
+  .sendrit-anim .sendrit-mock.no-trans * { transition: none !important; animation: none !important; }
+
+  @media (prefers-reduced-motion: reduce) {
+    .sendrit-anim::after { display: none !important; }
+    .sendrit-anim *, .sendrit-anim *::before, .sendrit-anim *::after { animation: none !important; transition: none !important; }
+    .sendrit-anim .card-eyebrow, .sendrit-anim > h3, .sendrit-anim > p, .sendrit-anim .sendrit-mock { opacity: 1 !important; transform: none !important; }
+    .sendrit-anim .seq-row { opacity: 1 !important; }
+    .sendrit-anim .seq-row:last-child { opacity: 0.55 !important; }
+    .sendrit-anim .sd1-ring, .sendrit-anim .sd1-check { stroke-dashoffset: 0 !important; }
+    .sendrit-anim .sd1-fill { opacity: 1 !important; }
+    .sendrit-anim .sd1-pulse { opacity: 0 !important; }
+    .sendrit-anim .sd-anim-status, .sendrit-anim .sd-anim-status .sw { opacity: 1 !important; transform: none !important; }
+    .sendrit-anim .seq-status.running.sd-anim-status { color: var(--highlight-orange) !important; -webkit-text-fill-color: currentColor !important; background: none !important; }
+    .sendrit-anim .seq-conn { clip-path: inset(0 0 0% 0) !important; opacity: 1 !important; }
+    .sendrit-anim .sd2-arc { opacity: 1 !important; }
+    .sendrit-anim .sd2-prog-fill { width: 65% !important; }
+  }
+
+  /* --- Snaarp Mail --- */
+  .snaarp-mock { display: flex; flex-direction: column; gap: 12px; padding: 18px; }
+  .snaarp-head {
+    display: flex; align-items: center; gap: 12px;
+    background: rgba(108,43,223,0.06); border: 1px solid var(--bg-card-border);
+    border-radius: 10px; padding: 12px 14px;
+  }
+  .av-stack { display: flex; }
+  .av-stack .as {
+    width: 26px; height: 26px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 10px; font-weight: 700; color: #fff;
+    border: 2px solid var(--bg-card); margin-left: -8px;
+  }
+  .av-stack .as:first-child { margin-left: 0; }
+  .av-stack .a { background: #6C2BDF; }
+  .av-stack .b { background: #2563EB; }
+  .av-stack .c { background: #14B8A6; }
+  .av-stack .more { background: #3A4468; }
+  /* avatar images reuse the initial-pill sizing */
+  img.zl-av, img.nb-av, .av-stack img.as, .testi-author img.av { object-fit: cover; display: block; }
+  .snaarp-title { flex: 1; font-size: 14px; font-weight: 700; color: #fff; }
+  .snaarp-badge {
+    font-size: 11px; font-weight: 600; color: var(--brand-light);
+    background: rgba(108,43,223,0.15); border: 1px solid rgba(108,43,223,0.4);
+    border-radius: 20px; padding: 4px 11px; white-space: nowrap;
+  }
+  .snaarp-reply {
+    display: flex; align-items: flex-start; gap: 11px;
+    background: rgba(255,255,255,0.02); border: 1px solid var(--bg-card-border);
+    border-radius: 10px; padding: 12px 14px;
+  }
+  .sr-dot { width: 8px; height: 8px; border-radius: 50%; margin-top: 5px; flex-shrink: 0; }
+  .sr-dot.blue { background: #3B82F6; }
+  .sr-dot.gray { background: var(--text-muted); }
+  .sr-body { flex: 1; min-width: 0; }
+  .sr-top { font-size: 13px; }
+  .sr-name { font-weight: 700; color: #fff; }
+  .sr-tag { color: var(--text-secondary); font-weight: 500; }
+  .sr-quote { font-size: 12px; font-style: italic; color: var(--text-secondary); margin-top: 3px; }
+  .sr-time { font-size: 11px; color: var(--text-muted); flex-shrink: 0; }
+
+  /* =========================================================
+     SNAARP MAIL CARD — live inbox storytelling loop
+     ---------------------------------------------------------
+     Scoped entirely to .snaarp-anim. Text + panel + header enter
+     ONCE via .in-view; the reply rows, typewriter previews, dot
+     pulses and mailbox counter are driven by a single master
+     setTimeout chain that loops ~8s. Only opacity / transform /
+     border-color animate -> zero layout shift (the Dana row is
+     pre-rendered, occupying reserved space at opacity 0).
+  ========================================================= */
+  /* Phase 1 — text entrance (once) */
+  .snaarp-anim .card-eyebrow,
+  .snaarp-anim > h3,
+  .snaarp-anim > p,
+  .snaarp-anim .snaarp-mock { opacity: 0; will-change: opacity, transform; }
+  .snaarp-anim .card-eyebrow { transform: translateY(8px);  transition: opacity 350ms ease-out, transform 350ms ease-out; }
+  .snaarp-anim > h3          { transform: translateY(14px); transition: opacity 420ms ease-out, transform 420ms ease-out; transition-delay: 80ms; }
+  .snaarp-anim > p           { transform: translateY(8px);  transition: opacity 350ms ease-out, transform 350ms ease-out; transition-delay: 190ms; }
+  /* Phase 2 — panel entrance (once) + border-color (for the new-message flash) */
+  .snaarp-anim .snaarp-mock {
+    transform: translateY(20px) scale(0.97);
+    transition: opacity 500ms cubic-bezier(0.22,1,0.36,1) 450ms,
+                transform 500ms cubic-bezier(0.22,1,0.36,1) 450ms,
+                border-color 600ms ease-out;
+  }
+  .snaarp-anim.in-view .card-eyebrow,
+  .snaarp-anim.in-view > h3,
+  .snaarp-anim.in-view > p           { opacity: 1; transform: translateY(0); }
+  .snaarp-anim.in-view .snaarp-mock  { opacity: 1; transform: translateY(0) scale(1); }
+  .snaarp-anim .snaarp-mock.flash    { border-color: rgba(139,77,255,0.85); transition: border-color 200ms ease-out; }
+
+  /* Phase 3 — header assembles (once): avatars stagger, +9 pops, title + pill fade */
+  .snaarp-anim .av-stack { position: relative; }
+  .snaarp-anim .av-stack .as { opacity: 0; transform: translateX(-8px); transition: opacity 250ms ease-out, transform 250ms ease-out; will-change: opacity, transform; }
+  .snaarp-anim.in-view .av-stack .as { opacity: 1; transform: translateX(0); }
+  .snaarp-anim.in-view .av-stack .as:nth-child(1) { transition-delay: 700ms; }
+  .snaarp-anim.in-view .av-stack .as:nth-child(2) { transition-delay: 780ms; }
+  .snaarp-anim.in-view .av-stack .as:nth-child(3) { transition-delay: 860ms; }
+  .snaarp-anim.in-view .av-stack .more { animation: snaarpPop 300ms ease-out 940ms both; }
+  @keyframes snaarpPop { 0% { opacity: 0; transform: translateX(-8px) scale(0.6); } 60% { opacity: 1; transform: translateX(0) scale(1.1); } 100% { opacity: 1; transform: scale(1); } }
+  .snaarp-anim .snaarp-title { opacity: 0; transition: opacity 300ms ease-out; transition-delay: 1020ms; }
+  .snaarp-anim.in-view .snaarp-title { opacity: 1; }
+  .snaarp-anim .snaarp-badge { opacity: 0; transform: scale(0.85); transition: opacity 300ms ease-out, transform 300ms ease-out; transition-delay: 1150ms; will-change: opacity, transform; }
+  .snaarp-anim.in-view .snaarp-badge { opacity: 1; transform: scale(1); }
+
+  /* idle — soft light sweep across the stacked avatars (every 5s) */
+  .snaarp-anim .av-stack::after {
+    content: ""; position: absolute; top: -2px; bottom: -2px; left: 0; right: 0;
+    background: linear-gradient(100deg, transparent 35%, rgba(255,255,255,0.55) 50%, transparent 65%);
+    pointer-events: none; opacity: 0; transform: translateX(-120%);
+  }
+  .snaarp-anim.in-view .av-stack::after { animation: snaarpShimmer 5s ease-in-out 1.6s infinite; }
+  @keyframes snaarpShimmer {
+    0% { transform: translateX(-120%); opacity: 0; }
+    3% { opacity: 0.15; }
+    16% { transform: translateX(120%); opacity: 0.15; }
+    19%, 100% { transform: translateX(120%); opacity: 0; }
+  }
+
+  /* mailbox slot-machine counter */
+  .snaarp-anim .mb-roll { display: inline-block; position: relative; overflow: hidden; height: 1.15em; line-height: 1.15em; vertical-align: -0.2em; text-align: right; }
+  .snaarp-anim .mb-cur, .snaarp-anim .mb-next { display: block; transition: transform 250ms ease-out; will-change: transform; }
+  .snaarp-anim .mb-next { position: absolute; left: 0; right: 0; top: 0; transform: translateY(100%); }
+  .snaarp-anim .mb-roll.mb-instant .mb-cur,
+  .snaarp-anim .mb-roll.mb-instant .mb-next { transition: none !important; }
+
+  /* Phase 4 — reply rows (looped). Marcus + Priya slide in from the left,
+     Dana slides up from below; all keep reserved space (opacity-only at rest). */
+  .snaarp-anim .r-priya, .snaarp-anim .r-marcus {
+    opacity: 0; transform: translateX(-14px);
+    transition: opacity 380ms ease-out, transform 380ms ease-out; will-change: opacity, transform;
+  }
+  .snaarp-anim .r-priya.in, .snaarp-anim .r-marcus.in { opacity: 1; transform: translateX(0); }
+  .snaarp-anim .r-dana {
+    opacity: 0; transform: translateY(24px);
+    transition: opacity 450ms cubic-bezier(0.22,1,0.36,1), transform 450ms cubic-bezier(0.22,1,0.36,1); will-change: opacity, transform;
+  }
+  .snaarp-anim .r-dana.in  { opacity: 1; transform: translateY(0); }
+  .snaarp-anim .r-dana.out { opacity: 0; transform: translateY(16px); transition: opacity 400ms ease-in, transform 400ms ease-in; }
+  .snaarp-anim .r-dana.snap { transition: none !important; }
+
+  /* Priya's timestamp holds until the message finishes typing */
+  .snaarp-anim .r-priya .sr-time { opacity: 0; transition: opacity 250ms ease-out; }
+  .snaarp-anim .r-priya .sr-time.show { opacity: 1; }
+
+  /* live notification beacon — expanding ring under blue unread dots */
+  .snaarp-anim .sr-dot.blue { position: relative; }
+  .snaarp-anim .sr-dot.blue.pulsing::after {
+    content: ""; position: absolute; inset: 0; border-radius: 50%; background: #3B82F6;
+    transform-origin: center; animation: snaarpPulse 1.5s ease-out infinite; pointer-events: none;
+  }
+  .snaarp-anim .r-dana .sr-dot.blue.pulsing::after { animation-duration: 1.1s; } /* newer = more urgent */
+  @keyframes snaarpPulse { 0% { transform: scale(1); opacity: 0.7; } 100% { transform: scale(2.5); opacity: 0; } }
+
+  /* typewriter preview — dim draft while typing, blinking cursor.
+     Fixed single-line height so an EMPTY preview (before/after typing)
+     reserves the exact same vertical space as a full one -> the row, the
+     panel and the whole card never change height as messages type/clear. */
+  .snaarp-anim .sr-quote { white-space: nowrap; overflow: hidden; min-height: 1.4em; line-height: 1.4; }
+  .snaarp-anim .sr-type { opacity: 1; }
+  .snaarp-anim .sr-quote.typing .sr-type { opacity: 0.75; }
+  .snaarp-anim .sr-cursor { display: none; font-style: normal; color: #fff; margin-left: 1px; }
+  .snaarp-anim .sr-quote.typing .sr-cursor { display: inline; animation: snaarpBlink 530ms step-end infinite; }
+  @keyframes snaarpBlink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+
+  @media (prefers-reduced-motion: reduce) {
+    .snaarp-anim *, .snaarp-anim *::before, .snaarp-anim *::after { animation: none !important; transition: none !important; }
+    .snaarp-anim .card-eyebrow, .snaarp-anim > h3, .snaarp-anim > p, .snaarp-anim .snaarp-mock { opacity: 1 !important; transform: none !important; }
+    .snaarp-anim .av-stack .as, .snaarp-anim .snaarp-title, .snaarp-anim .snaarp-badge { opacity: 1 !important; transform: none !important; }
+    .snaarp-anim .r-priya, .snaarp-anim .r-marcus { opacity: 1 !important; transform: none !important; }
+    .snaarp-anim .r-dana { opacity: 0 !important; }
+    .snaarp-anim .r-priya .sr-time { opacity: 1 !important; }
+    .snaarp-anim .sr-type { opacity: 1 !important; }
+    .snaarp-anim .sr-cursor { display: none !important; }
+  }
+
+  /* --- NeoBrain AI (full width, 3 cells) --- */
+  .nb-head { position: relative; z-index: 1; margin-bottom: 22px; }
+  .nb-head h3 { font-size: 21px; font-weight: 600; margin-bottom: 8px; }
+  .nb-head p { color: var(--text-secondary); font-size: 14px; max-width: 760px; }
+  .nb-grid {
+    position: relative; z-index: 1;
+    display: grid; grid-template-columns: 1.1fr 0.9fr 1.1fr; gap: 16px;
+  }
+  .nb-cell {
+    background: rgba(255,255,255,0.02); border: 1px solid var(--bg-card-border);
+    border-radius: 14px; padding: 18px;
+  }
+  .nb-person { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; }
+  .nb-av {
+    width: 36px; height: 36px; border-radius: 50%;
+    background: linear-gradient(135deg,#6C2BDF,#8B4DFF);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 12px; font-weight: 700; color: #fff; flex-shrink: 0;
+  }
+  .nb-name { font-size: 13px; font-weight: 700; color: #fff; }
+  .nb-role { font-size: 12px; color: var(--text-secondary); }
+  .nb-quote { font-size: 13px; font-style: italic; line-height: 1.6; color: var(--text-secondary); max-width: none; }
+  .nb-score-cell { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 14px; }
+  .nb-ring { position: relative; width: 120px; height: 120px; }
+  .nb-ring svg { width: 100%; height: 100%; }
+  .nb-ring-val {
+    position: absolute; inset: 0; display: flex; flex-direction: column;
+    align-items: center; justify-content: center; font-size: 30px; font-weight: 700; color: #fff;
+  }
+  .nb-ring-val .nb-cap { font-size: 9px; font-weight: 600; letter-spacing: 0.1em; color: var(--text-muted); margin-top: 2px; }
+  .nb-hot {
+    display: inline-flex; align-items: center; gap: 6px;
+    font-size: 12px; font-weight: 600; color: #fff;
+    background: linear-gradient(135deg,#FF6B35,#C2410C); border-radius: 20px; padding: 6px 14px;
+  }
+  .nb-hot .lucide { width: 13px; height: 13px; }
+  .nb-analysis { display: flex; flex-direction: column; gap: 16px; justify-content: center; }
+  .nb-arow { display: flex; align-items: center; justify-content: space-between; }
+  .nb-lbl { font-size: 13px; color: var(--text-secondary); }
+  .nb-pos { font-size: 13px; font-weight: 700; color: var(--green-accent); }
+  .nb-tags { display: flex; gap: 8px; }
+  .nb-tag { font-size: 10px; font-weight: 700; letter-spacing: 0.05em; border-radius: 6px; padding: 4px 9px; }
+  .nb-tag.pricing { background: rgba(108,43,223,0.2); color: var(--brand-light); border: 1px solid rgba(108,43,223,0.45); }
+  .nb-tag.meeting { background: rgba(255,107,53,0.18); color: #FF8A5B; border: 1px solid rgba(255,107,53,0.45); }
+  .nb-next { display: flex; align-items: center; gap: 12px; }
+  .nb-next-icon {
+    width: 40px; height: 40px; border-radius: 10px;
+    background: linear-gradient(135deg,#6C2BDF,#8B4DFF);
+    display: flex; align-items: center; justify-content: center; color: #fff; flex-shrink: 0;
+  }
+  .nb-next-icon .lucide { width: 18px; height: 18px; }
+  .nb-next-lbl { font-size: 12px; color: var(--text-secondary); }
+  .nb-next-action { font-size: 14px; font-weight: 700; color: #fff; }
+
+  /* =========================================================
+     NEOBRAIN AI CARD — cinematic AI-analysis storytelling loop
+     ---------------------------------------------------------
+     Scoped entirely to .neobrain-anim. Text + grid enter once via
+     .in-view; a single master async controller (cancellable) drives
+     the message -> processing -> analysis -> verdict story and loops
+     ~9s. Only opacity / transform / stroke-dashoffset animate.
+  ========================================================= */
+  /* Phase 1 — text entrance (once) */
+  .neobrain-anim .nb-head .card-eyebrow,
+  .neobrain-anim .nb-head h3,
+  .neobrain-anim .nb-head p,
+  .neobrain-anim .nb-grid { opacity: 0; will-change: opacity, transform; }
+  .neobrain-anim .nb-head .card-eyebrow { transform: translateY(8px);  transition: opacity 350ms ease-out, transform 350ms ease-out; }
+  .neobrain-anim .nb-head h3             { transform: translateY(14px); transition: opacity 420ms ease-out, transform 420ms ease-out; transition-delay: 90ms; }
+  .neobrain-anim .nb-head p              { transform: translateY(8px);  transition: opacity 350ms ease-out, transform 350ms ease-out; transition-delay: 200ms; }
+  /* Phase 2 — panel container enters (once) */
+  .neobrain-anim .nb-grid { transform: translateY(22px) scale(0.97); transition: opacity 520ms cubic-bezier(0.22,1,0.36,1) 500ms, transform 520ms cubic-bezier(0.22,1,0.36,1) 500ms; }
+  .neobrain-anim.in-view .nb-head .card-eyebrow,
+  .neobrain-anim.in-view .nb-head h3,
+  .neobrain-anim.in-view .nb-head p { opacity: 1; transform: translateY(0); }
+  .neobrain-anim.in-view .nb-grid   { opacity: 1; transform: translateY(0) scale(1); }
+
+  /* the three panels start dim; each brightens when its results fire */
+  .neobrain-anim .nb-cell { opacity: 0.15; transition: opacity 350ms ease-out; will-change: opacity; }
+  .neobrain-anim .nb-cell.lit { opacity: 1; }
+
+  /* Phase 3 — left panel: avatar arrival + glow, name/role, reading scan line */
+  .neobrain-anim .nb-reply { position: relative; overflow: hidden; }
+  .neobrain-anim .nb-av-wrap { position: relative; display: inline-flex; flex-shrink: 0; }
+  .neobrain-anim .nb-av { transform: scale(0); transition: none; }
+  .neobrain-anim .nb-av.in { animation: nbAvIn 350ms cubic-bezier(0.34,1.56,0.64,1) both; }
+  .neobrain-anim .nb-av-wrap::after {
+    content: ""; position: absolute; inset: 0; border-radius: 50%;
+    border: 2px solid rgba(139,77,255,0.6); opacity: 0; transform-origin: center; pointer-events: none;
+  }
+  .neobrain-anim .nb-av-wrap.glow::after { animation: nbAvGlow 500ms ease-out; }
+  @keyframes nbAvIn  { 0% { transform: scale(0); } 60% { transform: scale(1.1); } 100% { transform: scale(1); } }
+  @keyframes nbAvGlow { 0% { transform: scale(1); opacity: 0.5; } 100% { transform: scale(2); opacity: 0; } }
+  .neobrain-anim .nb-name { opacity: 0; transform: translateX(-10px); transition: opacity 300ms ease-out, transform 300ms ease-out; }
+  .neobrain-anim .nb-name.in { opacity: 1; transform: translateX(0); }
+  .neobrain-anim .nb-role { opacity: 0; transition: opacity 250ms ease-out; }
+  .neobrain-anim .nb-role.in { opacity: 0.6; }
+  .neobrain-anim .nb-scan {
+    position: absolute; left: 0; right: 0; top: 0; height: 1px;
+    background: rgba(167,118,248,0.3); opacity: 0; pointer-events: none; will-change: transform, opacity;
+  }
+  .neobrain-anim .nb-scan.run { animation: nbScan 800ms ease-in-out; }
+  @keyframes nbScan { 0% { transform: translateY(40px); opacity: 0; } 15% { opacity: 0.3; } 85% { opacity: 0.3; } 100% { transform: translateY(150px); opacity: 0; } }
+
+  /* typewriter (quote + Positive) — dim draft while typing, blinking cursor */
+  .neobrain-anim .nb-quote { min-height: 4.8em; } /* reserve space so typing causes no layout shift */
+  .neobrain-anim .nb-type { opacity: 1; }
+  .neobrain-anim .nb-quote.typing .nb-type { opacity: 0.75; }
+  .neobrain-anim .nb-cursor, .neobrain-anim .nb-pos-cursor { display: none; font-style: normal; color: #fff; }
+  .neobrain-anim .nb-quote.typing .nb-cursor { display: inline; animation: nbBlink 530ms step-end infinite; }
+  @keyframes nbBlink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+
+  /* Phase 4 — processing shimmer sweeps across the whole grid */
+  .neobrain-anim .nb-grid { position: relative; }
+  .neobrain-anim .nb-shimmer {
+    position: absolute; top: 0; bottom: 0; left: 0; width: 100%; z-index: 5;
+    background: linear-gradient(90deg, transparent 0, rgba(255,255,255,0.06) 20px, transparent 40px);
+    opacity: 0; pointer-events: none; transform: translateX(-100%); will-change: transform, opacity;
+  }
+  .neobrain-anim .nb-shimmer.run { animation: nbProcess 600ms ease-in-out; }
+  @keyframes nbProcess { 0% { transform: translateX(-100%); opacity: 0; } 10% { opacity: 1; } 90% { opacity: 1; } 100% { transform: translateX(100%); opacity: 0; } }
+
+  /* Phase 5 — center ring extras */
+  .neobrain-anim .nb-ring-fill { will-change: stroke-dashoffset; }
+  .neobrain-anim .nb-cap { opacity: 0; transition: opacity 300ms ease-out; }
+  .neobrain-anim .nb-cap.show { opacity: 0.5; }
+  .neobrain-anim .nb-ring-shimmer { opacity: 0; transform-box: fill-box; transform-origin: center; }
+  .neobrain-anim.analyzed .nb-ring-shimmer { opacity: 0.25; animation: nbRingRotate 4s linear infinite; }
+  @keyframes nbRingRotate { to { transform: rotate(360deg); } }
+  .neobrain-anim .nb-burst line { stroke: #A576F8; stroke-width: 1; opacity: 0; transform-box: view-box; transform-origin: 60px 60px; }
+  .neobrain-anim .nb-burst.run line { animation: nbBurst 400ms ease-out; }
+  @keyframes nbBurst { 0% { transform: scale(0.2); opacity: 0.5; } 100% { transform: scale(1); opacity: 0; } }
+
+  /* Phase 5 — right panel results */
+  .neobrain-anim .nb-lbl-sent, .neobrain-anim .nb-lbl-det,
+  .neobrain-anim .nb-next-lbl { opacity: 0; transition: opacity 280ms ease-out; }
+  .neobrain-anim .nb-lbl-sent.show, .neobrain-anim .nb-lbl-det.show,
+  .neobrain-anim .nb-next-lbl.show { opacity: 0.6; }
+  .neobrain-anim .nb-pos { display: inline-flex; }
+  .neobrain-anim .nb-pos.pulse { animation: nbPosPulse 200ms ease-out; }
+  .neobrain-anim.analyzed .nb-pos { animation: nbPosBreathe 3s ease-in-out infinite; }
+  @keyframes nbPosPulse { 0% { transform: scale(1); } 50% { transform: scale(1.04); } 100% { transform: scale(1); } }
+  @keyframes nbPosBreathe { 0%, 100% { opacity: 1; } 50% { opacity: 0.7; } }
+  .neobrain-anim .nb-tag { opacity: 0; will-change: transform, opacity; }
+  .neobrain-anim .nb-tag.stamp { animation: nbStamp 280ms ease-out both; }
+  .neobrain-anim .nb-tag.flash-on { background: rgba(255,255,255,0.55) !important; }
+  @keyframes nbStamp { 0% { opacity: 0; transform: scale(1.4); } 60% { opacity: 1; transform: scale(0.95); } 100% { opacity: 1; transform: scale(1); } }
+  .neobrain-anim .nb-next-icon { opacity: 0; transform: scale(0.5); position: relative; }
+  .neobrain-anim .nb-next-icon.in { animation: nbArrowIn 350ms cubic-bezier(0.34,1.56,0.64,1) both; }
+  @keyframes nbArrowIn { 0% { opacity: 0; transform: scale(0.5); } 60% { opacity: 1; transform: scale(1.1); } 100% { opacity: 1; transform: scale(1); } }
+  .neobrain-anim .nb-next-icon::after {
+    content: ""; position: absolute; inset: 0; border-radius: 10px;
+    border: 2px solid rgba(139,77,255,0.5); opacity: 0; transform-origin: center; pointer-events: none;
+  }
+  .neobrain-anim .nb-next-icon.pulsing::after { animation: nbArrowGlow 3s ease-out infinite; }
+  @keyframes nbArrowGlow { 0% { transform: scale(1); opacity: 0.4; } 70%, 100% { transform: scale(1.8); opacity: 0; } }
+  .neobrain-anim .nb-next-action { opacity: 0; transform: translateX(-6px); transition: opacity 300ms ease-out, transform 300ms ease-out; }
+  .neobrain-anim .nb-next-action.in { opacity: 1; transform: translateX(0); }
+
+  /* Phase 6 — Hot lead verdict + center flash */
+  .neobrain-anim .nb-hot { opacity: 0; transform: translateY(12px) scale(0.8); will-change: transform, opacity; }
+  .neobrain-anim .nb-hot.in { animation: nbHotDrop 450ms cubic-bezier(0.34,1.56,0.64,1) both; }
+  @keyframes nbHotDrop { 0% { opacity: 0; transform: translateY(12px) scale(0.8); } 60% { opacity: 1; transform: translateY(0) scale(1.08); } 100% { opacity: 1; transform: translateY(0) scale(1); } }
+  .neobrain-anim .nb-hot.flicker svg { animation: nbFlameLand 600ms ease-in-out; }
+  .neobrain-anim.analyzed .nb-hot svg { animation: nbFlameIdle 2s ease-in-out infinite; }
+  @keyframes nbFlameLand { 0% { opacity: 1; } 25% { opacity: 0.6; } 50% { opacity: 1; } 70% { opacity: 0.7; } 100% { opacity: 1; } }
+  @keyframes nbFlameIdle { 0% { opacity: 1; } 30% { opacity: 0.5; } 55% { opacity: 1; } 80% { opacity: 0.8; } 100% { opacity: 1; } }
+  .neobrain-anim .nb-flash {
+    position: absolute; inset: 0; border-radius: 14px; background: rgba(249,115,22,0.06);
+    opacity: 0; pointer-events: none;
+  }
+  .neobrain-anim .nb-flash.run { animation: nbVerdictFlash 400ms ease-in-out; }
+  @keyframes nbVerdictFlash { 0% { opacity: 0; } 40% { opacity: 1; } 100% { opacity: 0; } }
+  .neobrain-anim .nb-score-cell { position: relative; }
+
+  @media (prefers-reduced-motion: reduce) {
+    .neobrain-anim *, .neobrain-anim *::before, .neobrain-anim *::after { animation: none !important; transition: none !important; }
+    .neobrain-anim .nb-head .card-eyebrow, .neobrain-anim .nb-head h3, .neobrain-anim .nb-head p, .neobrain-anim .nb-grid { opacity: 1 !important; transform: none !important; }
+    .neobrain-anim .nb-cell { opacity: 1 !important; }
+    .neobrain-anim .nb-av { transform: none !important; }
+    .neobrain-anim .nb-name, .neobrain-anim .nb-role, .neobrain-anim .nb-cap, .neobrain-anim .nb-tag,
+    .neobrain-anim .nb-next-icon, .neobrain-anim .nb-next-action, .neobrain-anim .nb-hot,
+    .neobrain-anim .nb-lbl-sent, .neobrain-anim .nb-lbl-det, .neobrain-anim .nb-next-lbl { opacity: 1 !important; transform: none !important; }
+    .neobrain-anim .nb-cursor, .neobrain-anim .nb-scan, .neobrain-anim .nb-shimmer, .neobrain-anim .nb-flash, .neobrain-anim .nb-ring-shimmer, .neobrain-anim .nb-burst { display: none !important; }
+  }
+
+  /* =========================================================
+     7. PRICING
+  ========================================================= */
+  .pricing-layout {
+    display: grid;
+    grid-template-columns: 42% 1fr;
+    gap: 56px;
+    align-items: center;
+  }
+  .pricing-left .section-label { margin-bottom: 18px; }
+  .pricing-left h2 { font-size: 42px; font-weight: 700; line-height: 1.08; letter-spacing: -0.02em; margin-bottom: 20px; }
+  .pricing-left h2 .accent { color: #C4B5F0; }
+  .pricing-left > p { color: var(--text-secondary); font-size: 15px; margin-bottom: 30px; max-width: 380px; }
+  .price-features { display: flex; flex-direction: column; gap: 16px; margin-bottom: 34px; }
+  .price-features li { display: flex; align-items: center; gap: 13px; font-size: 15px; color: #cdd6ee; }
+
+  /* purple circular check */
+  .pc-check {
+    width: 22px; height: 22px; border-radius: 50%;
+    background: linear-gradient(135deg, #9B6BFF 0%, #6C2BDF 100%);
+    display: inline-flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .pc-check .lucide { width: 13px; height: 13px; color: #fff; stroke-width: 3.2; }
+
+  /* outer container card */
+  .pricing-cards-wrap {
+    position: relative;
+    background: #071224;
+    border: 1px solid var(--bg-card-border);
+    border-radius: 26px;
+    padding: 42px;
+  }
+  .pricing-pill {
+    position: absolute;
+    top: -17px; left: 50%; transform: translateX(-50%);
+    display: inline-flex; align-items: center; gap: 6px;
+    background: #EDE9FE; color: #4C2A85;
+    font-size: 13px; font-weight: 600;
+    padding: 8px 18px; border-radius: 999px;
+    white-space: nowrap;
+    box-shadow: 0 8px 22px -8px rgba(108,43,223,0.55);
+  }
+  .pricing-pill .lucide { width: 14px; height: 14px; color: #6C2BDF; }
+
+  .pricing-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 26px; position: relative; align-items: stretch; }
+  .price-card {
+    display: flex; flex-direction: column;
+    background: #131D36;
+    border: 1px solid var(--bg-card-border);
+    border-radius: 16px;
+    padding: 28px;
+  }
+  .price-card .pc-label { font-size: 18px; font-weight: 700; color: #fff; margin-bottom: 22px; }
+  .price-card .pc-big { font-size: 50px; font-weight: 700; color: #fff; line-height: 1; }
+  .price-card .pc-sub { font-size: 14px; color: var(--text-secondary); margin: 10px 0 22px; }
+  .price-card ul { display: flex; flex-direction: column; gap: 16px; }
+  .price-card li { display: flex; align-items: center; gap: 11px; font-size: 14px; color: #cdd6ee; }
+  .price-card .pc-from { margin-top: auto; padding-top: 26px; }
+  .price-card .pc-from .from-lbl { color: var(--text-secondary); font-size: 15px; }
+  .price-card .pc-from .from-amt { font-size: 42px; font-weight: 700; color: #fff; line-height: 1; }
+  .price-card .pc-from .from-amt span { font-size: 15px; font-weight: 500; color: var(--text-secondary); }
+
+  /* plus connector between cards */
+  .pc-plus {
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    width: 46px; height: 46px; border-radius: 50%;
+    background: linear-gradient(135deg, #9B6BFF 0%, #6C2BDF 100%);
+    display: flex; align-items: center; justify-content: center;
+    z-index: 2;
+    box-shadow: 0 10px 26px -6px rgba(108,43,223,0.6);
+  }
+  .pc-plus .lucide { width: 22px; height: 22px; color: #fff; stroke-width: 2.5; }
+
+  .pricing-cta { text-align: center; margin-top: 36px; }
+
+  /* =========================================================
+     8. INTEGRATIONS
+  ========================================================= */
+  .integrations-layout {
+    display: grid;
+    grid-template-columns: 1fr minmax(0, 452px);
+    gap: 64px;
+    align-items: center;
+  }
+  .int-left .int-pill {
+    display: inline-flex; align-items: center; gap: 7px;
+    background: #F3F1FB; color: #2A2342;
+    font-size: 14px; font-weight: 600;
+    padding: 8px 16px; border-radius: 999px;
+    margin-bottom: 24px;
+  }
+  .int-left .int-pill .lucide { width: 15px; height: 15px; color: #6C2BDF; }
+  .int-left h2 { font-size: 44px; font-weight: 700; line-height: 1.08; letter-spacing: -0.02em; margin-bottom: 20px; }
+  .int-left h2 .accent { color: #C4B5F0; }
+  .int-left p { color: var(--text-secondary); font-size: 15px; max-width: 400px; }
+
+  .integrations-frame {
+    background: #071224;
+    border: 1px solid var(--bg-card-border);
+    border-radius: 24px;
+    padding: 22px;
+  }
+  .integrations-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+  }
+  .int-tile {
+    aspect-ratio: 1;
+    border-radius: 18px;
+    background: #0B1326;
+    border: 1px solid #1A2040;
+    display: flex; align-items: center; justify-content: center;
+    transition: transform 0.2s ease, border-color 0.2s ease;
+  }
+  .int-tile img { width: 56%; height: 56%; object-fit: contain; }
+  .int-tile.empty { background: transparent; border-color: #141C33; }
+  .int-tile.white { background: #fff; }
+  .int-tile.fill img { width: 100%; height: 100%; border-radius: 16px; }
+  .int-tile:not(.empty):hover { transform: translateY(-3px); border-color: var(--brand); }
+  .int-tile.snov { flex-direction: column; background: #2A2150; border-color: #3A2F6E; gap: 2px; }
+  .int-tile.snov b { color: #fff; font-size: 19px; font-weight: 800; line-height: 1; }
+  .int-tile.snov span { color: #A78BFA; font-size: 12px; font-weight: 700; }
+
+  /* =========================================================
+     9. TESTIMONIALS
+  ========================================================= */
+  .testi-card { display: flex; flex-direction: column; }
+  .stars { color: var(--highlight-yellow); font-size: 15px; letter-spacing: 2px; margin-bottom: 14px; }
+  .testi-card .quote { color: #fff; font-size: 15px; line-height: 1.6; margin-bottom: 20px; flex: 1; }
+  .testi-author { display: flex; align-items: center; gap: 12px; }
+  .testi-author .av {
+    width: 38px; height: 38px; border-radius: 50%;
+    background: linear-gradient(135deg, #2A3155, #3A4468);
+    flex-shrink: 0;
+  }
+  .testi-author .name { font-size: 13px; font-weight: 700; color: #fff; }
+  .testi-author .role { font-size: 12px; color: var(--text-secondary); }
+
+  /* =========================================================
+     10. SECURITY
+  ========================================================= */
+  .security-pill {
+    display: inline-flex; align-items: center; gap: 7px;
+    background: #F3F1FB; color: #2A2342;
+    font-size: 14px; font-weight: 600;
+    padding: 8px 16px; border-radius: 999px;
+    margin-bottom: 24px;
+  }
+  .security-pill .lucide { width: 15px; height: 15px; color: #6C2BDF; }
+
+  .badges-row {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    gap: 40px;
+  }
+  .comp-badge {
+    width: 92px; height: 92px;
+    flex-shrink: 0;
+    transition: transform 0.25s ease;
+  }
+  .comp-badge img { width: 100%; height: 100%; object-fit: contain; display: block; }
+  .comp-badge:hover { transform: translateY(-4px) scale(1.04); }
+
+  /* =========================================================
+     11. FINAL CTA
+  ========================================================= */
+  .final-cta {
+    position: relative;
+    text-align: center;
+    padding: 100px 0;
+    overflow: hidden;
+  }
+  .final-cta::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse at 50% 50%, rgba(108,43,223,0.1) 0%, transparent 70%);
+    z-index: -1;
+  }
+  .final-cta h2 { font-size: 40px; font-weight: 700; letter-spacing: -0.02em; margin-bottom: 16px; }
+  .final-cta > .container > p { color: var(--text-secondary); font-size: 16px; margin-bottom: 30px; }
+  .final-buttons { display: flex; gap: 14px; justify-content: center; margin-bottom: 30px; }
+  .final-buttons .btn-primary { padding: 14px 32px; }
+  .final-buttons .btn-ghost { padding: 14px 32px; }
+  .final-trust {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 32px;
+    color: var(--text-muted);
+    font-size: 13px;
+  }
+  .final-trust .item { display: flex; align-items: center; gap: 7px; }
+
+  /* =========================================================
+     12. FOOTER
+  ========================================================= */
+  .footer {
+    position: relative;
+    overflow: hidden;
+    border-top: none;
+    padding: 76px 0 38px;
+    background:
+      radial-gradient(620px 420px at 12% -12%, rgba(138,104,255,0.55) 0%, transparent 62%),
+      linear-gradient(135deg, #3A1D8A 0%, #2C1568 55%, #25115C 100%);
+  }
+  .footer::before {
+    content: "";
+    position: absolute; inset: 0;
+    background-image:
+      radial-gradient(rgba(255,255,255,0.85) 1px, transparent 1.6px),
+      radial-gradient(rgba(255,255,255,0.6) 1px, transparent 1.6px);
+    background-size: 92px 92px, 134px 134px;
+    background-position: 0 0, 46px 64px;
+    opacity: 0.10;
+    pointer-events: none;
+  }
+  .footer .container { position: relative; z-index: 1; }
+  .footer-top {
+    display: grid;
+    grid-template-columns: 1.7fr 1fr 1fr 1fr 1.4fr;
+    gap: 32px;
+    margin-bottom: 56px;
+  }
+  .footer-logo { font-size: 34px; font-weight: 800; color: #fff; letter-spacing: -0.01em; display: inline-block; margin-bottom: 20px; }
+  .footer-brand .tagline { color: #C9BEEC; font-size: 15px; line-height: 1.6; max-width: 320px; margin-bottom: 30px; }
+  .social-row { display: flex; gap: 18px; }
+  .social-row a {
+    color: #EFEAFE;
+    display: inline-flex; align-items: center; justify-content: center;
+    transition: color 0.2s ease, transform 0.2s ease;
+  }
+  .social-row a svg { width: 18px; height: 18px; fill: currentColor; }
+  .social-row a:hover { color: #fff; transform: translateY(-2px); }
+  .footer-col h4 {
+    font-size: 16px; font-weight: 700; color: #fff;
+    text-transform: none; letter-spacing: 0;
+    margin-bottom: 20px;
+  }
+  .footer-col ul { display: flex; flex-direction: column; gap: 14px; }
+  .footer-col a, .footer-col .ftext { color: #BCAEE4; font-size: 14px; transition: color 0.2s ease; }
+  .footer-col a:hover { color: #fff; }
+  .footer-contact .c-group { margin-bottom: 18px; }
+  .footer-contact .c-label { display: block; color: #fff; font-size: 14px; font-weight: 700; margin-bottom: 6px; }
+  .footer-contact .c-val { color: #BCAEE4; font-size: 13px; line-height: 1.5; }
+  .footer-bottom {
+    border-top: 1px solid rgba(255,255,255,0.16);
+    padding-top: 26px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 16px;
+  }
+  .footer-bottom .copy,
+  .footer-bottom .since { color: #C4B8E8; font-size: 13px; letter-spacing: 0.03em; }
+
+  /* =========================================================
+     SCROLL REVEAL — reusable engine
+     ---------------------------------------------------------
+     Add  data-reveal  to ANY element to fade + lift it in as it
+     scrolls into view (fires once, never replays). Options:
+       data-reveal-delay="120"     fixed entrance delay (ms)
+       data-reveal-stagger="120"   put on a CONTAINER — its direct
+                                   data-reveal children stagger by
+                                   index * step (ms)
+       data-reveal-base="100"      stagger start offset (ms)
+     Anything already in view on load is shown instantly with no
+     animation, so nothing above the fold animates on page load.
+     (Legacy .reveal below = whole-section block reveal.)
+  ========================================================= */
+  .reveal { opacity: 0; transform: translateY(24px); transition: opacity 0.6s ease, transform 0.6s ease; }
+  .reveal.visible { opacity: 1; transform: translateY(0); }
+
+  [data-reveal] { opacity: 0; transform: translateY(24px); }
+  /* the entrance transition is added only while animating, then removed,
+     so it never overrides an element's own hover/transition rules */
+  [data-reveal].reveal-animating {
+    transition: opacity 0.6s ease, transform 0.6s ease;
+    will-change: opacity, transform;
+  }
+  [data-reveal].is-revealed { opacity: 1; transform: translateY(0); }
+
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    .reveal { opacity: 1; transform: none; transition: none; }
+    [data-reveal] { opacity: 1 !important; transform: none !important; }
+    * { transition: none !important; }
+  }
+
+  /* =========================================================
+     RESPONSIVE  ≤768px
+  ========================================================= */
+  @media (max-width: 980px) {
+    .footer-top { grid-template-columns: 1fr 1fr 1fr; }
+    .footer-brand { grid-column: 1 / -1; }
+  }
+
+  @media (max-width: 768px) {
+    .nav-links { display: none; }
+    .nav-toggle { display: block; }
+    .nav-right .login { display: none; }
+    .nav-right .btn-primary { padding: 7px 14px; }
+
+    .hero { min-height: auto; padding: 56px 0; flex-direction: column; }
+    .hero h1 { font-size: 42px; white-space: normal; }
+    .hero .container { order: 1; }
+    .hero-left { max-width: 100%; }
+    .hero-sub { max-width: 100%; }
+    .hero-dash {
+      position: relative;
+      order: 2;
+      left: auto; top: auto;
+      transform: none;
+      width: 100%;
+      max-width: 100%;
+      margin: 44px 0 0 0;
+    }
+    .hero-dash img { border-radius: 12px; }
+
+    .grid-3, .grid-2, .steps-grid,
+    .pricing-layout, .pricing-cards { grid-template-columns: 1fr; }
+    .steps-grid .step { border-right: none !important; border-bottom: 1px dashed rgba(255,255,255,0.10) !important; padding: 36px 24px; }
+    .steps-grid .step:last-child { border-bottom: none !important; }
+    .pricing-cards-wrap { padding: 32px 22px; }
+    .pc-plus { position: static; transform: none; margin: 4px auto; }
+
+    .step .arrow { display: none; }
+
+    .nb-grid { grid-template-columns: 1fr; }
+    .verify2-mock { grid-template-columns: 1fr; }
+
+    .integrations-layout { grid-template-columns: 1fr; gap: 32px; }
+    .int-left h2 { font-size: 30px; }
+    .integrations-frame { padding: 20px; }
+    .integrations-grid { gap: 12px; }
+
+    .section { padding: 64px 0; }
+    .section-head h2, .pricing-left h2 { font-size: 28px; }
+    .final-cta h2 { font-size: 30px; }
+
+    .footer-top { grid-template-columns: 1fr 1fr; }
+
+    .hero-ctas, .final-buttons { flex-wrap: wrap; }
+  }
+
+  @media (max-width: 480px) {
+    .hero h1 { font-size: 32px; }
+    .logobar .logos { gap: 16px; }
+    .logobar .logos .brand { font-size: 15px; min-width: 80px; flex: 1 1 28%; }
+    .footer-top { grid-template-columns: 1fr; }
+    .footer-bottom { flex-direction: column; align-items: flex-start; }
+  }
+
+  /* Mobile menu */
+  .mobile-menu {
+    display: none;
+    flex-direction: column;
+    gap: 4px;
+    padding: 12px 24px 20px;
+    background: var(--nav-bg);
+    -webkit-backdrop-filter: blur(12px);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--bg-card-border);
+    position: sticky;
+    top: 72px;
+    z-index: 99;
+  }
+  .mobile-menu.open { display: flex; }
+  .mobile-menu a { color: var(--text-secondary); font-size: 14px; padding: 10px 0; }
+  .mobile-menu a:hover { color: #fff; }
+  .mobile-group-label { color: var(--text-muted); font-size: 11px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; padding: 8px 0 2px; }
+  .mobile-menu a.mobile-sub { padding: 8px 0 8px 14px; font-weight: 500; color: #C7CEE2; }
+  .mobile-menu a.mobile-sub:hover { color: #fff; }
+</style>
+</head>
+<body>
+
+<!-- ===================== NAVBAR ===================== -->
+<header class="navbar">
+  <nav class="container" aria-label="Primary">
+    <a class="logo" href="#">NeoLeads</a>
+    <div class="nav-links">
+      <div class="nav-item" id="productsNav">
+        <button class="nav-trigger" type="button" aria-haspopup="true" aria-expanded="false" aria-controls="productsMenu">
+          Products <span class="caret" aria-hidden="true"><i data-lucide="chevron-down"></i></span>
+        </button>
+        <div class="mega-menu" id="productsMenu" role="menu" aria-label="Products">
+          <div class="mega-grid">
+            <a class="mega-item is-primary" role="menuitem" href="zeus-prospecting.html">
+              <span class="mega-ic"><i data-lucide="search"></i></span>
+              <span class="mega-text">
+                <span class="mega-title">Zeus</span>
+                <span class="mega-desc">Find verified decision-makers before your competitors do</span>
+              </span>
+            </a>
+            <a class="mega-item" role="menuitem" href="#platform">
+              <span class="mega-ic"><i data-lucide="zap"></i></span>
+              <span class="mega-text">
+                <span class="mega-title">Sendrit</span>
+                <span class="mega-desc">AI-written, multichannel sequences that actually get replies</span>
+              </span>
+            </a>
+            <a class="mega-item" role="menuitem" href="#platform">
+              <span class="mega-ic"><i data-lucide="badge-check"></i></span>
+              <span class="mega-text">
+                <span class="mega-title">Verifyrit</span>
+                <span class="mega-desc">Clean every email address before it costs you a bounce</span>
+              </span>
+            </a>
+            <a class="mega-item" role="menuitem" href="#platform">
+              <span class="mega-ic"><i data-lucide="inbox"></i></span>
+              <span class="mega-text">
+                <span class="mega-title">Snaarpmail</span>
+                <span class="mega-desc">Bulletproof sending infrastructure and one inbox for every reply</span>
+              </span>
+            </a>
+            <a class="mega-item" role="menuitem" href="#platform">
+              <span class="mega-ic"><i data-lucide="flame"></i></span>
+              <span class="mega-text">
+                <span class="mega-title">Warmrit</span>
+                <span class="mega-desc">Build sender reputation so your emails land not spam</span>
+              </span>
+            </a>
+            <a class="mega-item" role="menuitem" href="#platform">
+              <span class="mega-ic"><i data-lucide="brain-circuit"></i></span>
+              <span class="mega-text">
+                <span class="mega-title">NeoBrain AI</span>
+                <span class="mega-desc">The AI layer that qualifies leads and scores every conversation</span>
+              </span>
+            </a>
+          </div>
+        </div>
+      </div>
+      <a href="#testimonials">Case Studies <span class="caret" aria-hidden="true"><i data-lucide="chevron-down"></i></span></a>
+      <a href="#pricing">Pricing</a>
+      <a href="#integrations">Integration</a>
+      <a href="#features">Resources <span class="caret" aria-hidden="true"><i data-lucide="chevron-down"></i></span></a>
+      <a href="#features">Tools <span class="caret" aria-hidden="true"><i data-lucide="chevron-down"></i></span></a>
+    </div>
+    <div class="nav-right">
+      <a class="login" href="#">Log In</a>
+      <button class="btn-primary nav-cta">Get Started</button>
+      <button class="nav-toggle" aria-label="Toggle menu" aria-expanded="false" id="navToggle"><i data-lucide="menu"></i></button>
+    </div>
+  </nav>
+</header>
+<div class="mobile-menu" id="mobileMenu">
+  <span class="mobile-group-label">Products</span>
+  <a class="mobile-sub" href="zeus-prospecting.html">Zeus</a>
+  <a class="mobile-sub" href="#platform">Sendrit</a>
+  <a class="mobile-sub" href="#platform">Verifyrit</a>
+  <a class="mobile-sub" href="#platform">Snaarpmail</a>
+  <a class="mobile-sub" href="#platform">Warmrit</a>
+  <a class="mobile-sub" href="#platform">NeoBrain AI</a>
+  <a href="#testimonials">Case Studies</a>
+  <a href="#pricing">Pricing</a>
+  <a href="#integrations">Integration</a>
+  <a href="#features">Resources</a>
+  <a href="#features">Tools</a>
+  <a href="#pricing">Log In</a>
+</div>
+
+<main>
+
+<!-- ===================== HERO ===================== -->
+<section class="hero">
+  <div class="hero-dash" aria-hidden="true">
+    <img src="hero-dashboard.png" alt="" width="1062" height="1014" />
+  </div>
+  <div class="container">
+    <div class="hero-left" data-reveal-stagger="100" data-reveal-onload>
+      <span class="hero-badge" data-reveal>
+        <i data-lucide="sparkles" aria-hidden="true"></i>
+        AI Revenue Operating System
+      </span>
+      <h1 data-reveal>
+        We Find. We Engage.<br />
+        They Reply. <span class="grow">We Grow</span>
+      </h1>
+      <p class="hero-sub" data-reveal>
+        The world's first Pay-Per-Conversation platform that automates your entire outbound sales process. We handle everything from finding leads to starting real conversations—so you only pay when prospects reply.
+      </p>
+      <div class="hero-ctas" data-reveal>
+        <button class="btn-primary">Start for Free</button>
+        <button class="btn-light">Book a Demo</button>
+      </div>
+      <div class="trust-row" data-reveal>
+        <span class="item">
+          <i data-lucide="credit-card" aria-hidden="true"></i>
+          Pay Per Conversation
+        </span>
+        <span class="item">
+          <i data-lucide="badge-dollar-sign" aria-hidden="true"></i>
+          No Setup Fees
+        </span>
+        <span class="item">
+          <i data-lucide="calendar-x" aria-hidden="true"></i>
+          Cancel Anytime
+        </span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== LOGO BAR ===================== -->
+<section class="logobar">
+  <div class="container" data-reveal-stagger="100">
+    <p class="label" data-reveal>Trusted by growing businesses worldwide</p>
+    <div class="logos" data-reveal>
+      <img class="brand-logo" src="logos/allstate.svg" alt="Allstate" loading="lazy" />
+      <img class="brand-logo" src="logos/abbott.svg" alt="Abbott" loading="lazy" />
+      <img class="brand-logo" src="logos/alaska.svg" alt="Alaska Airlines" loading="lazy" />
+      <img class="brand-logo" src="logos/blackrock.svg" alt="BlackRock" loading="lazy" />
+      <img class="brand-logo" src="logos/adm.svg" alt="ADM" loading="lazy" />
+      <img class="brand-logo" src="logos/coterra.svg" alt="Coterra" loading="lazy" />
+      <img class="brand-logo" src="logos/camden.svg" alt="Camden" loading="lazy" />
+    </div>
+  </div>
+</section>
+
+<!-- ===================== 4. FEATURES ===================== -->
+<section class="section alt" id="features">
+  <div class="container">
+    <div class="section-head" data-reveal-stagger="100">
+      <span class="section-label" data-reveal>FEATURES</span>
+      <h2 data-reveal>The Complete Outbound Ecosystem</h2>
+      <p data-reveal>NeoLeads combines industry-leading technology with AI to find, start conversations, and send emails.</p>
+    </div>
+    <div class="grid-3" data-reveal-stagger="120">
+      <article class="card feature-card" data-reveal>
+        <div class="feature-icon icon-purple" aria-hidden="true"><i data-lucide="radar"></i></div>
+        <h3>Zeus (Lead Discovery)</h3>
+        <p>Find your ideal companies with AI-powered data with enrichment and intent signals.</p>
+      </article>
+      <article class="card feature-card" data-reveal>
+        <div class="feature-icon icon-teal" aria-hidden="true"><i data-lucide="badge-check"></i></div>
+        <h3>Verifyrit (Email Validation)</h3>
+        <p>Ensure 99%+ email deliverability with advanced verification and list data cleaning.</p>
+      </article>
+      <article class="card feature-card" data-reveal>
+        <div class="feature-icon icon-orange" aria-hidden="true"><i data-lucide="flame"></i></div>
+        <h3>Warmrit (Email Warmer)</h3>
+        <p>Land in the inbox, not the spam folders.</p>
+      </article>
+      <article class="card feature-card" data-reveal>
+        <div class="feature-icon icon-blue" aria-hidden="true"><i data-lucide="send"></i></div>
+        <h3>Sendrit (Outreach Engine)</h3>
+        <p>Create personalized email sequences, automate follow ups, and track every email.</p>
+      </article>
+      <article class="card feature-card" data-reveal>
+        <div class="feature-icon icon-purple2" aria-hidden="true"><i data-lucide="inbox"></i></div>
+        <h3>Snaarp Mail (Inbox &amp; Inbox)</h3>
+        <p>Unlimited mailboxes with a unified inbox to manage all replies in one place.</p>
+      </article>
+      <article class="card feature-card" data-reveal>
+        <div class="feature-icon icon-green" aria-hidden="true"><i data-lucide="brain-circuit"></i></div>
+        <h3>NeoBrain AI (Intelligence)</h3>
+        <p>AI that replies, scores leads, creates email and helps you focus on the best opportunities.</p>
+      </article>
+    </div>
+    <div class="center-cta" data-reveal data-reveal-delay="200">
+      <button class="btn-primary" style="padding:12px 28px;">Explore All Products <i data-lucide="arrow-right"></i></button>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== 5. HOW IT WORKS ===================== -->
+<section class="section" id="how">
+  <div class="container">
+    <div class="section-head" data-reveal-stagger="100">
+      <span class="steps-pill" data-reveal><i data-lucide="presentation"></i> How NeoLeads Works</span>
+      <h2 data-reveal>From Leads to Conversations in<br />6 Simple Steps</h2>
+    </div>
+    <div class="steps-grid" data-reveal-stagger="120">
+      <div class="step" data-reveal>
+        <span class="step-num">Step 1</span>
+        <div class="step-icon ic-indigo" aria-hidden="true"><i data-lucide="user-search"></i></div>
+        <h3>Find Leads</h3>
+        <p>Zeus finds and companies high-quality prospects.</p>
+      </div>
+      <div class="step" data-reveal>
+        <span class="step-num">Step 2</span>
+        <div class="step-icon ic-green" aria-hidden="true"><i data-lucide="shield-check"></i></div>
+        <h3>Verify Emails</h3>
+        <p>Verifyrit ensures 100% valid and deliverable emails.</p>
+      </div>
+      <div class="step" data-reveal>
+        <span class="step-num">Step 3</span>
+        <div class="step-icon ic-orange" aria-hidden="true"><i data-lucide="flame"></i></div>
+        <h3>Warm Up</h3>
+        <p>Warmrit builds strong sender reputation automatically.</p>
+      </div>
+      <div class="step" data-reveal>
+        <span class="step-num">Step 4</span>
+        <div class="step-icon ic-blue" aria-hidden="true"><i data-lucide="send"></i></div>
+        <h3>Send Campaigns</h3>
+        <p>Sendrit launches personalized multi-step campaigns.</p>
+      </div>
+      <div class="step" data-reveal>
+        <span class="step-num">Step 5</span>
+        <div class="step-icon ic-blue" aria-hidden="true"><i data-lucide="inbox"></i></div>
+        <h3>Get Replies</h3>
+        <p>All replies land in your unified inbox instantly.</p>
+      </div>
+      <div class="step" data-reveal>
+        <span class="step-num">Step 6</span>
+        <div class="step-icon ic-purple" aria-hidden="true"><i data-lucide="messages-square"></i></div>
+        <h3>Pay Per Conversation</h3>
+        <p>You only pay $10 for qualified business conversations.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== 6. ALL-IN-ONE PLATFORM ===================== -->
+<section class="section alt" id="platform">
+  <div class="container">
+    <div class="section-head" data-reveal-stagger="100">
+      <span class="section-label" data-reveal>ALL-IN-ONE</span>
+      <h2 data-reveal>Everything You Need.<br />All In One Platform</h2>
+      <p data-reveal>NeoLeads combines industry-leading technology with AI to deliver real conversations, not just emails.</p>
+    </div>
+    <div class="grid-2" data-reveal-stagger="120">
+      <!-- Card 1: Zeus Prospecting -->
+      <div class="showcase-card zeus-anim" data-reveal data-reveal-skip>
+        <span class="card-eyebrow"><i data-lucide="search"></i> Lead Discovery</span>
+        <h3>Zeus Prospecting</h3>
+        <p>Find the exact companies and decision-makers you need using AI-powered search and real-time intent signals.</p>
+        <div class="mock zeus-mock">
+          <div class="zeus-search">
+            <i data-lucide="search"></i>
+            <span class="zs-text">SaaS · 50–200 · hiring SDRs</span>
+            <span class="zs-live"><span class="dot"></span>LIVE</span>
+          </div>
+          <div class="zeus-lead">
+            <img class="zl-av nv" src="avatars/Container-4.png" alt="Nova Labs lead" />
+            <div class="zl-info"><div class="zl-name">Nova Labs · VP Sales</div><div class="zl-sub">Series B · 140 employees</div></div>
+            <span class="zl-badge hot"><i data-lucide="flame"></i>High</span>
+          </div>
+          <div class="zeus-lead">
+            <img class="zl-av hx" src="avatars/Container-5.png" alt="Helix lead" />
+            <div class="zl-info"><div class="zl-name">Helix · Head of Growth</div><div class="zl-sub">Series A · 80 employees</div></div>
+            <span class="zl-badge match">94% match</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card 2: Verifyrit & Warmrit -->
+      <div class="showcase-card verify2-anim" data-reveal data-reveal-skip>
+        <span class="card-eyebrow"><i data-lucide="check"></i> Email Deliverability</span>
+        <h3>Verifyrit &amp; Warmrit</h3>
+        <p>Ensure 99%+ deliverability with advanced data cleaning while building a rock-solid sender reputation to land straight in the primary inbox.</p>
+        <div class="mock verify2-mock">
+          <div class="vw-left">
+            <div class="vw-ring">
+              <svg viewBox="0 0 100 100" aria-hidden="true">
+                <circle cx="50" cy="50" r="42" fill="none" stroke="rgba(255,255,255,0.07)" stroke-width="7"/>
+                <circle class="vw-ring-fill" cx="50" cy="50" r="42" fill="none" stroke="#22C55E" stroke-width="7" stroke-linecap="round" transform="rotate(-90 50 50)"/>
+                <circle class="vw-ring-shimmer" cx="50" cy="50" r="42" fill="none" stroke="#ffffff" stroke-width="7" stroke-linecap="round" stroke-dasharray="14 250"/>
+              </svg>
+              <div class="vw-ring-val"><span class="vw-num">0.0</span>%<span class="vw-inbox">INBOX</span></div>
+            </div>
+            <span class="vw-spam">Spam 0.1%</span>
+          </div>
+          <div class="vw-right">
+            <div class="vw-rep-head"><span class="vw-rep-lbl">Sender reputation</span><span class="vw-warmed">Warmed <i data-lucide="check"></i></span></div>
+            <svg class="vw-chart" viewBox="0 0 200 64" preserveAspectRatio="none" aria-hidden="true">
+              <defs><linearGradient id="repFill" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="rgba(34,197,94,0.35)"/>
+                <stop offset="100%" stop-color="rgba(34,197,94,0)"/>
+              </linearGradient></defs>
+              <path class="vw-area" d="M0,50 C40,48 60,38 90,32 C120,26 150,18 200,20 L200,64 L0,64 Z" fill="url(#repFill)"/>
+              <path class="vw-line" d="M0,50 C40,48 60,38 90,32 C120,26 150,18 200,20" fill="none" stroke="#22C55E" stroke-width="2.5"/>
+            </svg>
+            <div class="vw-score"><span class="vw-score-num">0</span>/100 <span class="vw-delta">+12 in 30d</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card 3: Sendrit Automation -->
+      <div class="showcase-card sendrit-anim" data-reveal data-reveal-skip>
+        <span class="card-eyebrow"><i data-lucide="zap"></i> Outreach Engine</span>
+        <h3>Sendrit Automation</h3>
+        <p>Launch highly personalized campaigns, automate intelligent follow-up sequences, and scale your outbound efforts effortlessly.</p>
+        <div class="mock sendrit-mock">
+          <!-- Step 1 — Intro email -->
+          <div class="seq-row">
+            <span class="seq-dot">
+              <svg class="seq-dot-svg" viewBox="0 0 28 28" aria-hidden="true">
+                <circle class="sd1-pulse" cx="14" cy="14" r="12" fill="none" stroke="#F97316" stroke-width="2"/>
+                <circle class="sd1-ring" cx="14" cy="14" r="12" fill="none" stroke="#F97316" stroke-width="2" stroke-linecap="round" transform="rotate(-90 14 14)"/>
+                <circle class="sd1-fill" cx="14" cy="14" r="12" fill="#F97316"/>
+                <path class="sd1-check" d="M8.5 14.5 L12.5 18 L19.5 9.5" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </span>
+            <div class="seq-card">
+              <span class="seq-name">Intro email</span>
+              <span class="seq-status sent sd-anim-status"><span class="sw sw1">Sent</span> <span class="sw sw2">·</span> <span class="sw sw3">64% open</span></span>
+            </div>
+            <svg class="seq-conn" viewBox="0 0 2 26" preserveAspectRatio="none" aria-hidden="true"><line x1="1" y1="0" x2="1" y2="26" stroke="var(--text-muted)" stroke-width="2" stroke-dasharray="3 4"/></svg>
+          </div>
+          <!-- Step 2 — Follow-up (in progress) -->
+          <div class="seq-row">
+            <span class="seq-dot">
+              <svg class="seq-dot-svg" viewBox="0 0 28 28" aria-hidden="true">
+                <circle class="sd2-ring" cx="14" cy="14" r="12" fill="none" stroke="rgba(255,255,255,0.3)" stroke-width="2"/>
+                <circle class="sd2-arc" cx="14" cy="14" r="12" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-dasharray="18.85 56.55"/>
+              </svg>
+            </span>
+            <div class="seq-card">
+              <span class="seq-name">Wait 2 days · Follow-up</span>
+              <span class="seq-status running sd-anim-status">Running</span>
+              <div class="sd2-prog"><div class="sd2-prog-fill"></div></div>
+            </div>
+            <svg class="seq-conn" viewBox="0 0 2 26" preserveAspectRatio="none" aria-hidden="true"><line x1="1" y1="0" x2="1" y2="26" stroke="var(--text-muted)" stroke-width="2" stroke-dasharray="3 4"/></svg>
+          </div>
+          <!-- Step 3 — Break-up email (queued) -->
+          <div class="seq-row">
+            <span class="seq-dot">
+              <svg class="seq-dot-svg" viewBox="0 0 28 28" aria-hidden="true">
+                <circle class="sd3-ring" cx="14" cy="14" r="12" fill="none" stroke="rgba(255,255,255,0.18)" stroke-width="2"/>
+              </svg>
+            </span>
+            <div class="seq-card">
+              <span class="seq-name">Break-up email</span>
+              <span class="seq-status queued">Queued</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card 4: Snaarp Mail -->
+      <div class="showcase-card snaarp-anim" data-reveal data-reveal-skip>
+        <span class="card-eyebrow"><i data-lucide="mail"></i> Infra &amp; Inbox</span>
+        <h3>Snaarp Mail</h3>
+        <p>Power your outreach with unlimited mailboxes and manage every prospect reply from a single, centralized master inbox.</p>
+        <div class="mock snaarp-mock">
+          <div class="snaarp-head">
+            <div class="av-stack">
+              <img class="as a" src="avatars/Container-2.png" alt="" /><img class="as b" src="avatars/Container.png" alt="" /><img class="as c" src="avatars/Container-6.png" alt="" /><span class="as more">+9</span>
+            </div>
+            <span class="snaarp-title">Master Inbox</span>
+            <span class="snaarp-badge"><span class="mb-roll"><span class="mb-cur">12</span><span class="mb-next">13</span></span> mailboxes</span>
+          </div>
+          <!-- Priya M. — newest existing reply (preview types in) -->
+          <div class="snaarp-reply r-priya">
+            <span class="sr-dot blue"></span>
+            <div class="sr-body">
+              <div class="sr-top"><span class="sr-name">Priya M.</span> <span class="sr-tag">replied</span></div>
+              <div class="sr-quote"><span class="sr-type"></span><span class="sr-cursor">|</span></div>
+            </div>
+            <span class="sr-time">2m</span>
+          </div>
+          <!-- Marcus L. — older reply, already read -->
+          <div class="snaarp-reply r-marcus">
+            <span class="sr-dot gray"></span>
+            <div class="sr-body">
+              <div class="sr-top"><span class="sr-name">Marcus L.</span> <span class="sr-tag">replied</span></div>
+              <div class="sr-quote sr-static">"What does pricing look like for..."</div>
+            </div>
+            <span class="sr-time">18m</span>
+          </div>
+          <!-- Dana K. — new arrival, pre-rendered hidden below (no DOM insertion at runtime) -->
+          <div class="snaarp-reply r-dana" aria-hidden="true">
+            <span class="sr-dot blue"></span>
+            <div class="sr-body">
+              <div class="sr-top"><span class="sr-name">Dana K.</span> <span class="sr-tag">replied</span></div>
+              <div class="sr-quote"><span class="sr-type"></span><span class="sr-cursor">|</span></div>
+            </div>
+            <span class="sr-time">just now</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Full-width NeoBrain AI — reveals last, after the 4-card grid -->
+    <div class="neobrain-card neobrain-anim" data-reveal data-reveal-skip>
+      <div class="nb-head">
+        <span class="card-eyebrow"><i data-lucide="brain-circuit"></i> AI Intelligence</span>
+        <h3>NeoBrain AI</h3>
+        <p>Automatically qualify incoming replies and score lead intent so you can focus your time strictly on closing the best opportunities.</p>
+      </div>
+      <div class="nb-grid">
+        <!-- processing shimmer sweeps across all three panels (Phase 4) -->
+        <div class="nb-shimmer" aria-hidden="true"></div>
+        <!-- Left — the incoming reply -->
+        <div class="nb-cell nb-reply">
+          <div class="nb-person">
+            <span class="nb-av-wrap"><img class="nb-av" src="avatars/Container-6.png" alt="Dana Reyes" /></span>
+            <div><div class="nb-name">Dana Reyes</div><div class="nb-role">Director of Ops · replied</div></div>
+          </div>
+          <p class="nb-quote"><span class="nb-type"></span><span class="nb-cursor">|</span></p>
+          <div class="nb-scan" aria-hidden="true"></div>
+        </div>
+        <!-- Center — intent score -->
+        <div class="nb-cell nb-score-cell">
+          <div class="nb-ring">
+            <svg viewBox="0 0 120 120" aria-hidden="true">
+              <circle cx="60" cy="60" r="52" fill="none" stroke="rgba(255,255,255,0.07)" stroke-width="8"/>
+              <circle class="nb-ring-fill" cx="60" cy="60" r="52" fill="none" stroke="#333333" stroke-width="8" stroke-linecap="round" transform="rotate(-90 60 60)"/>
+              <circle class="nb-ring-shimmer" cx="60" cy="60" r="52" fill="none" stroke="#C4A8FF" stroke-width="8" stroke-linecap="round" stroke-dasharray="13 314"/>
+              <g class="nb-burst" aria-hidden="true">
+                <line x1="116" y1="60" x2="124" y2="60"/>
+                <line x1="88" y1="108.5" x2="92" y2="115.4"/>
+                <line x1="32" y1="108.5" x2="28" y2="115.4"/>
+                <line x1="4" y1="60" x2="-4" y2="60"/>
+                <line x1="32" y1="11.5" x2="28" y2="4.6"/>
+                <line x1="88" y1="11.5" x2="92" y2="4.6"/>
+              </g>
+            </svg>
+            <div class="nb-ring-val"><span class="nb-num">0</span><span class="nb-cap">INTENT SCORE</span></div>
+          </div>
+          <span class="nb-hot"><i data-lucide="flame"></i> Hot lead</span>
+          <div class="nb-flash" aria-hidden="true"></div>
+        </div>
+        <!-- Right — classification results -->
+        <div class="nb-cell nb-analysis">
+          <div class="nb-arow"><span class="nb-lbl nb-lbl-sent">Sentiment</span><span class="nb-pos"><span class="nb-pos-type"></span></span></div>
+          <div class="nb-arow"><span class="nb-lbl nb-lbl-det">Detected</span><span class="nb-tags"><span class="nb-tag pricing">PRICING</span><span class="nb-tag meeting">MEETING</span></span></div>
+          <div class="nb-next">
+            <span class="nb-next-icon"><i data-lucide="arrow-right"></i></span>
+            <div><div class="nb-next-lbl">Suggested next step</div><div class="nb-next-action">Book a meeting</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== 7. PRICING ===================== -->
+<section class="section" id="pricing">
+  <div class="container">
+    <div class="pricing-layout">
+      <div class="pricing-left" data-reveal-stagger="100">
+        <span class="section-label" data-reveal>PAY FOR RESULTS, NOT SOFTWARE</span>
+        <h2 data-reveal>Pay Only for<br /><span class="accent">Conversations</span></h2>
+        <p data-reveal>No contracts. No hidden fees. Just a simple $10 per qualified conversation.</p>
+        <ul class="price-features" data-reveal>
+          <li><span class="pc-check"><i data-lucide="check"></i></span> $10 per qualified business conversation</li>
+          <li><span class="pc-check"><i data-lucide="check"></i></span> No long-term contracts</li>
+          <li><span class="pc-check"><i data-lucide="check"></i></span> Disqualify any reply you don't like</li>
+          <li><span class="pc-check"><i data-lucide="check"></i></span> Cancel anytime, no hard feelings</li>
+        </ul>
+        <button class="btn-primary" style="padding:14px 30px;" data-reveal>Start Getting Conversations <i data-lucide="arrow-right"></i></button>
+      </div>
+
+      <div class="pricing-cards-wrap" data-reveal data-reveal-delay="150">
+        <span class="pricing-pill"><i data-lucide="zap"></i> Simple. Transparent. Fair.</span>
+        <div class="pricing-cards">
+          <div class="price-card">
+            <div class="pc-label">Platform Access</div>
+            <ul>
+              <li><span class="pc-check"><i data-lucide="check"></i></span> All features included</li>
+              <li><span class="pc-check"><i data-lucide="check"></i></span> Unlimited email accounts</li>
+              <li><span class="pc-check"><i data-lucide="check"></i></span> Unified inbox</li>
+              <li><span class="pc-check"><i data-lucide="check"></i></span> AI-powered engine</li>
+              <li><span class="pc-check"><i data-lucide="check"></i></span> Analytics &amp; reporting</li>
+            </ul>
+            <div class="pc-from">
+              <span class="from-lbl">From </span>
+              <span class="from-amt">$99<span>/month</span></span>
+            </div>
+          </div>
+
+          <div class="pc-plus"><i data-lucide="plus"></i></div>
+
+          <div class="price-card">
+            <div class="pc-label">Pay Per Conversation</div>
+            <div class="pc-big">$10</div>
+            <div class="pc-sub">per qualified conversation</div>
+            <ul>
+              <li><span class="pc-check"><i data-lucide="check"></i></span> Real people, real replies</li>
+              <li><span class="pc-check"><i data-lucide="check"></i></span> You qualify the conversations</li>
+              <li><span class="pc-check"><i data-lucide="check"></i></span> Pay only for value</li>
+              <li><span class="pc-check"><i data-lucide="check"></i></span> Scale with confidence</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== 8. INTEGRATIONS ===================== -->
+<section class="section alt" id="integrations">
+  <div class="container">
+    <div class="integrations-layout">
+      <div class="int-left" data-reveal-stagger="100">
+        <span class="int-pill" data-reveal><i data-lucide="trophy"></i> Integration</span>
+        <h2 data-reveal>Plugs into your entire<br /><span class="accent">tech stack.</span></h2>
+        <p data-reveal>Connect Ritstack to the 40+ tools your team already uses — CRMs, calendars, marketing platforms and more.</p>
+      </div>
+
+      <div class="integrations-frame" data-reveal data-reveal-delay="150">
+        <div class="integrations-grid">
+          <!-- Row 1 -->
+          <span class="int-tile fill" title="Reachinbox"><img src="logos/Group.png" alt="Reachinbox" /></span>
+          <span class="int-tile white" title="Gmail"><img src="logos/gmail.png" alt="Gmail" /></span>
+          <span class="int-tile empty"></span>
+          <span class="int-tile" title="GetResponse"><img src="logos/getresponse_symbol.svg.png" alt="GetResponse" /></span>
+          <!-- Row 2 -->
+          <span class="int-tile" title="Mailchimp"><img src="logos/mailchimp.png" alt="Mailchimp" /></span>
+          <span class="int-tile empty"></span>
+          <span class="int-tile" title="Microsoft Excel"><img src="logos/ms_excel.png" alt="Microsoft Excel" /></span>
+          <span class="int-tile empty"></span>
+          <!-- Row 3 -->
+          <span class="int-tile snov" title="Snov.io"><b>Snov</b><span>io</span></span>
+          <span class="int-tile" title="Google Calendar"><img src="logos/Frame.png" alt="Google Calendar" /></span>
+          <span class="int-tile" title="HubSpot"><img src="logos/Symbol.svg.png" alt="HubSpot" /></span>
+          <span class="int-tile" title="Cloudflare"><img src="logos/cloudflare_logo.svg.png" alt="Cloudflare" /></span>
+          <!-- Row 4 -->
+          <span class="int-tile" title="Zoho"><img src="logos/zoho_logo.svg.png" alt="Zoho" /></span>
+          <span class="int-tile empty"></span>
+          <span class="int-tile" title="Mailgun"><img src="logos/mailgun_technologies_inc_symbol.svg.png" alt="Mailgun" /></span>
+          <span class="int-tile" title="Reply"><img src="logos/reply_logo.svg.png" alt="Reply" /></span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== 9. TESTIMONIALS ===================== -->
+<section class="section" id="testimonials">
+  <div class="container">
+    <div class="section-head" data-reveal-stagger="100">
+      <span class="section-label" data-reveal>CUSTOMER STORIES</span>
+      <h2 data-reveal>Don't just take our word for it.</h2>
+    </div>
+    <div class="grid-3" data-reveal-stagger="120">
+      <article class="card testi-card" data-reveal>
+        <div class="stars" aria-label="5 out of 5 stars"><i data-lucide="star"></i><i data-lucide="star"></i><i data-lucide="star"></i><i data-lucide="star"></i><i data-lucide="star"></i></div>
+        <p class="quote">"NeoLeads completely changed our outbound workflow. We went from 5% reply rate to over 23% in 3 weeks."</p>
+        <div class="testi-author"><img class="av" src="avatars/Container.png" alt="James T." /><div><div class="name">James T.</div><div class="role">VP Sales, TechCorp</div></div></div>
+      </article>
+      <article class="card testi-card" data-reveal>
+        <div class="stars" aria-label="5 out of 5 stars"><i data-lucide="star"></i><i data-lucide="star"></i><i data-lucide="star"></i><i data-lucide="star"></i><i data-lucide="star"></i></div>
+        <p class="quote">"The pay-per-conversation model is genius. We only pay for actual results, not wasted software subscriptions."</p>
+        <div class="testi-author"><img class="av" src="avatars/Container-2.png" alt="Maria K." /><div><div class="name">Maria K.</div><div class="role">Founder, GrowthLab</div></div></div>
+      </article>
+      <article class="card testi-card" data-reveal>
+        <div class="stars" aria-label="5 out of 5 stars"><i data-lucide="star"></i><i data-lucide="star"></i><i data-lucide="star"></i><i data-lucide="star"></i><i data-lucide="star"></i></div>
+        <p class="quote">"NeoBrain AI is scary good. It replies to leads like a human, qualifies them and books meetings on autopilot."</p>
+        <div class="testi-author"><img class="av" src="avatars/Container-1.png" alt="Derek W." /><div><div class="name">Derek W.</div><div class="role">Head of Growth, ScaleUp</div></div></div>
+      </article>
+      <article class="card testi-card" data-reveal>
+        <div class="stars" aria-label="5 out of 5 stars"><i data-lucide="star"></i><i data-lucide="star"></i><i data-lucide="star"></i><i data-lucide="star"></i><i data-lucide="star"></i></div>
+        <p class="quote">"Setup was fast and the results came quickly. This is the future of outbound sales."</p>
+        <div class="testi-author"><img class="av" src="avatars/Container-6.png" alt="Priya S." /><div><div class="name">Priya S.</div><div class="role">Marketing Director, FintechHub</div></div></div>
+      </article>
+      <article class="card testi-card" data-reveal>
+        <div class="stars" aria-label="5 out of 5 stars"><i data-lucide="star"></i><i data-lucide="star"></i><i data-lucide="star"></i><i data-lucide="star"></i><i data-lucide="star"></i></div>
+        <p class="quote">"Best investment we made this year. Our pipeline has never been healthier."</p>
+        <div class="testi-author"><img class="av" src="avatars/Container-3.png" alt="Carlos M." /><div><div class="name">Carlos M.</div><div class="role">CEO, LaunchPad</div></div></div>
+      </article>
+      <article class="card testi-card" data-reveal>
+        <div class="stars" aria-label="5 out of 5 stars"><i data-lucide="star"></i><i data-lucide="star"></i><i data-lucide="star"></i><i data-lucide="star"></i><i data-lucide="star"></i></div>
+        <p class="quote">"The unified inbox alone is worth it. Managing 10 mailboxes from one place is a game changer."</p>
+        <div class="testi-author"><img class="av" src="avatars/Container-7.png" alt="Sophie L." /><div><div class="name">Sophie L.</div><div class="role">Sales Lead, Nexvio</div></div></div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== 10. SECURITY ===================== -->
+<section class="section alt" id="security">
+  <div class="container">
+    <div class="section-head" data-reveal-stagger="100">
+      <span class="security-pill" data-reveal><i data-lucide="shield-check"></i> Compliant</span>
+      <h2 data-reveal>Keep your organization secure<br />and compliant.</h2>
+    </div>
+    <div class="badges-row" data-reveal-stagger="80">
+      <span class="comp-badge" title="AICPA SOC" data-reveal><img src="logos/compliance-1.png" alt="AICPA SOC 2 certified" /></span>
+      <span class="comp-badge" title="PCI DSS" data-reveal><img src="logos/compliance-2.png" alt="PCI DSS compliant" /></span>
+      <span class="comp-badge" title="GDPR" data-reveal><img src="logos/compliance-3.png" alt="GDPR compliant" /></span>
+      <span class="comp-badge" title="Privacy" data-reveal><img src="logos/compliance-4.png" alt="Data privacy" /></span>
+      <span class="comp-badge" title="CSA STAR Level One" data-reveal><img src="logos/compliance-5.png" alt="CSA STAR Level One" /></span>
+      <span class="comp-badge" title="ISO/IEC 27001" data-reveal><img src="logos/compliance-6.png" alt="ISO/IEC 27001 certified" /></span>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== 11. FINAL CTA ===================== -->
+<section class="final-cta">
+  <div class="container" data-reveal-stagger="100">
+    <span class="section-label" data-reveal>GET STARTED</span>
+    <h2 data-reveal>Ready to generate real conversations?</h2>
+    <p data-reveal>Join hundreds of businesses that only pay for results.</p>
+    <div class="final-buttons" data-reveal>
+      <button class="btn-primary">Start for Free <i data-lucide="arrow-right"></i></button>
+      <button class="btn-ghost">Book a Demo</button>
+    </div>
+    <div class="final-trust" data-reveal>
+      <span class="item"><i data-lucide="shield-check"></i> SOC 2 Certified</span>
+      <span class="item"><i data-lucide="check"></i> No credit card</span>
+      <span class="item"><i data-lucide="check"></i> Cancel anytime</span>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<!-- ===================== 12. FOOTER ===================== -->
+<footer class="footer">
+  <div class="container">
+    <div class="footer-top" data-reveal-stagger="100">
+      <div class="footer-brand" data-reveal>
+        <a class="footer-logo" href="#">Neoleads</a>
+        <p class="tagline">Every tool your business needs to find, reach, verify and close — in one connected stack.</p>
+        <div class="social-row">
+          <a href="#" aria-label="X"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231 5.45-6.231zm-1.161 17.52h1.833L7.084 4.126H5.117l11.966 15.644z"/></svg></a>
+          <a href="#" aria-label="Facebook"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M24 12.073C24 5.405 18.627 0 12 0S0 5.405 0 12.073c0 6.02 4.388 11.01 10.125 11.927v-8.437H7.078v-3.49h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.49h-2.796v8.437C19.612 23.083 24 18.093 24 12.073z"/></svg></a>
+          <a href="#" aria-label="Instagram"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg></a>
+          <a href="#" aria-label="LinkedIn"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.225 0z"/></svg></a>
+        </div>
+      </div>
+      <div class="footer-col" data-reveal>
+        <h4>Solutions</h4>
+        <ul>
+          <li><a href="#">For sales teams</a></li>
+          <li><a href="#">For marketing</a></li>
+          <li><a href="#">For founders</a></li>
+          <li><a href="#">For agencies</a></li>
+          <li><a href="#">For enterprise</a></li>
+        </ul>
+      </div>
+      <div class="footer-col" data-reveal>
+        <h4>Company</h4>
+        <ul>
+          <li><a href="#">About</a></li>
+          <li><a href="#">Resources</a></li>
+          <li><a href="#">API docs</a></li>
+          <li><a href="#">Privacy policy</a></li>
+          <li><a href="#">Terms of service</a></li>
+        </ul>
+      </div>
+      <div class="footer-col" data-reveal>
+        <h4>Product</h4>
+        <ul>
+          <li><a href="#">Kalender</a></li>
+          <li><a href="#">Zeus</a></li>
+          <li><a href="#">Snaarplock</a></li>
+          <li><a href="#">Snaarpmail</a></li>
+          <li><a href="#">Verifyrit</a></li>
+          <li><a href="#">Sendrit</a></li>
+        </ul>
+      </div>
+      <div class="footer-col footer-contact" data-reveal>
+        <h4>Contact Information</h4>
+        <div class="c-group">
+          <span class="c-label">Email</span>
+          <span class="c-val">support@snaarp.com</span>
+        </div>
+        <div class="c-group">
+          <span class="c-label">Phone</span>
+          <span class="c-val">+1 (800) 123-4567</span>
+        </div>
+        <div class="c-group">
+          <span class="c-label">Office Address</span>
+          <span class="c-val">Neoleads<br />1234 Sales Street, Suite 500<br />San Francisco, CA 94105, USA</span>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom" data-reveal data-reveal-delay="150">
+      <span class="since">SINCE. 2026</span>
+      <span class="copy">©Neoleads. All rights reserved.</span>
+    </div>
+  </div>
+</footer>
+
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+<script>
+  // Render all Lucide icons
+  if (window.lucide) { lucide.createIcons(); }
+
+  // Mobile menu toggle
+  (function () {
+    var toggle = document.getElementById('navToggle');
+    var menu = document.getElementById('mobileMenu');
+    if (toggle && menu) {
+      toggle.addEventListener('click', function () {
+        var open = menu.classList.toggle('open');
+        toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+      });
+      menu.querySelectorAll('a').forEach(function (a) {
+        a.addEventListener('click', function () {
+          menu.classList.remove('open');
+          toggle.setAttribute('aria-expanded', 'false');
+        });
+      });
+    }
+  })();
+
+  // Products mega-menu — click the name or arrow to toggle; closes on outside
+  // click, Escape, or when a product is selected.
+  (function () {
+    var nav = document.getElementById('productsNav');
+    if (!nav) { return; }
+    var trigger = nav.querySelector('.nav-trigger');
+    function close() { nav.classList.remove('open'); trigger.setAttribute('aria-expanded', 'false'); }
+    trigger.addEventListener('click', function (e) {
+      e.stopPropagation();
+      var open = nav.classList.toggle('open');
+      trigger.setAttribute('aria-expanded', open ? 'true' : 'false');
+    });
+    document.addEventListener('click', function (e) { if (!nav.contains(e.target)) { close(); } });
+    document.addEventListener('keydown', function (e) { if (e.key === 'Escape') { close(); } });
+    nav.querySelectorAll('.mega-item').forEach(function (item) { item.addEventListener('click', close); });
+  })();
+
+  // Scroll reveal engine — reusable, Intersection Observer based.
+  // Markup contract:
+  //   [data-reveal]                 element fades + lifts in once
+  //   [data-reveal-delay="120"]     fixed entrance delay (ms)
+  //   [data-reveal-stagger="120"]   container: its direct [data-reveal]
+  //                                 children get index * step delays
+  //   [data-reveal-base="100"]      stagger start offset (ms)
+  // Elements already in view on load are revealed instantly (no anim).
+  (function () {
+    var prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    var hasIO = 'IntersectionObserver' in window;
+    var slice = Array.prototype.slice;
+
+    // 1. Compute stagger delays from container groups.
+    // A group (or element) marked data-reveal-onload still animates even when
+    // it's above the fold on load — used for the hero entrance.
+    slice.call(document.querySelectorAll('[data-reveal-stagger]')).forEach(function (group) {
+      var step = parseInt(group.getAttribute('data-reveal-stagger'), 10) || 120;
+      var base = parseInt(group.getAttribute('data-reveal-base'), 10) || 0;
+      var onload = group.hasAttribute('data-reveal-onload');
+      var kids = group.querySelectorAll(':scope > [data-reveal]');
+      slice.call(kids).forEach(function (kid, i) {
+        if (kid.getAttribute('data-reveal-delay') === null) {
+          kid.setAttribute('data-reveal-delay', base + i * step);
+        }
+        if (onload) { kid.setAttribute('data-reveal-onload', ''); }
+      });
+    });
+
+    var legacy = slice.call(document.querySelectorAll('.reveal'));
+    var items = slice.call(document.querySelectorAll('[data-reveal]'));
+
+    // 2. No observer / reduced motion -> show everything, no animation.
+    if (prefersReduced || !hasIO) {
+      legacy.forEach(function (el) { el.classList.add('visible'); });
+      items.forEach(function (el) { el.classList.add('is-revealed'); el.removeAttribute('data-reveal'); });
+      return;
+    }
+
+    // 3. Legacy whole-section .reveal blocks.
+    var legacyObs = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+          legacyObs.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.12 });
+    legacy.forEach(function (el) { legacyObs.observe(el); });
+
+    // 4. Granular, staggered [data-reveal] elements.
+    // Once the entrance settles we drop the data-reveal attribute + helper
+    // classes so the element returns to its own CSS — its final visible state
+    // (opacity:1 / no transform) is identical, and this stops the reveal rule
+    // from overriding the element's own hover transitions.
+    function settle(el) {
+      el.classList.remove('reveal-animating');
+      el.style.transitionDelay = '';
+      el.removeAttribute('data-reveal');
+    }
+    function reveal(el, animate) {
+      if (!animate) { el.classList.add('is-revealed'); settle(el); return; } // above the fold
+      var delay = parseInt(el.getAttribute('data-reveal-delay'), 10) || 0;
+      if (delay) { el.style.transitionDelay = delay + 'ms'; }
+      el.classList.add('reveal-animating');
+      requestAnimationFrame(function () {
+        requestAnimationFrame(function () { el.classList.add('is-revealed'); });
+      });
+      window.setTimeout(function () { settle(el); }, 700 + delay);
+    }
+
+    var obs = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (entry.isIntersecting) {
+          reveal(entry.target, true);
+          obs.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.1, rootMargin: '0px 0px -5% 0px' });
+
+    var vh = window.innerHeight || document.documentElement.clientHeight;
+    items.forEach(function (el) {
+      // data-reveal-skip: this element runs its own bespoke animation
+      // (e.g. the Zeus card). Reveal its frame instantly and hand off —
+      // it still counts in any stagger group so siblings keep their timing.
+      if (el.hasAttribute('data-reveal-skip')) { el.classList.add('is-revealed'); settle(el); return; }
+      var r = el.getBoundingClientRect();
+      var aboveFold = r.top < vh * 0.9 && r.bottom > 0; // already visible at load
+      if (aboveFold) {
+        // default: skip animation above the fold. Opt in with data-reveal-onload
+        // (the hero) to play the entrance on page load instead.
+        reveal(el, el.hasAttribute('data-reveal-onload'));
+      } else {
+        obs.observe(el);
+      }
+    });
+  })();
+
+  // Zeus Prospecting card — bespoke staggered entrance (isolated to .zeus-anim).
+  // Fires once at threshold 0.15; CSS handles the precise timing via .in-view.
+  (function () {
+    var card = document.querySelector('.zeus-anim');
+    if (!card) { return; }
+    var prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (prefersReduced || !('IntersectionObserver' in window)) {
+      card.classList.add('in-view');
+      return;
+    }
+    var zObs = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('in-view');
+          zObs.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.15 });
+    zObs.observe(card);
+  })();
+
+  // Verifyrit & Warmrit card — bespoke cinematic entrance (isolated to .verify2-anim).
+  // CSS handles the opacity/transform phases via .in-view; JS drives the gauge
+  // ring sweep + colour, the % counter and the 98/100 score via requestAnimationFrame.
+  (function () {
+    var card = document.querySelector('.verify2-anim');
+    if (!card) { return; }
+
+    var ring    = card.querySelector('.vw-ring-fill');
+    var numEl   = card.querySelector('.vw-num');
+    var inbox   = card.querySelector('.vw-inbox');
+    var line    = card.querySelector('.vw-line');
+    var scoreEl = card.querySelector('.vw-score-num');
+
+    var R = 42;
+    var C = 2 * Math.PI * R;            // ring circumference (~263.9)
+    var TARGET = 99.2;                  // inbox %
+    var finalOffset = C * (1 - TARGET / 100); // dashoffset at 99.2% fill
+
+    // Prep SVG draw lengths up front (attributes only -> no layout shift).
+    if (ring) { ring.style.strokeDasharray = C; ring.style.strokeDashoffset = C; ring.style.stroke = 'rgb(42,42,42)'; }
+    var lineLen = 0;
+    if (line && line.getTotalLength) {
+      lineLen = line.getTotalLength();
+      line.style.strokeDasharray = lineLen;
+      line.style.strokeDashoffset = lineLen;
+      line.style.transition = 'stroke-dashoffset 1600ms ease-in-out 800ms';
+    }
+
+    var prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    function settleInstant() {
+      card.classList.add('in-view');
+      if (ring) { ring.style.strokeDashoffset = finalOffset; ring.style.stroke = '#22C55E'; }
+      if (line) { line.style.strokeDashoffset = 0; }
+      if (numEl) { numEl.textContent = TARGET.toFixed(1); }
+      if (inbox) { inbox.classList.add('show'); }
+      if (scoreEl) { scoreEl.textContent = '98'; }
+    }
+    if (prefersReduced || !('IntersectionObserver' in window)) { settleInstant(); return; }
+
+    // Faithful cubic-bezier easing (Newton-Raphson) so the ring decelerates
+    // exactly like the CSS curve it mirrors.
+    function cubicBezier(p1x, p1y, p2x, p2y) {
+      function A(a, b) { return 1 - 3 * b + 3 * a; }
+      function B(a, b) { return 3 * b - 6 * a; }
+      function Cc(a) { return 3 * a; }
+      function calc(t, a, b) { return ((A(a, b) * t + B(a, b)) * t + Cc(a)) * t; }
+      function slope(t, a, b) { return 3 * A(a, b) * t * t + 2 * B(a, b) * t + Cc(a); }
+      return function (x) {
+        if (x <= 0) { return 0; }
+        if (x >= 1) { return 1; }
+        var t = x;
+        for (var i = 0; i < 6; i++) {
+          var s = slope(t, p1x, p2x);
+          if (s === 0) { break; }
+          t -= (calc(t, p1x, p2x) - x) / s;
+        }
+        return calc(t, p1y, p2y);
+      };
+    }
+    var ringEase = cubicBezier(0.4, 0, 0.2, 1);
+    function easeOutCubic(x) { return 1 - Math.pow(1 - x, 3); }
+
+    function animate(duration, ease, step) {
+      var start = 0;
+      function frame(now) {
+        if (!start) { start = now; }
+        var raw = Math.min(1, (now - start) / duration);
+        step(ease(raw), raw);
+        if (raw < 1) { requestAnimationFrame(frame); }
+      }
+      requestAnimationFrame(frame);
+    }
+
+    // Phase 3 — hero gauge: ring sweeps + dims grey -> green, % counts up.
+    function runRing() {
+      var inboxShown = false;
+      animate(1800, ringEase, function (e, raw) {
+        if (ring) {
+          ring.style.strokeDashoffset = (C - (C - finalOffset) * e);
+          var cf = Math.min(1, e / 0.5); // reach full green by mid-sweep
+          var r = Math.round(42 + (34 - 42) * cf);
+          var g = Math.round(42 + (197 - 42) * cf);
+          var b = Math.round(42 + (94 - 42) * cf);
+          ring.style.stroke = 'rgb(' + r + ',' + g + ',' + b + ')';
+        }
+        if (numEl) { numEl.textContent = (TARGET * e).toFixed(1); }
+        if (!inboxShown && raw >= 0.5 && inbox) { inbox.classList.add('show'); inboxShown = true; }
+      });
+    }
+
+    // Phase 5 — score flies up fast then settles.
+    function runScore() {
+      animate(900, easeOutCubic, function (e) {
+        if (scoreEl) { scoreEl.textContent = Math.round(98 * e); }
+      });
+    }
+
+    var fired = false;
+    var obs = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (entry.isIntersecting && !fired) {
+          fired = true;
+          entry.target.classList.add('in-view'); // CSS phases + chart draw
+          if (line) { line.style.strokeDashoffset = 0; } // Phase 4 line draw
+          setTimeout(runRing, 600);   // Phase 3
+          setTimeout(runScore, 1600); // Phase 5
+          obs.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.15 });
+    obs.observe(card);
+  })();
+
+  // Sendrit Automation card — live-sequence storytelling loop (isolated to .sendrit-anim).
+  // A single requestAnimationFrame master timeline toggles state classes at fixed
+  // offsets and loops every ~6.8s; CSS does the actual interpolation. The loop only
+  // runs while the card is in view and restarts cleanly from Phase 3 on re-entry.
+  (function () {
+    var card = document.querySelector('.sendrit-anim');
+    if (!card) { return; }
+    var panel = card.querySelector('.sendrit-mock');
+    var rows  = card.querySelectorAll('.seq-row');
+    var conns = card.querySelectorAll('.seq-conn');
+
+    var sd1ring  = card.querySelector('.sd1-ring');
+    var sd1fill  = card.querySelector('.sd1-fill');
+    var sd1check = card.querySelector('.sd1-check');
+    var sd1pulse = card.querySelector('.sd1-pulse');
+    var status1  = rows[0].querySelector('.sd-anim-status');
+    var status2  = rows[1].querySelector('.sd-anim-status');
+    var prog     = card.querySelector('.sd2-prog');
+
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      card.classList.add('in-view'); // CSS reduced-motion block shows a static final state
+      return;
+    }
+
+    // Master timeline (loop-relative ms). 0-300ms = lead-in pause, then Phase 3..6.
+    var T = 6800;
+    var timeline = [
+      { at: 300,  fn: function () { rows[0].classList.add('lit'); sd1ring.classList.add('draw'); } },        // border draws
+      { at: 700,  fn: function () { sd1fill.classList.add('fill'); } },                                       // fills orange
+      { at: 900,  fn: function () { sd1check.classList.add('draw'); } },                                      // check draws
+      { at: 1200, fn: function () {                                                                           // complete: pulse + status + connector
+          sd1pulse.classList.remove('pulse'); void panel.offsetWidth; sd1pulse.classList.add('pulse');
+          status1.classList.add('show'); conns[0].classList.add('draw');
+      } },
+      { at: 1600, fn: function () {                                                                           // Phase 4: Step 2 activates
+          rows[1].classList.add('lit'); panel.classList.add('s2-active');
+          status2.classList.add('show'); prog.classList.add('go'); conns[1].classList.add('draw');
+      } },
+      { at: 2800, fn: function () { rows[2].classList.add('s3lit'); panel.classList.add('s3-active'); } },    // Phase 5: Step 3 stirs
+      { at: 6400, fn: function () { panel.classList.add('resetting'); } }                                     // Phase 6: tail fade
+    ];
+
+    function resetPanel() {
+      // Snap every looped element back to its initial (Phase 3) state with no
+      // reverse transitions, so the next pass draws everything fresh.
+      panel.classList.add('no-trans');
+      panel.classList.remove('resetting', 's2-active', 's3-active');
+      rows[0].classList.remove('lit'); rows[1].classList.remove('lit'); rows[2].classList.remove('s3lit');
+      sd1ring.classList.remove('draw'); sd1fill.classList.remove('fill'); sd1check.classList.remove('draw');
+      sd1pulse.classList.remove('pulse');
+      status1.classList.remove('show'); status2.classList.remove('show');
+      conns[0].classList.remove('draw'); conns[1].classList.remove('draw');
+      prog.classList.remove('go');
+      void panel.offsetWidth; // force reflow so the class removals apply instantly
+      panel.classList.remove('no-trans');
+    }
+
+    var raf = null, running = false, loopStart = 0, idx = 0;
+    function frame(now) {
+      if (!running) { return; }
+      if (!loopStart) { loopStart = now; }
+      var t = now - loopStart;
+      while (idx < timeline.length && t >= timeline[idx].at) { timeline[idx].fn(); idx++; }
+      if (t >= T) { resetPanel(); loopStart = now; idx = 0; }
+      raf = requestAnimationFrame(frame);
+    }
+    function startLoop() {
+      if (running) { return; }
+      running = true; loopStart = 0; idx = 0;
+      resetPanel();                       // clean restart from Phase 3
+      raf = requestAnimationFrame(frame);
+    }
+    function stopLoop() {
+      running = false;
+      if (raf) { cancelAnimationFrame(raf); raf = null; }
+    }
+
+    if (!('IntersectionObserver' in window)) { card.classList.add('in-view'); startLoop(); return; }
+    var obs = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (entry.isIntersecting) { card.classList.add('in-view'); startLoop(); } // text/panel enter once; loop (re)starts
+        else { stopLoop(); }
+      });
+    }, { threshold: 0.15 });
+    obs.observe(card);
+  })();
+
+  // Snaarp Mail card — live inbox storytelling loop (isolated to .snaarp-anim).
+  // One master setTimeout chain drives Phases 4-7 (~8s) and re-arms itself; the
+  // typewriter is requestAnimationFrame with a timestamp accumulator. All timers
+  // are tracked so leaving the viewport cancels everything and re-entry restarts.
+  (function () {
+    var card = document.querySelector('.snaarp-anim');
+    if (!card) { return; }
+    var panel    = card.querySelector('.snaarp-mock');
+    var rPriya   = card.querySelector('.r-priya');
+    var rMarcus  = card.querySelector('.r-marcus');
+    var rDana    = card.querySelector('.r-dana');
+    var priyaDot = rPriya.querySelector('.sr-dot');
+    var danaDot  = rDana.querySelector('.sr-dot');
+    var priyaQuote = rPriya.querySelector('.sr-quote');
+    var priyaType  = rPriya.querySelector('.sr-type');
+    var priyaTime  = rPriya.querySelector('.sr-time');
+    var danaQuote  = rDana.querySelector('.sr-quote');
+    var danaType   = rDana.querySelector('.sr-type');
+    var roll  = card.querySelector('.mb-roll');
+    var mbCur = card.querySelector('.mb-cur');
+    var mbNext = card.querySelector('.mb-next');
+
+    var PRIYA_MSG = '"Yes, let\'s set up a call this week..."';
+    var DANA_MSG  = '"Is this still available?..."';
+
+    var timers = [];
+    var typer = null;
+    function after(ms, fn) { var id = setTimeout(fn, ms); timers.push(id); return id; }
+    function clearAll() {
+      for (var i = 0; i < timers.length; i++) { clearTimeout(timers[i]); }
+      timers = [];
+      if (typer) { typer.cancel(); typer = null; }
+    }
+
+    // Typewriter — rAF + timestamp accumulator, ~38ms/char with +/-10ms jitter.
+    function typeWriter(typeEl, quoteEl, text, onDone) {
+      if (typer) { typer.cancel(); }
+      quoteEl.classList.add('typing');
+      typeEl.textContent = '';
+      var i = 0, last = 0, acc = 0, raf;
+      function nextDelay() { return 38 + (Math.random() * 20 - 10); }
+      var delay = nextDelay();
+      function step(ts) {
+        if (!last) { last = ts; }
+        acc += ts - last; last = ts;
+        while (acc >= delay && i < text.length) { acc -= delay; i++; typeEl.textContent = text.slice(0, i); delay = nextDelay(); }
+        if (i < text.length) { raf = requestAnimationFrame(step); }
+        else { quoteEl.classList.remove('typing'); typer = null; if (onDone) { onDone(); } }
+      }
+      raf = requestAnimationFrame(step);
+      typer = { cancel: function () { if (raf) { cancelAnimationFrame(raf); } } };
+    }
+
+    // Mailbox counter — slot-machine flip between two known values, then commit.
+    function flip(from, to, dir) {
+      mbCur.textContent = from; mbNext.textContent = to;
+      roll.classList.add('mb-instant');
+      mbNext.style.transform = dir === 'up' ? 'translateY(100%)' : 'translateY(-100%)';
+      mbCur.style.transform = 'translateY(0)';
+      void roll.offsetWidth;                    // commit start positions instantly
+      roll.classList.remove('mb-instant');
+      mbCur.style.transform = dir === 'up' ? 'translateY(-100%)' : 'translateY(100%)';
+      mbNext.style.transform = 'translateY(0)';
+      after(260, function () {                  // settle: adopt the new value, reset slots
+        roll.classList.add('mb-instant');
+        mbCur.textContent = to; mbCur.style.transform = 'translateY(0)';
+        mbNext.style.transform = 'translateY(100%)';
+        void roll.offsetWidth;
+        roll.classList.remove('mb-instant');
+      });
+    }
+
+    // Snap every looped element back to its clean Phase-4 starting state.
+    function resetContent() {
+      rPriya.classList.remove('in'); rMarcus.classList.remove('in');
+      priyaDot.classList.remove('pulsing'); danaDot.classList.remove('pulsing');
+      priyaTime.classList.remove('show');
+      priyaQuote.classList.remove('typing'); danaQuote.classList.remove('typing');
+      priyaType.textContent = ''; danaType.textContent = '';
+      rDana.classList.add('snap'); rDana.classList.remove('in', 'out');
+      roll.classList.add('mb-instant');
+      mbCur.textContent = '12'; mbCur.style.transform = 'translateY(0)';
+      mbNext.textContent = '13'; mbNext.style.transform = 'translateY(100%)';
+      void rDana.offsetWidth;                   // apply snaps with no transition
+      rDana.classList.remove('snap'); roll.classList.remove('mb-instant');
+    }
+
+    function runLoop() {
+      timers = [];
+      // Phase 4 — existing rows slide in (older first)
+      after(0,    function () { rMarcus.classList.add('in'); });
+      after(300,  function () { rPriya.classList.add('in'); priyaDot.classList.add('pulsing'); });
+      // Phase 5 — Priya types (cursor blinks ~400ms first, then characters)
+      after(800,  function () { priyaQuote.classList.add('typing'); });
+      after(1200, function () { typeWriter(priyaType, priyaQuote, PRIYA_MSG, function () { priyaTime.classList.add('show'); }); });
+      // Phase 6 — Dana arrives: row slides up, border flash, counter 12 -> 13, preview types
+      after(3000, function () {
+        rDana.classList.add('in'); danaDot.classList.add('pulsing');
+        panel.classList.add('flash'); flip('12', '13', 'up');
+      });
+      after(3200, function () { panel.classList.remove('flash'); });
+      after(3450, function () { typeWriter(danaType, danaQuote, DANA_MSG); });
+      // Phase 7 — reset: Dana leaves, counter 13 -> 12, Priya text clears (brief cursor)
+      after(6300, function () {
+        rDana.classList.remove('in'); rDana.classList.add('out');
+        flip('13', '12', 'down');
+        rPriya.classList.remove('in'); rMarcus.classList.remove('in');
+        priyaDot.classList.remove('pulsing'); danaDot.classList.remove('pulsing');
+        priyaTime.classList.remove('show');
+        if (typer) { typer.cancel(); typer = null; }
+        priyaType.textContent = ''; priyaQuote.classList.add('typing');
+        danaType.textContent = ''; danaQuote.classList.remove('typing');
+      });
+      after(6600, function () { priyaQuote.classList.remove('typing'); }); // cursor disappears
+      // ~500ms pause, then restart from Phase 4
+      after(7200, function () { resetContent(); runLoop(); });
+    }
+
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      card.classList.add('in-view');
+      rMarcus.classList.add('in'); rPriya.classList.add('in');
+      priyaType.textContent = PRIYA_MSG; priyaTime.classList.add('show');
+      return;
+    }
+
+    var entered = false;
+    function start() {
+      clearAll(); resetContent();
+      var lead = entered ? 0 : 1200;   // first time: let the header (Phase 3) assemble
+      entered = true;
+      after(lead, runLoop);
+    }
+    function stop() { clearAll(); resetContent(); }
+
+    if (!('IntersectionObserver' in window)) { card.classList.add('in-view'); start(); return; }
+    var obs = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (entry.isIntersecting) { card.classList.add('in-view'); start(); }
+        else { stop(); }
+      });
+    }, { threshold: 0.15 });
+    obs.observe(card);
+  })();
+
+  // NeoBrain AI card — cinematic AI-analysis storytelling loop (isolated to .neobrain-anim).
+  // A single cancellable master async function tells the story: message arrives + types,
+  // the AI "reads" + "processes", then fires its analysis across all three panels and
+  // drops the verdict. requestAnimationFrame drives the typewriters and the ring/counter
+  // (with the score-70 stutter). Leaving the viewport cancels everything; re-entry restarts.
+  (function () {
+    var card = document.querySelector('.neobrain-anim');
+    if (!card) { return; }
+    var reply    = card.querySelector('.nb-reply');
+    var score    = card.querySelector('.nb-score-cell');
+    var analysis = card.querySelector('.nb-analysis');
+    var avatar   = card.querySelector('.nb-av');
+    var avWrap   = card.querySelector('.nb-av-wrap');
+    var name     = card.querySelector('.nb-name');
+    var role     = card.querySelector('.nb-role');
+    var quote    = card.querySelector('.nb-quote');
+    var quoteType = card.querySelector('.nb-type');
+    var scan     = card.querySelector('.nb-scan');
+    var shimmer  = card.querySelector('.nb-shimmer');
+    var ringFill = card.querySelector('.nb-ring-fill');
+    var num      = card.querySelector('.nb-num');
+    var cap      = card.querySelector('.nb-cap');
+    var burst    = card.querySelector('.nb-burst');
+    var hot      = card.querySelector('.nb-hot');
+    var flash    = card.querySelector('.nb-flash');
+    var sentLbl  = card.querySelector('.nb-lbl-sent');
+    var detLbl   = card.querySelector('.nb-lbl-det');
+    var pos      = card.querySelector('.nb-pos');
+    var posType  = card.querySelector('.nb-pos-type');
+    var pricing  = card.querySelector('.nb-tag.pricing');
+    var meeting  = card.querySelector('.nb-tag.meeting');
+    var nextLbl  = card.querySelector('.nb-next-lbl');
+    var arrow    = card.querySelector('.nb-next-icon');
+    var action   = card.querySelector('.nb-next-action');
+
+    var QUOTE = '"This looks genuinely useful — can you send pricing and grab 30 minutes next week to walk the team through it?"';
+    var C = 2 * Math.PI * 52;            // ring circumference (~326.7)
+    var FINAL = C * (1 - 0.87);          // dashoffset at 87%
+
+    function resetContent() {
+      reply.classList.remove('lit'); score.classList.remove('lit'); analysis.classList.remove('lit');
+      card.classList.remove('analyzed');
+      avatar.classList.remove('in'); avWrap.classList.remove('glow');
+      name.classList.remove('in'); role.classList.remove('in');
+      quote.classList.remove('typing'); quoteType.textContent = '';
+      scan.classList.remove('run'); shimmer.classList.remove('run');
+      cap.classList.remove('show'); burst.classList.remove('run');
+      ringFill.style.strokeDasharray = C; ringFill.style.strokeDashoffset = C; ringFill.style.stroke = '#333333';
+      num.textContent = '0';
+      sentLbl.classList.remove('show'); detLbl.classList.remove('show'); nextLbl.classList.remove('show');
+      pos.classList.remove('pulse'); posType.textContent = '';
+      pricing.classList.remove('stamp', 'flash-on'); meeting.classList.remove('stamp', 'flash-on');
+      arrow.classList.remove('in', 'pulsing'); action.classList.remove('in');
+      hot.classList.remove('in', 'flicker'); flash.classList.remove('run');
+    }
+
+    // ---- reduced-motion: render the final analyzed state, no loop ----
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      card.classList.add('in-view');
+      reply.classList.add('lit'); score.classList.add('lit'); analysis.classList.add('lit');
+      avatar.classList.add('in'); name.classList.add('in'); role.classList.add('in');
+      quoteType.textContent = QUOTE;
+      ringFill.style.strokeDasharray = C; ringFill.style.strokeDashoffset = FINAL; ringFill.style.stroke = '#7C3AED';
+      num.textContent = '87'; cap.classList.add('show');
+      sentLbl.classList.add('show'); detLbl.classList.add('show'); nextLbl.classList.add('show');
+      posType.textContent = 'Positive';
+      arrow.classList.add('in'); action.classList.add('in'); hot.classList.add('in');
+      return;
+    }
+
+    // ---- cancellable timing primitives ----
+    function track(tk) { var h = { id: 0 }; tk.rafs.push(h); return h; }
+    function sleep(tk, ms) { return new Promise(function (res) { var id = setTimeout(res, ms); tk.timers.push(id); }); }
+    function replay(el, cls) { el.classList.remove(cls); void el.offsetWidth; el.classList.add(cls); }
+
+    // typewriter — rAF + timestamp accumulator, per-char interval with jitter
+    function typeWriter(tk, typeEl, holderClassEl, text, perChar, jitter) {
+      return new Promise(function (resolve) {
+        typeEl.textContent = '';
+        var i = 0, last = 0, acc = 0, h = track(tk);
+        function delay() { return perChar + (jitter ? (Math.random() * 2 * jitter - jitter) : 0); }
+        var d = delay();
+        function frame(ts) {
+          if (tk.cancelled) { resolve(); return; }
+          if (!last) { last = ts; }
+          acc += ts - last; last = ts;
+          while (acc >= d && i < text.length) { acc -= d; i++; typeEl.textContent = text.slice(0, i); d = delay(); }
+          if (i < text.length) { h.id = requestAnimationFrame(frame); }
+          else { resolve(); }
+        }
+        h.id = requestAnimationFrame(frame);
+      });
+    }
+
+    // ring sweep + counter, ease-out cubic, grey->purple, 80ms stutter at score 70
+    function runRing(tk) {
+      return new Promise(function (resolve) {
+        var start = 0, pausedTotal = 0, pauseUntil = 0, pauseStart = 0, stuttered = false, capShown = false, h = track(tk);
+        function ease(x) { return 1 - Math.pow(1 - x, 3); }
+        function ch(a, b, t) { return Math.round(a + (b - a) * t); }
+        function frame(ts) {
+          if (tk.cancelled) { resolve(); return; }
+          if (!start) { start = ts; }
+          if (pauseUntil > 0) {
+            if (ts < pauseUntil) { h.id = requestAnimationFrame(frame); return; }
+            pausedTotal += ts - pauseStart; pauseUntil = 0;
+          }
+          var e = ease(Math.min(1, (ts - start - pausedTotal) / 1600));
+          var count = 87 * e;
+          if (!stuttered && count >= 70) { stuttered = true; pauseUntil = ts + 80; pauseStart = ts; h.id = requestAnimationFrame(frame); return; }
+          ringFill.style.strokeDashoffset = C - (C - FINAL) * e;
+          ringFill.style.stroke = 'rgb(' + ch(51, 124, e) + ',' + ch(51, 58, e) + ',' + ch(51, 237, e) + ')';
+          num.textContent = Math.round(count);
+          if (!capShown && count >= 50) { cap.classList.add('show'); capShown = true; }
+          if (e < 1) { h.id = requestAnimationFrame(frame); }
+          else {
+            num.textContent = '87'; ringFill.style.strokeDashoffset = FINAL; ringFill.style.stroke = '#7C3AED';
+            replay(burst, 'run'); resolve();
+          }
+        }
+        h.id = requestAnimationFrame(frame);
+      });
+    }
+
+    // right-panel cascade (runs in parallel with the ring)
+    async function fireRight(tk) {
+      sentLbl.classList.add('show');
+      await typeWriter(tk, posType, pos, 'Positive', 60, 0); if (tk.cancelled) { return; }
+      replay(pos, 'pulse');
+      detLbl.classList.add('show');
+      await sleep(tk, 160); if (tk.cancelled) { return; }
+      replay(pricing, 'stamp'); pricing.classList.add('flash-on');
+      var p1 = setTimeout(function () { pricing.classList.remove('flash-on'); }, 80); tk.timers.push(p1);
+      await sleep(tk, 200); if (tk.cancelled) { return; }
+      replay(meeting, 'stamp'); meeting.classList.add('flash-on');
+      var p2 = setTimeout(function () { meeting.classList.remove('flash-on'); }, 80); tk.timers.push(p2);
+      await sleep(tk, 200); if (tk.cancelled) { return; }
+      nextLbl.classList.add('show');
+      await sleep(tk, 100); if (tk.cancelled) { return; }
+      arrow.classList.add('in');
+      await sleep(tk, 100); if (tk.cancelled) { return; }
+      action.classList.add('in');
+      await sleep(tk, 250); if (tk.cancelled) { return; }
+      arrow.classList.add('pulsing');
+    }
+
+    // ---- master story (one full ~9s loop) ----
+    async function story(tk) {
+      resetContent();
+      tk.rafs.length = 0; tk.timers.length = 0;
+      await sleep(tk, 300); if (tk.cancelled) { return; }
+
+      // Phase 3 — the message arrives, then types itself out
+      reply.classList.add('lit');
+      avatar.classList.add('in'); replay(avWrap, 'glow');
+      await sleep(tk, 200); if (tk.cancelled) { return; }
+      name.classList.add('in');
+      await sleep(tk, 150); if (tk.cancelled) { return; }
+      role.classList.add('in');
+      await sleep(tk, 250); if (tk.cancelled) { return; }
+      quote.classList.add('typing');          // cursor blinks first
+      replay(scan, 'run');                     // AI "reads" the message
+      // Start typing in the BACKGROUND — the AI reads + analyses in parallel, so the
+      // viewer grasps the whole concept immediately instead of waiting for the full quote.
+      typeWriter(tk, quoteType, quote, QUOTE, 28, 8).then(function () { if (!tk.cancelled) { quote.classList.remove('typing'); } });
+      await sleep(tk, 900); if (tk.cancelled) { return; }   // brief read beat; typing keeps running
+
+      // Phase 4 — processing sweep (overlaps the still-typing message)
+      replay(shimmer, 'run');
+      await sleep(tk, 700); if (tk.cancelled) { return; }
+
+      // Phase 5 — fire analysis simultaneously across center + right panels
+      score.classList.add('lit'); analysis.classList.add('lit');
+      runRing(tk);            // self-running (not awaited)
+      fireRight(tk);          // self-running (not awaited)
+
+      // Phase 6 — verdict drops after the score locks in
+      await sleep(tk, 1800); if (tk.cancelled) { return; }
+      hot.classList.add('in'); replay(flash, 'run'); hot.classList.add('flicker');
+      ringFill.style.stroke = '#F97316';       // ring briefly tints orange
+      await sleep(tk, 200); if (tk.cancelled) { return; }
+      ringFill.style.stroke = '#7C3AED';
+      hot.classList.remove('flicker');
+      card.classList.add('analyzed');          // Phase 7 idle micro-animations on
+
+      // Phase 7 — hold the fully-analyzed state
+      await sleep(tk, 2600); if (tk.cancelled) { return; }
+
+      // Phase 8 — fade panels back to dim, then loop restarts (reset under cover)
+      card.classList.remove('analyzed');
+      reply.classList.remove('lit'); score.classList.remove('lit'); analysis.classList.remove('lit');
+      await sleep(tk, 800); if (tk.cancelled) { return; }
+    }
+
+    var token = null, entered = false;
+    function cancel() {
+      if (!token) { return; }
+      token.cancelled = true;
+      token.rafs.forEach(function (h) { cancelAnimationFrame(h.id); });
+      token.timers.forEach(clearTimeout);
+      token = null;
+    }
+    function startStory() {
+      cancel();
+      var tk = token = { cancelled: false, rafs: [], timers: [] };
+      (async function () {
+        if (!entered) { entered = true; await sleep(tk, 900); } // first time: let Phase 1/2 enter
+        while (!tk.cancelled) { await story(tk); }
+      })();
+    }
+
+    if (!('IntersectionObserver' in window)) { card.classList.add('in-view'); startStory(); return; }
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (entry.isIntersecting) { card.classList.add('in-view'); startStory(); }
+        else { cancel(); resetContent(); }
+      });
+    }, { threshold: 0.15 });
+    io.observe(card);
+  })();
+</script>
+</body>
+</html>
