@@ -351,6 +351,155 @@
   .ai-role { font-size: 12.5px; color: var(--text-secondary); margin-top: 2px; }
   .ai-score { font-size: 20px; font-weight: 700; color: var(--brand-light); }
 
+  /* ============================================================
+     AI Search — live demo animation (fully scoped to #aiSearchPanel)
+     Zero layout shift: only opacity / transform / stroke / width.
+     ============================================================ */
+  #aiSearchPanel { position: relative; overflow: hidden; min-height: 304px; }
+  #aiSearchPanel .ai-search { position: relative; will-change: transform, opacity; }
+  #aiSearchPanel .as-text { flex: 1; min-width: 0; white-space: nowrap; overflow: hidden; transition: opacity 0.2s ease; }
+  #aiSearchPanel .as-text.locked { opacity: 0.5; }
+  #aiSearchPanel .as-word { display: inline; }
+  #aiSearchPanel .as-word.flash { animation: aisWordFlash 0.15s ease; }
+  @keyframes aisWordFlash { 0% { opacity: 1; } 50% { opacity: 0.5; } 100% { opacity: 1; } }
+
+  #aiSearchPanel .cursor { display: inline-block; color: var(--brand-light); font-weight: 300; }
+  #aiSearchPanel .cursor.blink { animation: aisBlink 1.06s steps(1, end) infinite; }
+  #aiSearchPanel .cursor.hidden { opacity: 0; animation: none; }
+  @keyframes aisBlink { 0% { opacity: 1; } 50% { opacity: 1; } 50.01% { opacity: 0; } 100% { opacity: 0; } }
+
+  /* Search button press + ripple */
+  #aiSearchPanel .as-btn { position: relative; overflow: hidden; }
+  #aiSearchPanel .as-btn.press { animation: aisPress 0.2s ease; }
+  @keyframes aisPress {
+    0%   { transform: scale(1);    filter: brightness(1); }
+    40%  { transform: scale(0.93); filter: brightness(1.3); }
+    100% { transform: scale(1);    filter: brightness(1); }
+  }
+  #aiSearchPanel .as-ripple {
+    position: absolute; left: 50%; top: 50%;
+    width: 120px; height: 120px; margin: -60px 0 0 -60px;
+    border-radius: 50%; background: #fff; opacity: 0;
+    transform: scale(0); pointer-events: none;
+  }
+  #aiSearchPanel .as-ripple.go { animation: aisRipple 0.4s ease-out; }
+  @keyframes aisRipple { 0% { transform: scale(0); opacity: 0.3; } 100% { transform: scale(2.5); opacity: 0; } }
+
+  /* Border scan arc + resting traveling dot (SVG) */
+  #aiSearchPanel .as-scan { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; overflow: visible; }
+  #aiSearchPanel .as-scan rect { fill: none; }
+  #aiSearchPanel .as-scan-rect { stroke: rgba(124, 58, 237, 0.7); stroke-width: 2; opacity: 0; }
+  #aiSearchPanel .as-scan-rest { stroke: var(--brand-light); stroke-width: 2; opacity: 0; }
+  #aiSearchPanel .ai-search.connected .as-scan-rest { opacity: 0.15; animation: aisTravel 4s linear infinite; }
+  @keyframes aisTravel { to { stroke-dashoffset: calc(var(--perim, 300) * -1px); } }
+
+  /* Database scan line */
+  #aiSearchPanel .ai-scanline {
+    position: absolute; left: 0; right: 0; top: 0; height: 1px;
+    background: var(--brand-light); opacity: 0; pointer-events: none;
+  }
+  #aiSearchPanel .ai-scanline.go { animation: aisScanline 0.6s ease-in-out; }
+  @keyframes aisScanline {
+    0%   { opacity: 0;    transform: translateY(64px); }
+    15%  { opacity: 0.12; }
+    85%  { opacity: 0.12; }
+    100% { opacity: 0;    transform: translateY(var(--scan-end, 240px)); }
+  }
+
+  /* Reserve space so the card height never changes as content fills/clears
+     (prevents layout shift of the neighbouring card in the bento row). */
+  #aiSearchPanel .ai-chips { min-height: 30px; }
+  #aiSearchPanel .ai-results { min-height: 156px; }
+
+  /* Filter tags stamp-in */
+  #aiSearchPanel .ai-chip-row { display: inline-flex; align-items: center; gap: 8px; }
+  #aiSearchPanel .chip { opacity: 0; will-change: transform, opacity; }
+  #aiSearchPanel .chip.stamp { animation: aisStamp 0.26s ease-out forwards; }
+  @keyframes aisStamp {
+    0%   { opacity: 0; transform: scale(1.3); }
+    60%  { opacity: 1; transform: scale(0.95); }
+    100% { opacity: 1; transform: scale(1); }
+  }
+  #aiSearchPanel .chip.active.stamp { animation: aisStampActive 0.26s ease-out forwards; }
+  @keyframes aisStampActive {
+    0%   { opacity: 0; transform: scale(1.3); filter: brightness(1.7); }
+    25%  { filter: brightness(1.7); }
+    40%  { filter: brightness(1); }
+    60%  { opacity: 1; transform: scale(0.95); }
+    100% { opacity: 1; transform: scale(1); filter: brightness(1); }
+  }
+  #aiSearchPanel .chip.exit { animation: aisChipOut 0.25s ease forwards; }
+  @keyframes aisChipOut { to { opacity: 0; transform: scale(0.9); } }
+
+  /* Match count */
+  #aiSearchPanel .matches { opacity: 0; display: inline-block; }
+  #aiSearchPanel .matches.bounce { animation: aisBounce 0.2s ease; }
+  @keyframes aisBounce { 0% { transform: scale(1); } 50% { transform: scale(1.08); } 100% { transform: scale(1); } }
+  #aiSearchPanel .matches.breathe { animation: aisBreathe 3s ease-in-out infinite; }
+  @keyframes aisBreathe { 0%, 100% { opacity: 1; } 50% { opacity: 0.7; } }
+
+  /* Result rows — discovered sequentially */
+  #aiSearchPanel .ai-results { position: relative; }
+  #aiSearchPanel .ai-result { opacity: 0; will-change: transform, opacity; }
+  #aiSearchPanel .ai-result.enter { animation: aisRowIn 0.38s cubic-bezier(0.22, 1, 0.36, 1) forwards; }
+  @keyframes aisRowIn { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
+  #aiSearchPanel .ai-result.exit { animation: aisRowOut 0.35s ease-in forwards; }
+  @keyframes aisRowOut { from { opacity: 1; transform: translateY(0); } to { opacity: 0; transform: translateY(-10px); } }
+
+  #aiSearchPanel .ai-result .ai-av { transform: scale(0.5); }
+  #aiSearchPanel .ai-result.enter .ai-av { animation: aisAvIn 0.35s ease-out forwards; }
+  @keyframes aisAvIn { 0% { transform: scale(0.5); } 70% { transform: scale(1.08); } 100% { transform: scale(1); } }
+
+  #aiSearchPanel .ai-name { opacity: 0; }
+  #aiSearchPanel .ai-result.enter .ai-name { animation: aisNameIn 0.28s ease-out 0.08s forwards; }
+  @keyframes aisNameIn { from { opacity: 0; transform: translateX(-8px); } to { opacity: 1; transform: translateX(0); } }
+  #aiSearchPanel .ai-role { opacity: 0; }
+  #aiSearchPanel .ai-result.enter .ai-role { animation: aisRoleIn 0.25s ease-out 0.12s forwards; }
+  @keyframes aisRoleIn { from { opacity: 0; } to { opacity: 0.6; } }
+
+  #aiSearchPanel .ai-score.snap { animation: aisSnap 0.2s ease; }
+  @keyframes aisSnap { 0% { transform: scale(1); } 50% { transform: scale(1.1); } 100% { transform: scale(1); } }
+  #aiSearchPanel .ai-score.glow { animation: aisGlow 2.5s ease-in-out infinite; }
+  @keyframes aisGlow {
+    0%, 100% { text-shadow: 0 0 6px rgba(139, 77, 255, 0.35); }
+    50%      { text-shadow: 0 0 11px rgba(139, 77, 255, 0.8); }
+  }
+
+  /* Divider that draws in between rows */
+  #aiSearchPanel .ai-divider { height: 1px; background: var(--bg-card-border); width: 0; margin: 10px 14px 0; }
+  #aiSearchPanel .ai-divider.draw { animation: aisDraw 0.3s ease-out forwards; }
+  @keyframes aisDraw { from { width: 0; } to { width: calc(100% - 28px); } }
+
+  /* "AI confirmed match" micro dot */
+  #aiSearchPanel .ai-dot {
+    display: inline-block; width: 4px; height: 4px; border-radius: 50%;
+    background: var(--brand-light); margin-left: 7px; vertical-align: middle;
+    opacity: 0; position: relative;
+  }
+  #aiSearchPanel .ai-dot.pulse { opacity: 1; }
+  #aiSearchPanel .ai-dot.pulse::after {
+    content: ''; position: absolute; inset: 0; border-radius: 50%;
+    background: var(--brand-light); animation: aisDotPulse 0.5s ease-out forwards;
+  }
+  @keyframes aisDotPulse { from { transform: scale(1); opacity: 0.5; } to { transform: scale(2.5); opacity: 0; } }
+
+  /* Static fallback for reduced motion */
+  #aiSearchPanel.is-static .chip,
+  #aiSearchPanel.is-static .ai-result,
+  #aiSearchPanel.is-static .ai-name,
+  #aiSearchPanel.is-static .matches { opacity: 1 !important; transform: none !important; animation: none !important; }
+  #aiSearchPanel.is-static .ai-role { opacity: 0.6 !important; transform: none !important; animation: none !important; }
+  #aiSearchPanel.is-static .ai-av { transform: none !important; animation: none !important; }
+  #aiSearchPanel.is-static .ai-divider { width: calc(100% - 28px) !important; animation: none !important; }
+  #aiSearchPanel.is-static .cursor { display: none; }
+
+  @media (prefers-reduced-motion: reduce) {
+    #aiSearchPanel .cursor.blink,
+    #aiSearchPanel .matches.breathe,
+    #aiSearchPanel .ai-score.glow,
+    #aiSearchPanel .ai-search.connected .as-scan-rest { animation: none; }
+  }
+
   /* --- Verified Contacts --- */
   .vc-head { display: flex; align-items: center; gap: 13px; margin-bottom: 14px; }
   .vc-av {
@@ -1136,28 +1285,28 @@
           <h3>AI Search</h3>
           <p>Describe your ideal buyer in a sentence — Zeus finds them, no filter-stacking required.</p>
         </div>
-        <div class="bc-panel">
+        <div class="bc-panel" id="aiSearchPanel">
           <div class="ai-search">
             <i data-lucide="search"></i>
-            <span class="as-text">Fintech founders hiring sales leaders <span class="cursor">|</span></span>
-            <button class="as-btn">Search</button>
+            <span class="as-text"><span class="as-typed"></span><span class="cursor" aria-hidden="true">|</span></span>
+            <button class="as-btn" type="button">Search<span class="as-ripple" aria-hidden="true"></span></button>
+            <svg class="as-scan" aria-hidden="true" preserveAspectRatio="none">
+              <rect class="as-scan-rect"></rect>
+              <rect class="as-scan-rest"></rect>
+            </svg>
           </div>
           <div class="ai-chips">
-            <span class="chip active">FOUNDER/CEO</span>
-            <span class="chip">FINTECH</span>
-            <span class="chip">HIRING</span>
-            <span class="matches">86 matches</span>
+            <span class="ai-chip-row"></span>
+            <span class="matches"></span>
           </div>
-          <div class="ai-result">
-            <img class="ai-av" src="avatars/Container.png" alt="Tom Keller" />
-            <div class="ai-info"><div class="ai-name">Tom Keller</div><div class="ai-role">CEO · Arc Pay</div></div>
-            <span class="ai-score">96</span>
-          </div>
-          <div class="ai-result">
-            <img class="ai-av" src="avatars/Container-2.png" alt="Rhea Vance" />
-            <div class="ai-info"><div class="ai-name">Rhea Vance</div><div class="ai-role">Founder · Ledgr</div></div>
-            <span class="ai-score">93</span>
-          </div>
+          <div class="ai-results"></div>
+          <div class="ai-scanline" aria-hidden="true"></div>
+          <!-- Static fallback (prefers-reduced-motion / no-JS) -->
+          <noscript>
+            <div style="margin-top:10px;color:var(--text-secondary);font-size:13px">
+              Tom Keller · CEO · Arc Pay · 96 &nbsp;|&nbsp; Rhea Vance · Founder · Ledgr · 93
+            </div>
+          </noscript>
         </div>
       </article>
 
@@ -1858,6 +2007,401 @@
       }
     });
   })();
+</script>
+
+<!-- ================================================================
+     Zeus AI Search — live search demo animation. Fully self-contained.
+     No shared state, no global styles. Triggers on scroll-into-view,
+     loops two alternating query cycles, cancels + resets on viewport exit.
+     ================================================================ -->
+<script>
+(function () {
+  var panel = document.getElementById('aiSearchPanel');
+  if (!panel) return;
+
+  // ---- Content config — swap queries/tags/counts/results here only ----
+  var CYCLES = [
+    {
+      query: 'Fintech founders hiring sales leaders',
+      tags: [ { label: 'FOUNDER/CEO', active: true }, { label: 'FINTECH' }, { label: 'HIRING' } ],
+      matches: 86,
+      results: [
+        { avatar: 'avatars/Container.png',   name: 'Tom Keller', role: 'CEO · Arc Pay',    score: 96 },
+        { avatar: 'avatars/Container-2.png', name: 'Rhea Vance', role: 'Founder · Ledgr',  score: 93 }
+      ]
+    },
+    {
+      query: 'B2B SaaS VP of Sales Series B',
+      tags: [ { label: 'VP SALES', active: true }, { label: 'SERIES B' }, { label: 'SAAS' } ],
+      matches: 54,
+      results: [
+        { avatar: 'avatars/Container-3.png', name: 'Marcus Hill', role: 'VP Sales · Stackr',          score: 91 },
+        { avatar: 'avatars/Container-4.png', name: 'Priya Nair',  role: 'Head of Revenue · Loopbase', score: 88 }
+      ]
+    }
+  ];
+
+  // ---- Element handles ----
+  var searchBar = panel.querySelector('.ai-search');
+  var asText    = panel.querySelector('.as-text');
+  var asTyped   = panel.querySelector('.as-typed');
+  var cursor    = panel.querySelector('.cursor');
+  var btn       = panel.querySelector('.as-btn');
+  var ripple    = panel.querySelector('.as-ripple');
+  var svg       = panel.querySelector('.as-scan');
+  var scanRect  = panel.querySelector('.as-scan-rect');
+  var scanRest  = panel.querySelector('.as-scan-rest');
+  var chipRow   = panel.querySelector('.ai-chip-row');
+  var matchesEl = panel.querySelector('.matches');
+  var results   = panel.querySelector('.ai-results');
+  var scanline  = panel.querySelector('.ai-scanline');
+
+  var prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var perim = 300;
+
+  // ---- Easing + color helpers ----
+  function easeOutCubic(t) { return 1 - Math.pow(1 - t, 3); }
+  function hx(h) { h = h.replace('#', ''); return [parseInt(h.substr(0,2),16), parseInt(h.substr(2,2),16), parseInt(h.substr(4,2),16)]; }
+  function lerpHex(a, b, t) {
+    var pa = hx(a), pb = hx(b);
+    return 'rgb(' + Math.round(pa[0]+(pb[0]-pa[0])*t) + ',' + Math.round(pa[1]+(pb[1]-pa[1])*t) + ',' + Math.round(pa[2]+(pb[2]-pa[2])*t) + ')';
+  }
+
+  // ---- Cancellable run token + waiter ----
+  var active = null;
+  function newToken() { return { cancelled: false, timers: [], rejectWait: null }; }
+  function cancel() {
+    if (!active) return;
+    active.cancelled = true;
+    active.timers.forEach(clearTimeout);
+    active.timers = [];
+    if (active.rejectWait) { try { active.rejectWait(); } catch (e) {} }
+    active = null;
+  }
+  function wait(token, ms) {
+    return new Promise(function (resolve, reject) {
+      if (token.cancelled) { reject(); return; }
+      token.rejectWait = reject;
+      var t = setTimeout(function () { resolve(); }, ms);
+      token.timers.push(t);
+    });
+  }
+  function frameLoop(token, dur, step) {
+    return new Promise(function (resolve) {
+      var start = performance.now();
+      (function tick(now) {
+        if (token.cancelled) { resolve(); return; }
+        var t = dur > 0 ? Math.min(1, (now - start) / dur) : 1;
+        step(t);
+        if (t < 1) requestAnimationFrame(tick); else resolve();
+      })(start);
+    });
+  }
+
+  // ---- SVG border sizing (perimeter for dash animations) ----
+  function sizeSvg() {
+    var r = searchBar.getBoundingClientRect();
+    var W = Math.round(r.width), H = Math.round(r.height);
+    if (!W || !H) return;
+    perim = 2 * ((W - 2) + (H - 2));
+    [scanRect, scanRest].forEach(function (rect) {
+      rect.setAttribute('x', 1); rect.setAttribute('y', 1);
+      rect.setAttribute('width', W - 2); rect.setAttribute('height', H - 2);
+      rect.setAttribute('rx', 11); rect.setAttribute('ry', 11);
+    });
+    svg.setAttribute('viewBox', '0 0 ' + W + ' ' + H);
+    scanRect.style.strokeDasharray = perim + 'px';
+    scanRect.style.strokeDashoffset = perim + 'px';
+    scanRest.style.strokeDasharray = '7 ' + perim;
+    searchBar.style.setProperty('--perim', perim);
+    // scan line travels the full panel content height
+    var ph = panel.clientHeight - 32;
+    panel.style.setProperty('--scan-end', ph + 'px');
+  }
+
+  // ---- Typewriter (incremental, per-word flash) ----
+  function typeIn(token, text) {
+    return new Promise(function (resolve) {
+      asTyped.innerHTML = '';
+      var i = 0, currentWord = null;
+      var last = performance.now(), acc = 0;
+      var nextDelay = 32 + (Math.random() * 20 - 10);
+      function flash(span) { if (!span) return; span.classList.add('flash'); setTimeout(function () { span.classList.remove('flash'); }, 160); }
+      (function tick(now) {
+        if (token.cancelled) { resolve(); return; }
+        acc += now - last; last = now;
+        while (acc >= nextDelay && i < text.length) {
+          acc -= nextDelay;
+          var ch = text[i];
+          if (ch === ' ') {
+            flash(currentWord); currentWord = null;
+            asTyped.appendChild(document.createTextNode(' '));
+          } else {
+            if (!currentWord) { currentWord = document.createElement('span'); currentWord.className = 'as-word'; asTyped.appendChild(currentWord); }
+            currentWord.textContent += ch;
+          }
+          i++;
+          nextDelay = 32 + (Math.random() * 20 - 10);
+        }
+        if (i < text.length) requestAnimationFrame(tick);
+        else { flash(currentWord); resolve(); }
+      })(last);
+    });
+  }
+  function deleteText(token) {
+    return new Promise(function (resolve) {
+      var text = asTyped.textContent;
+      asTyped.textContent = text;
+      var last = performance.now(), acc = 0;
+      (function tick(now) {
+        if (token.cancelled) { resolve(); return; }
+        acc += now - last; last = now;
+        while (acc >= 18 && text.length > 0) { acc -= 18; text = text.slice(0, -1); asTyped.textContent = text; }
+        if (text.length > 0) requestAnimationFrame(tick); else resolve();
+      })(last);
+    });
+  }
+
+  // ---- Counters ----
+  function countUp(token, el, target, dur, color) {
+    return frameLoop(token, dur, function (t) {
+      var e = easeOutCubic(t);
+      el.textContent = Math.round(e * target);
+      if (color) {
+        if (t < 0.7) el.style.color = '#ffffff';
+        else el.style.color = lerpHex('#ffffff', '#8B4DFF', (t - 0.7) / 0.3);
+      }
+    });
+  }
+
+  // ---- Renderers ----
+  function renderChips(cfg) {
+    chipRow.innerHTML = '';
+    return cfg.tags.map(function (tag) {
+      var el = document.createElement('span');
+      el.className = 'chip' + (tag.active ? ' active' : '');
+      el.textContent = tag.label;
+      chipRow.appendChild(el);
+      return el;
+    });
+  }
+  function renderResults(cfg) {
+    results.innerHTML = '';
+    var rows = [];
+    cfg.results.forEach(function (data, idx) {
+      if (idx === 1) {
+        var div = document.createElement('div');
+        div.className = 'ai-divider';
+        results.appendChild(div);
+      }
+      var row = document.createElement('div');
+      row.className = 'ai-result';
+      row.innerHTML =
+        '<img class="ai-av" src="' + data.avatar + '" alt="' + data.name + '" />' +
+        '<div class="ai-info"><div class="ai-name">' + data.name + '<span class="ai-dot"></span></div>' +
+        '<div class="ai-role">' + data.role + '</div></div>' +
+        '<span class="ai-score">0</span>';
+      results.appendChild(row);
+      rows.push(row);
+    });
+    return rows;
+  }
+
+  // ---- Border sweep + scan line ----
+  function borderSweep() {
+    scanRect.style.transition = 'none';
+    scanRect.style.strokeDashoffset = perim + 'px';
+    scanRect.style.opacity = '1';
+    void scanRect.getBoundingClientRect();
+    scanRect.style.transition = 'stroke-dashoffset 0.8s ease-in-out';
+    scanRect.style.strokeDashoffset = '0px';
+    setTimeout(function () { scanRect.style.opacity = '0'; }, 850);
+  }
+  function runScanline() { scanline.classList.remove('go'); void scanline.offsetWidth; scanline.classList.add('go'); }
+
+  // ---- One result row reveal (slide + avatar spring + name/role + score) ----
+  function revealRow(token, row, data) {
+    row.classList.add('enter');
+    var scoreEl = row.querySelector('.ai-score');
+    return wait(token, 80).then(function () {
+      return countUp(token, scoreEl, data.score, 600, true);
+    }).then(function () {
+      scoreEl.style.color = '#8B4DFF';
+      scoreEl.classList.add('snap');
+      setTimeout(function () { scoreEl.classList.remove('snap'); }, 220);
+    });
+  }
+
+  // ---- Reset visible content to empty (between cycles / on exit) ----
+  function clearAll() {
+    chipRow.innerHTML = '';
+    results.innerHTML = '';
+    matchesEl.textContent = '';
+    matchesEl.style.opacity = '0';
+    matchesEl.classList.remove('breathe', 'bounce');
+    asTyped.innerHTML = '';
+    searchBar.classList.remove('connected');
+    scanRect.style.opacity = '0';
+    asText.classList.remove('locked');
+    cursor.classList.remove('hidden');
+    cursor.classList.add('blink');
+  }
+
+  // ---- One full search cycle (Phases 4–11) ----
+  function runCycle(token, cfg, first) {
+    return Promise.resolve()
+      // Phase 4 — type query
+      .then(function () {
+        cursor.classList.remove('hidden'); cursor.classList.add('blink');
+        return wait(token, first ? 450 : 0);
+      })
+      .then(function () { return typeIn(token, cfg.query); })
+      .then(function () { return wait(token, 300); })
+      // Phase 5 — button press + ripple
+      .then(function () {
+        btn.classList.add('press');
+        ripple.classList.remove('go'); void ripple.offsetWidth; ripple.classList.add('go');
+        return wait(token, 200);
+      })
+      .then(function () { btn.classList.remove('press'); })
+      // Phase 6 — AI scanning
+      .then(function () {
+        cursor.classList.remove('blink'); cursor.classList.add('hidden');
+        asText.classList.add('locked');
+        borderSweep();
+        runScanline();
+        return wait(token, 900);
+      })
+      .then(function () { asText.classList.remove('locked'); })
+      // Phase 7 — filter tags stamp in, staggered
+      .then(function () {
+        var chips = renderChips(cfg);
+        return chips.reduce(function (p, chip) {
+          return p.then(function () { chip.classList.add('stamp'); return wait(token, 120); });
+        }, Promise.resolve());
+      })
+      // match count up
+      .then(function () { return wait(token, 100); })
+      .then(function () {
+        matchesEl.style.transition = 'opacity 0.5s ease-out';
+        matchesEl.style.opacity = '1';
+        return countUp(token, matchesEl, cfg.matches, 500, false);
+      })
+      .then(function () {
+        matchesEl.textContent = cfg.matches + ' matches';
+        matchesEl.classList.add('bounce');
+        setTimeout(function () { matchesEl.classList.remove('bounce'); }, 220);
+      })
+      // Phase 8 — results discovered one by one
+      .then(function () {
+        var rows = renderResults(cfg);
+        token._rows = rows;
+        return revealRow(token, rows[0], cfg.results[0]);
+      })
+      .then(function () { return wait(token, 400); })
+      .then(function () {
+        var divider = results.querySelector('.ai-divider');
+        if (divider) divider.classList.add('draw');
+        return revealRow(token, token._rows[1], cfg.results[1]);
+      })
+      // Phase 9 — confirmed-match dot pulses
+      .then(function () { return wait(token, 150); })
+      .then(function () {
+        token._rows.forEach(function (r) {
+          var d = r.querySelector('.ai-dot');
+          d.classList.add('pulse');
+          setTimeout(function () { d.classList.remove('pulse'); }, 520);
+        });
+      })
+      // Phase 10 — hold + idle
+      .then(function () {
+        matchesEl.classList.add('breathe');
+        results.querySelectorAll('.ai-score').forEach(function (s) { s.classList.add('glow'); });
+        searchBar.classList.add('connected');
+        return wait(token, 4200);
+      })
+      // Phase 11 — reset for next cycle
+      .then(function () {
+        matchesEl.classList.remove('breathe');
+        results.querySelectorAll('.ai-score').forEach(function (s) { s.classList.remove('glow'); });
+        searchBar.classList.remove('connected');
+        token._rows[1].classList.add('exit');
+        return wait(token, 100);
+      })
+      .then(function () {
+        token._rows[0].classList.add('exit');
+        var chips = chipRow.querySelectorAll('.chip');
+        var seq = Promise.resolve();
+        for (var k = chips.length - 1; k >= 0; k--) {
+          (function (c) { seq = seq.then(function () { c.classList.add('exit'); return wait(token, 80); }); })(chips[k]);
+        }
+        return seq;
+      })
+      .then(function () {
+        matchesEl.style.transition = 'opacity 0.2s ease';
+        matchesEl.style.opacity = '0';
+        return wait(token, 350);
+      })
+      .then(function () {
+        results.innerHTML = '';
+        chipRow.innerHTML = '';
+        matchesEl.textContent = '';
+        matchesEl.style.transition = '';
+        cursor.classList.remove('hidden'); cursor.classList.add('blink');
+        return deleteText(token);
+      })
+      .then(function () { return wait(token, 400); });
+  }
+
+  // ---- Master loop ----
+  function runLoop(token) {
+    sizeSvg();
+    clearAll();
+    var idx = 0;
+    function next(first) {
+      if (token.cancelled) return;
+      runCycle(token, CYCLES[idx % CYCLES.length], first)
+        .then(function () { idx++; next(false); })
+        .catch(function () { /* cancelled */ });
+    }
+    next(true);
+  }
+
+  // ---- Static fallback (reduced motion) ----
+  function renderStatic() {
+    var cfg = CYCLES[0];
+    panel.classList.add('is-static');
+    asTyped.textContent = cfg.query;
+    renderChips(cfg);
+    matchesEl.textContent = cfg.matches + ' matches';
+    var rows = renderResults(cfg);
+    rows.forEach(function (row, i) {
+      var s = row.querySelector('.ai-score');
+      s.textContent = cfg.results[i].score;
+      s.style.color = '#8B4DFF';
+    });
+  }
+
+  // ---- Trigger on scroll-into-view; cancel + reset on exit ----
+  if (prefersReduced || !('IntersectionObserver' in window)) {
+    renderStatic();
+    return;
+  }
+
+  window.addEventListener('resize', function () { if (active) sizeSvg(); });
+
+  var io = new IntersectionObserver(function (entries) {
+    entries.forEach(function (entry) {
+      if (entry.isIntersecting) {
+        if (!active) { active = newToken(); runLoop(active); }
+      } else {
+        cancel();
+        clearAll();
+      }
+    });
+  }, { threshold: 0.35 });
+  io.observe(panel);
+})();
 </script>
 </body>
 </html>
