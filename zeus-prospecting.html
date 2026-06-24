@@ -891,25 +891,10 @@
   }
   .mp-toggle span { font-size: 11px; font-weight: 600; color: var(--text-secondary); padding: 5px 12px; border-radius: 6px; }
   .mp-toggle span.active { background: linear-gradient(135deg, #8B4DFF, #6C2BDF); color: #fff; }
-  .mp-bars {
-    position: relative;
-    display: flex; align-items: flex-end; gap: 9px;
-    height: 200px; margin-bottom: 12px;
-  }
-  .mp-bars::before {
-    content: ""; position: absolute; left: 0; right: 0; top: 46%;
-    border-top: 1px dashed rgba(255,255,255,0.12);
-  }
-  .mp-bar { flex: 1; border-radius: 6px 6px 0 0; background: #2A2150; position: relative; }
-  .mp-bar.peak { background: linear-gradient(180deg, #A576F8, #6C2BDF); }
-  .mp-peak {
-    position: absolute; top: -24px; left: 50%; transform: translateX(-50%);
-    background: linear-gradient(135deg, #8B4DFF, #6C2BDF);
-    color: #fff; font-size: 10px; font-weight: 600;
-    padding: 3px 8px; border-radius: 6px; white-space: nowrap;
-  }
-  .mp-axis { display: flex; justify-content: space-between; padding: 0 4px; }
-  .mp-axis span { font-size: 11px; font-weight: 600; letter-spacing: 0.05em; color: var(--text-muted); }
+  .mp-chart-svg-wrap { display: block; }
+  .mp-chart-svg-wrap svg { display: block; width: 100%; height: auto; overflow: visible; }
+  .mp-bar-rect { transform-box: fill-box; transform-origin: 50% 100%; will-change: transform, opacity; }
+  @keyframes mp-dash-travel { from { stroke-dashoffset: 8; } to { stroke-dashoffset: 0; } }
 
   @media (max-width: 820px) {
     .bento { grid-template-columns: 1fr; }
@@ -1821,41 +1806,32 @@
       </article>
 
       <!-- Card 5: Watch Your Whole Market Move (full width) -->
-      <article class="bento-card full" data-reveal>
+      <article class="bento-card full" id="mpCard">
         <div class="mp">
           <div class="mp-left">
-            <span class="mp-pill">Market Pulse</span>
-            <h3>Watch Your Whole<br />Market Move</h3>
-            <p>Zeus tracks new matches and fresh signals across your saved searches every day, so you always know when activity in your target market is heating up.</p>
-            <div class="mp-stats">
+            <span class="mp-pill" data-mp-el="pill">Market Pulse</span>
+            <h3 data-mp-el="h3"><span data-mp-el="line1">Watch Your Whole</span><br /><span data-mp-el="line2">Market Move</span></h3>
+            <p data-mp-el="sub">Zeus tracks new matches and fresh signals across your saved searches every day, so you always know when activity in your target market is heating up.</p>
+            <div class="mp-stats" data-mp-el="statsblock">
               <div class="mp-stat">
-                <div class="mp-num">1,284</div>
-                <div class="mp-cap">New matches / wk</div>
+                <div class="mp-num" data-mp-el="stat1">1,284</div>
+                <div class="mp-cap" data-mp-el="cap1">New matches / wk</div>
               </div>
               <div class="mp-stat">
-                <div class="mp-num green">+18%</div>
-                <div class="mp-cap">vs last week</div>
+                <div class="mp-num green" data-mp-el="stat2">+18%</div>
+                <div class="mp-cap" data-mp-el="cap2">vs last week</div>
               </div>
             </div>
           </div>
-          <div class="mp-chart-card">
+          <div class="mp-chart-card" data-mp-el="chartcard">
             <div class="mp-chart-head">
               <span class="t">Signals this month</span>
-              <span class="mp-toggle"><span>30d</span><span class="active">90d</span></span>
+              <span class="mp-toggle">
+                <span data-mp-el="btn30">30d</span>
+                <span data-mp-el="btn90" class="active">90d</span>
+              </span>
             </div>
-            <div class="mp-bars">
-              <div class="mp-bar" style="height:38%"></div>
-              <div class="mp-bar" style="height:44%"></div>
-              <div class="mp-bar" style="height:36%"></div>
-              <div class="mp-bar" style="height:50%"></div>
-              <div class="mp-bar" style="height:56%"></div>
-              <div class="mp-bar" style="height:52%"></div>
-              <div class="mp-bar" style="height:60%"></div>
-              <div class="mp-bar peak" style="height:82%"><span class="mp-peak">Peak · Jul</span></div>
-              <div class="mp-bar" style="height:68%"></div>
-              <div class="mp-bar" style="height:56%"></div>
-            </div>
-            <div class="mp-axis"><span>APR</span><span>MAY</span><span>JUN</span><span>JUL</span></div>
+            <div class="mp-chart-svg-wrap" data-mp-el="svgwrap"></div>
           </div>
         </div>
       </article>
@@ -3429,6 +3405,774 @@
     });
   }, { threshold: 0.35 });
   io.observe(panel);
+})();
+</script>
+
+<!-- ================================================================
+     Market Pulse — live bar-chart storytelling animation.
+     SVG-based, two data views (90d / 30d), infinite loop.
+     Triggers on scroll-into-view. Isolated to #mpCard only.
+     ================================================================ -->
+<script>
+(function () {
+  'use strict';
+
+  // ================================================================
+  // VIEWS CONFIG
+  // ================================================================
+  var VIEWS = [
+    {
+      label:     '90d',
+      bars:      [38, 44, 36, 52, 56, 60, 58, 64, 92, 68],
+      peakIndex: 8,
+      peakLabel: 'Peak · Jul',
+      xLabels:   [{ t: 'APR', x: 50 }, { t: 'MAY', x: 160 }, { t: 'JUN', x: 277 }, { t: 'JUL', x: 395 }],
+      stat1:     1284,
+      stat2:     18
+    },
+    {
+      label:     '30d',
+      bars:      [60, 72, 68, 85, 92, 78],
+      peakIndex: 4,
+      peakLabel: 'Peak · Jul 14',
+      xLabels:   [{ t: 'JUN', x: 104 }, { t: 'JUL', x: 336 }],
+      stat1:     347,
+      stat2:     23
+    }
+  ];
+
+  // ================================================================
+  // INIT — find elements
+  // ================================================================
+  var card = document.getElementById('mpCard');
+  if (!card) return;
+
+  function q(attr) { return card.querySelector('[data-mp-el="' + attr + '"]'); }
+  var pill       = q('pill');
+  var line1      = q('line1');
+  var line2      = q('line2');
+  var sub        = q('sub');
+  var statsBlock = q('statsblock');
+  var stat1El    = q('stat1');
+  var stat2El    = q('stat2');
+  var cap1El     = q('cap1');
+  var cap2El     = q('cap2');
+  var chartCard  = q('chartcard');
+  var svgWrap    = q('svgwrap');
+  var btn30      = q('btn30');
+  var btn90      = q('btn90');
+
+  var prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  // ================================================================
+  // SVG CONSTANTS
+  // ================================================================
+  var NS      = 'http://www.w3.org/2000/svg';
+  var SVG_W   = 440;
+  var CHART_H = 160;
+  var SVG_H   = 205;
+  var XLY     = 192; // x-axis label y
+
+  function mkEl(tag, attrs) {
+    var e = document.createElementNS(NS, tag);
+    var ks = Object.keys(attrs);
+    for (var i = 0; i < ks.length; i++) e.setAttribute(ks[i], attrs[ks[i]]);
+    return e;
+  }
+
+  // ================================================================
+  // BAR LAYOUT
+  // ================================================================
+  function layout(view) {
+    var n    = view.bars.length;
+    var bw   = n <= 6 ? 52 : 32;
+    var gap  = (SVG_W - n * bw) / (n - 1);
+    return view.bars.map(function (h, i) {
+      var x   = i * (bw + gap);
+      var hpx = (h / 100) * CHART_H;
+      return { x: x, y: CHART_H - hpx, w: bw, h: hpx, cx: x + bw / 2, peak: i === view.peakIndex };
+    });
+  }
+
+  // ================================================================
+  // BUILD STATIC SVG SKELETON (once)
+  // ================================================================
+  var svg, clipRect, baseline;
+  var dynG, barEls, peakGlow, burstG, tooltipG, tooltipStem, xlabelEls;
+
+  function buildSkeleton() {
+    svg = mkEl('svg', { viewBox: '0 0 ' + SVG_W + ' ' + SVG_H, 'aria-hidden': 'true' });
+    svg.style.cssText = 'display:block;width:100%;height:auto;overflow:visible;';
+
+    var defs = mkEl('defs', {});
+
+    // Peak gradient (y coords updated per view)
+    var pg = mkEl('linearGradient', { id: 'mpPG', x1: '0', y1: '0', x2: '0', y2: '1', gradientUnits: 'userSpaceOnUse' });
+    pg.appendChild(mkEl('stop', { offset: '0%', 'stop-color': '#A576F8' }));
+    pg.appendChild(mkEl('stop', { offset: '100%', 'stop-color': '#6C2BDF' }));
+    defs.appendChild(pg);
+
+    // Glow gradient
+    var gg = mkEl('linearGradient', { id: 'mpGG', x1: '0', y1: '0', x2: '0', y2: '' + CHART_H, gradientUnits: 'userSpaceOnUse' });
+    gg.appendChild(mkEl('stop', { offset: '0%', 'stop-color': '#7c3aed', 'stop-opacity': '0.18' }));
+    gg.appendChild(mkEl('stop', { offset: '100%', 'stop-color': '#7c3aed', 'stop-opacity': '0' }));
+    defs.appendChild(gg);
+
+    // Baseline clip (draw-in)
+    var cp = mkEl('clipPath', { id: 'mpBC' });
+    clipRect = mkEl('rect', { x: '0', y: '0', width: '0', height: '' + SVG_H });
+    cp.appendChild(clipRect);
+    defs.appendChild(cp);
+
+    svg.appendChild(defs);
+
+    // Baseline
+    baseline = mkEl('line', {
+      x1: '0', y1: '' + CHART_H, x2: '' + SVG_W, y2: '' + CHART_H,
+      stroke: 'rgba(255,255,255,0.12)', 'stroke-width': '1',
+      'stroke-dasharray': '4 4', 'clip-path': 'url(#mpBC)'
+    });
+    svg.appendChild(baseline);
+
+    svgWrap.innerHTML = '';
+    svgWrap.appendChild(svg);
+  }
+
+  // ================================================================
+  // RENDER DYNAMIC ELEMENTS FOR A VIEW
+  // ================================================================
+  function renderDyn(viewIdx) {
+    if (dynG) dynG.remove();
+    var view = VIEWS[viewIdx];
+    var L    = layout(view);
+    var pk   = L[view.peakIndex];
+    dynG     = mkEl('g', {});
+
+    // Update peak gradient y range
+    var pg = svg.querySelector('#mpPG');
+    if (pg) { pg.setAttribute('y1', '' + pk.y); pg.setAttribute('y2', '' + CHART_H); }
+
+    // Glow column behind peak bar
+    peakGlow = mkEl('rect', { x: '' + pk.x, y: '0', width: '' + pk.w, height: '' + CHART_H, fill: 'url(#mpGG)', opacity: '0' });
+    dynG.appendChild(peakGlow);
+
+    // Bars
+    barEls = L.map(function (b) {
+      var r = mkEl('rect', {
+        x: '' + b.x, y: '' + b.y, width: '' + b.w, height: '' + b.h,
+        rx: '5', ry: '5',
+        fill: b.peak ? 'url(#mpPG)' : '#3D2F6E',
+        class: 'mp-bar-rect'
+      });
+      r.style.transform  = 'scaleY(0)';
+      r.style.opacity    = '0.3';
+      dynG.appendChild(r);
+      return { el: r, b: b };
+    });
+
+    // Burst (4 diagonal lines from peak top)
+    burstG = mkEl('g', { opacity: '0' });
+    var BL = 11;
+    [[-1, -1], [1, -1], [1, 1], [-1, 1]].forEach(function (d) {
+      burstG.appendChild(mkEl('line', {
+        x1: '' + pk.cx, y1: '' + pk.y,
+        x2: '' + (pk.cx + d[0] * BL), y2: '' + (pk.y + d[1] * BL),
+        stroke: '#A576F8', 'stroke-width': '1.5', 'stroke-linecap': 'round'
+      }));
+    });
+    dynG.appendChild(burstG);
+
+    // Tooltip
+    var TW  = view.peakLabel.length > 10 ? 84 : 68;
+    var TH  = 22;
+    var ttx = Math.max(4, Math.min(SVG_W - TW - 4, pk.cx - TW / 2));
+    var tty = Math.max(4, pk.y - 42);
+    var tcx = ttx + TW / 2;
+    var sy1 = tty + TH, sy2 = pk.y - 2;
+    var slen = Math.max(0, sy2 - sy1);
+    tooltipG = mkEl('g', { opacity: '0' });
+    tooltipG.appendChild(mkEl('rect', { x: '' + ttx, y: '' + tty, width: '' + TW, height: '' + TH, rx: '6', ry: '6', fill: 'url(#mpPG)' }));
+    var ttxt = mkEl('text', {
+      x: '' + tcx, y: '' + (tty + 15), fill: '#fff',
+      'font-size': '10', 'font-weight': '700', 'text-anchor': 'middle',
+      'font-family': "'Inter',-apple-system,sans-serif"
+    });
+    ttxt.textContent = view.peakLabel;
+    tooltipG.appendChild(ttxt);
+    tooltipStem = mkEl('line', {
+      x1: '' + pk.cx, y1: '' + sy1, x2: '' + pk.cx, y2: '' + sy2,
+      stroke: 'rgba(165,118,248,0.55)', 'stroke-width': '1',
+      'stroke-dasharray': '' + slen, 'stroke-dashoffset': '' + slen
+    });
+    tooltipG.appendChild(tooltipStem);
+    dynG.appendChild(tooltipG);
+
+    // X-axis labels
+    xlabelEls = view.xLabels.map(function (lbl) {
+      var t = mkEl('text', {
+        x: '' + lbl.x, y: '' + XLY, fill: 'rgba(255,255,255,0.45)',
+        'font-size': '11', 'font-weight': '600', 'text-anchor': 'middle',
+        'font-family': "'Inter',-apple-system,sans-serif",
+        'letter-spacing': '0.05em', opacity: '0'
+      });
+      t.textContent = lbl.t;
+      dynG.appendChild(t);
+      return t;
+    });
+
+    svg.appendChild(dynG);
+    return L;
+  }
+
+  // ================================================================
+  // EASING
+  // ================================================================
+  function eOut(t) { return 1 - Math.pow(1 - t, 3); }
+  function eOutBack(t) {
+    var c1 = 1.70158, c3 = c1 + 1;
+    return 1 + c3 * Math.pow(t - 1, 3) + c1 * Math.pow(t - 1, 2);
+  }
+  function eSnap(t) { // mild overshoot for bars
+    var c1 = 0.38, c3 = c1 + 1;
+    return 1 + c3 * Math.pow(t - 1, 3) + c1 * Math.pow(t - 1, 2);
+  }
+
+  // ================================================================
+  // PRIMITIVES
+  // ================================================================
+  var _tok = null; // cancellation token
+
+  function newToken() { return { cancelled: false }; }
+  function cancel()   { if (_tok) _tok.cancelled = true; }
+
+  function wait(tok, ms) {
+    return new Promise(function (res) {
+      if (tok.cancelled) { res(); return; }
+      var id = setTimeout(function () { res(); }, ms);
+      tok._t = tok._t || [];
+      tok._t.push(id);
+    });
+  }
+
+  function tween(tok, dur, easeFn, fn) {
+    return new Promise(function (res) {
+      if (tok.cancelled) { res(); return; }
+      var t0 = performance.now();
+      function tick(now) {
+        if (tok.cancelled) { res(); return; }
+        var t = Math.min((now - t0) / dur, 1);
+        fn(easeFn(t), t);
+        if (t < 1) requestAnimationFrame(tick);
+        else res();
+      }
+      requestAnimationFrame(tick);
+    });
+  }
+
+  // ================================================================
+  // IDLE RAF
+  // ================================================================
+  var _idleRaf = null;
+  var _idleT0  = 0;
+
+  function stopIdle() {
+    if (_idleRaf) { cancelAnimationFrame(_idleRaf); _idleRaf = null; }
+  }
+
+  function startIdle(peakIdx) {
+    stopIdle();
+    _idleT0 = performance.now();
+    function tick(now) {
+      var s = (now - _idleT0) / 1000;
+      // Peak bar brightness breathe (2.5s)
+      var pb = 1 + 0.2 * (0.5 - 0.5 * Math.cos(2 * Math.PI * s / 2.5));
+      if (barEls[peakIdx]) barEls[peakIdx].el.style.filter = 'brightness(' + pb.toFixed(3) + ')';
+      // Tooltip float (3s)
+      var fy = -2 * (0.5 - 0.5 * Math.cos(2 * Math.PI * s / 3));
+      if (tooltipG) tooltipG.setAttribute('transform', 'translate(0,' + fy.toFixed(2) + ')');
+      // +% stat glow (3s)
+      var glow = 8 * (0.5 - 0.5 * Math.cos(2 * Math.PI * s / 3));
+      if (stat2El) stat2El.style.textShadow = '0 0 ' + glow.toFixed(1) + 'px #22c55e';
+      // Non-peak bar breathe (4s, staggered)
+      barEls.forEach(function (br, i) {
+        if (i === peakIdx) return;
+        var ph  = (i / barEls.length) * Math.PI * 2;
+        var op  = 0.875 + 0.125 * (0.5 - 0.5 * Math.cos(2 * Math.PI * s / 4 + ph));
+        br.el.style.opacity = op.toFixed(3);
+      });
+      _idleRaf = requestAnimationFrame(tick);
+    }
+    _idleRaf = requestAnimationFrame(tick);
+  }
+
+  function stopIdleClean() {
+    stopIdle();
+    if (barEls) barEls.forEach(function (br) { br.el.style.filter = ''; });
+    if (tooltipG) tooltipG.removeAttribute('transform');
+    if (stat2El) stat2El.style.textShadow = '';
+  }
+
+  // ================================================================
+  // STAT COUNTER
+  // ================================================================
+  function countStat(tok, el, value, isPercent, dur) {
+    return tween(tok, dur, eOut, function (e) {
+      var v = Math.round(value * e);
+      el.textContent = isPercent ? '+' + v + '%' : v.toLocaleString();
+    });
+  }
+
+  // ================================================================
+  // TOGGLE BUTTON STATE
+  // ================================================================
+  function setToggle(active) {
+    // active: 0 = 90d, 1 = 30d
+    if (active === 0) {
+      btn90.classList.add('active');
+      btn30.classList.remove('active');
+    } else {
+      btn30.classList.add('active');
+      btn90.classList.remove('active');
+    }
+  }
+
+  // ================================================================
+  // RESET / STATIC FALLBACK
+  // ================================================================
+  function hardReset() {
+    stopIdleClean();
+    // Left side — restore visible
+    [pill, line1, line2, sub].forEach(function (el) {
+      el.style.opacity = '1'; el.style.transform = '';
+    });
+    statsBlock.style.opacity = '1';
+    stat1El.textContent = '1,284';
+    stat2El.textContent = '+18%';
+    [cap1El, cap2El].forEach(function (c) { c.style.opacity = '1'; });
+    // Chart card
+    chartCard.style.opacity = '1'; chartCard.style.transform = '';
+    setToggle(0);
+    // SVG — rebuild static 90d view
+    buildSkeleton();
+    renderDyn(0);
+    clipRect.setAttribute('width', '' + SVG_W);
+    barEls.forEach(function (b) { b.el.style.transform = 'scaleY(1)'; b.el.style.opacity = '1'; });
+    peakGlow.setAttribute('opacity', '0.55');
+    tooltipG.setAttribute('opacity', '1');
+    tooltipStem.setAttribute('stroke-dashoffset', '0');
+    xlabelEls.forEach(function (l) { l.setAttribute('opacity', '0.5'); });
+    baseline.style.animation = 'mp-dash-travel 0.5s linear infinite';
+  }
+
+  // ================================================================
+  // PHASE 1 — TEXT ENTRANCE (first trigger only)
+  // ================================================================
+  var _textDone = false;
+
+  function phaseText(tok) {
+    if (_textDone) return Promise.resolve();
+    _textDone = true;
+
+    pill.style.cssText    = 'opacity:0;transform:scale(0.8);';
+    line1.style.cssText   = 'opacity:0;transform:translateY(16px);';
+    line2.style.cssText   = 'opacity:0;transform:translateY(16px);';
+    sub.style.cssText     = 'opacity:0;transform:translateY(8px);';
+    statsBlock.style.opacity = '0';
+    [cap1El, cap2El].forEach(function (c) { c.style.opacity = '0'; });
+
+    // pill (0ms)
+    tween(tok, 350, eOutBack, function (e) {
+      pill.style.opacity   = Math.min(e, 1);
+      pill.style.transform = 'scale(' + (0.8 + 0.2 * Math.min(e, 1)) + ')';
+    });
+
+    return wait(tok, 100).then(function () {
+      tween(tok, 450, eOut, function (e) {
+        line1.style.opacity   = e;
+        line1.style.transform = 'translateY(' + (16 * (1 - e)) + 'px)';
+      });
+      return wait(tok, 100);
+    }).then(function () {
+      tween(tok, 450, eOut, function (e) {
+        line2.style.opacity   = e;
+        line2.style.transform = 'translateY(' + (16 * (1 - e)) + 'px)';
+      });
+      return wait(tok, 120);
+    }).then(function () {
+      tween(tok, 350, eOut, function (e) {
+        sub.style.opacity   = e;
+        sub.style.transform = 'translateY(' + (8 * (1 - e)) + 'px)';
+      });
+    });
+  }
+
+  // ================================================================
+  // PHASE 2 — CHART PANEL ENTRANCE
+  // ================================================================
+  function phaseChartIn(tok) {
+    chartCard.style.cssText = 'opacity:0;transform:translateX(24px) scale(0.98);';
+    return wait(tok, 600).then(function () {
+      return tween(tok, 550, function (t) {
+        return 1 - Math.pow(1 - t, 4) * (1 + 0.4 * t);
+      }, function (e) {
+        var v = Math.min(e, 1);
+        chartCard.style.opacity   = v;
+        chartCard.style.transform = 'translateX(' + (24 * (1 - v)) + 'px) scale(' + (0.98 + 0.02 * v) + ')';
+      });
+    });
+  }
+
+  // ================================================================
+  // PHASE 3 — AXIS + BASELINE
+  // ================================================================
+  function phaseAxis(tok) {
+    clipRect.setAttribute('width', '0');
+    baseline.style.animation = '';
+    xlabelEls.forEach(function (l) { l.setAttribute('opacity', '0'); l.setAttribute('transform', 'translate(0,4)'); });
+
+    return wait(tok, 900).then(function () {
+      // Draw baseline
+      tween(tok, 500, eOut, function (e) {
+        clipRect.setAttribute('width', '' + (SVG_W * e));
+      }).then(function () {
+        if (!tok.cancelled) baseline.style.animation = 'mp-dash-travel 0.5s linear infinite';
+      });
+      // X-labels staggered
+      xlabelEls.forEach(function (lb, i) {
+        wait(tok, i * 80).then(function () {
+          return tween(tok, 250, eOut, function (e) {
+            lb.setAttribute('opacity', '' + (0.5 * e));
+            lb.setAttribute('transform', 'translate(0,' + (4 * (1 - e)) + ')');
+          });
+        });
+      });
+      return wait(tok, 600);
+    });
+  }
+
+  // ================================================================
+  // PHASE 4 — BARS BUILD LEFT TO RIGHT
+  // ================================================================
+  function phaseBars(tok, viewIdx) {
+    var view    = VIEWS[viewIdx];
+    var STAGGER = 120;
+    var n       = barEls.length;
+    var pkIdx   = view.peakIndex;
+
+    barEls.forEach(function (b) {
+      b.el.style.transition = 'none';
+      b.el.style.transform  = 'scaleY(0)';
+      b.el.style.opacity    = '0.3';
+      b.el.style.filter     = '';
+    });
+    peakGlow.setAttribute('opacity', '0');
+    tooltipG.setAttribute('opacity', '0');
+
+    var promises = barEls.map(function (barObj, i) {
+      var delay   = i * STAGGER;
+      var isPeak  = i === pkIdx;
+      var dur     = isPeak ? 380 : 500;
+      var ease    = eSnap;
+
+      return wait(tok, delay).then(function () {
+        if (tok.cancelled) return;
+
+        // Anticipation flash on previous bar
+        if (i > 0) {
+          var prev = barEls[i - 1].el;
+          prev.style.transition = 'filter 60ms';
+          prev.style.filter     = 'brightness(1.3)';
+          setTimeout(function () { prev.style.filter = ''; prev.style.transition = ''; }, 70);
+        }
+
+        return tween(tok, dur, ease, function (e, rawT) {
+          barObj.el.style.transform = 'scaleY(' + e + ')';
+          barObj.el.style.opacity   = 0.3 + 0.7 * Math.min(rawT * 1.6, 1);
+          // Glow column appears at 50% of peak bar growth
+          if (isPeak && rawT > 0.5) {
+            peakGlow.setAttribute('opacity', '' + (0.55 * eOut((rawT - 0.5) / 0.5)));
+          }
+        }).then(function () {
+          if (tok.cancelled) return;
+          // Confirmation flash
+          barObj.el.style.filter = 'brightness(1.8)';
+          setTimeout(function () { barObj.el.style.filter = ''; }, 80);
+
+          if (isPeak) {
+            // Radial burst — scale up group from peak top, fade out
+            var pkData = barObj.b;
+            var cx = pkData.cx, cy = pkData.y;
+            burstG.setAttribute('opacity', '0.6');
+            tween(tok, 380, eOut, function (e) {
+              var s = 1 + e * 1.8;
+              burstG.setAttribute('opacity', '' + (0.6 * (1 - e)));
+              burstG.setAttribute('transform',
+                'translate(' + cx + ',' + cy + ') scale(' + s + ') translate(' + (-cx) + ',' + (-cy) + ')');
+            });
+
+            // Tooltip drops in (80ms after burst)
+            wait(tok, 80).then(function () {
+              tooltipG.setAttribute('transform', 'translate(0,-10)');
+              return tween(tok, 300, eOutBack, function (e) {
+                tooltipG.setAttribute('opacity', '' + Math.min(e, 1));
+                tooltipG.setAttribute('transform', 'translate(0,' + (-10 * (1 - Math.min(e, 1))) + ')');
+              });
+            }).then(function () {
+              // Stem draws down
+              if (!tok.cancelled) {
+                var slen = parseFloat(tooltipStem.getAttribute('stroke-dasharray') || '0');
+                return tween(tok, 150, eOut, function (e) {
+                  tooltipStem.setAttribute('stroke-dashoffset', '' + (slen * (1 - e)));
+                });
+              }
+            });
+          }
+        });
+      });
+    });
+
+    var lastDelay = (n - 1) * STAGGER + (pkIdx === n - 1 ? 380 : 500) + 500;
+    return wait(tok, lastDelay);
+  }
+
+  // ================================================================
+  // PHASE 5 — STATS COUNT UP
+  // ================================================================
+  function phaseStats(tok, view) {
+    statsBlock.style.opacity = '1';
+    stat1El.textContent = '0';
+    stat2El.textContent = '+0%';
+    [cap1El, cap2El].forEach(function (c) { c.style.opacity = '0'; });
+
+    var p1 = countStat(tok, stat1El, view.stat1, false, 900);
+    var p2 = countStat(tok, stat2El, view.stat2, true, 900);
+
+    // Labels fade in at midpoint
+    wait(tok, 450).then(function () {
+      [cap1El, cap2El].forEach(function (c) {
+        c.style.transition = 'opacity 300ms ease';
+        c.style.opacity    = '0.55';
+      });
+    });
+
+    return Promise.all([p1, p2]).then(function () {
+      if (tok.cancelled) return;
+      // Lock flash
+      return tween(tok, 200, eOut, function (e) {
+        var s = 1 + 0.04 * Math.sin(e * Math.PI);
+        stat1El.style.transform = 'scale(' + s + ')';
+        stat2El.style.transform = 'scale(' + s + ')';
+      });
+    }).then(function () {
+      if (tok.cancelled) return;
+      stat1El.style.transform = '';
+      stat2El.style.transform = '';
+    });
+  }
+
+  // ================================================================
+  // PHASE 7 — BARS EXIT (slide out)
+  // ================================================================
+  function phaseBarsExit(tok, dir) {
+    // dir: -1 = slide left (exit 90d), +1 = slide right (exit 30d)
+    var dx = dir * 20;
+    var promises = barEls.map(function (br, i) {
+      return wait(tok, i * 40).then(function () {
+        return tween(tok, 300, eOut, function (e) {
+          br.el.style.transform   = 'scaleY(1) translateX(' + (dx * e) + 'px)';
+          br.el.style.opacity     = 1 - e;
+        });
+      });
+    });
+
+    // Fade tooltip, glow, and x-labels together
+    tween(tok, 250, eOut, function (e) {
+      tooltipG.setAttribute('opacity', '' + (1 - e));
+      peakGlow.setAttribute('opacity', '' + (0.55 * (1 - e)));
+      xlabelEls.forEach(function (l) { l.setAttribute('opacity', '' + (0.5 * (1 - e))); });
+    });
+
+    return wait(tok, barEls.length * 40 + 350);
+  }
+
+  // ================================================================
+  // PHASE 7 — TOGGLE BUTTON ANIMATION
+  // ================================================================
+  function animateToggle(tok, toView) {
+    var inBtn  = toView === 1 ? btn30 : btn90;
+    var outBtn = toView === 1 ? btn90 : btn30;
+
+    // Activate new button
+    tween(tok, 200, eOut, function (e) {
+      inBtn.style.transform = 'scale(' + (1 + 0.05 * Math.sin(e * Math.PI)) + ')';
+    }).then(function () {
+      inBtn.style.transform = '';
+      setToggle(toView);
+    });
+
+    return wait(tok, 200);
+  }
+
+  // ================================================================
+  // MASTER LOOP
+  // ================================================================
+  function runLoop(tok) {
+    buildSkeleton();
+    renderDyn(0);
+    setToggle(0);
+
+    // Phase 1 text (only first time)
+    phaseText(tok)
+      .then(function () { return phaseChartIn(tok); })
+      .then(function () { return phaseAxis(tok); })
+      .then(function () { return phaseBars(tok, 0); })
+      .then(function () { return phaseStats(tok, VIEWS[0]); })
+      .then(function () {
+        startIdle(VIEWS[0].peakIndex);
+        return wait(tok, 1700); // Phase 6 hold
+      })
+      .then(function () {
+        stopIdleClean();
+        return animateToggle(tok, 1); // switch to 30d
+      })
+      .then(function () {
+        return phaseBarsExit(tok, -1);
+      })
+      .then(function () {
+        return wait(tok, 200);
+      })
+      .then(function () {
+        // Cross-fade stats to 0 before new count
+        return tween(tok, 200, eOut, function (e) {
+          statsBlock.style.opacity = 1 - e;
+        });
+      })
+      .then(function () {
+        // Re-render for 30d view
+        renderDyn(1);
+        clipRect.setAttribute('width', '' + SVG_W);
+        baseline.style.animation = 'mp-dash-travel 0.5s linear infinite';
+        xlabelEls.forEach(function (l) {
+          l.setAttribute('opacity', '0');
+          l.setAttribute('transform', 'translate(0,4)');
+          setTimeout(function () {
+            l.setAttribute('opacity', '0.5');
+            l.setAttribute('transform', '');
+          }, 80);
+        });
+        return wait(tok, 100);
+      })
+      .then(function () { return phaseBars(tok, 1); })
+      .then(function () { return phaseStats(tok, VIEWS[1]); })
+      .then(function () {
+        startIdle(VIEWS[1].peakIndex);
+        return wait(tok, 1200); // Phase 8 hold (30d view)
+      })
+      .then(function () {
+        stopIdleClean();
+        return animateToggle(tok, 0); // switch back to 90d
+      })
+      .then(function () {
+        return phaseBarsExit(tok, 1); // slide right on exit
+      })
+      .then(function () {
+        return tween(tok, 200, eOut, function (e) {
+          statsBlock.style.opacity = 1 - e;
+        });
+      })
+      .then(function () {
+        if (tok.cancelled) return;
+        // Phase 9 — loop reset: rebuild 90d and re-run chart phases
+        renderDyn(0);
+        return phaseAxis(tok);
+      })
+      .then(function () { return phaseBars(tok, 0); })
+      .then(function () { return phaseStats(tok, VIEWS[0]); })
+      .then(function () {
+        startIdle(VIEWS[0].peakIndex);
+        return wait(tok, 1700);
+      })
+      .then(function () {
+        if (tok.cancelled) return;
+        stopIdleClean();
+        // Restart loop from 30d toggle (skip text + chart entrance)
+        _tok = newToken();
+        var t = _tok;
+        animateToggle(t, 1)
+          .then(function () { return phaseBarsExit(t, -1); })
+          .then(function () {
+            return tween(t, 200, eOut, function (e) { statsBlock.style.opacity = 1 - e; });
+          })
+          .then(function () {
+            renderDyn(1);
+            clipRect.setAttribute('width', '' + SVG_W);
+            baseline.style.animation = 'mp-dash-travel 0.5s linear infinite';
+            xlabelEls.forEach(function (l) {
+              l.setAttribute('opacity', '0');
+              setTimeout(function () { l.setAttribute('opacity', '0.5'); }, 80);
+            });
+            return wait(t, 100);
+          })
+          .then(function () { return phaseBars(t, 1); })
+          .then(function () { return phaseStats(t, VIEWS[1]); })
+          .then(function () {
+            startIdle(VIEWS[1].peakIndex);
+            return wait(t, 1200);
+          })
+          .then(function () {
+            if (t.cancelled) return;
+            stopIdleClean();
+            // Full loop restart
+            cancel();
+            _tok = newToken();
+            runLoop(_tok);
+          });
+      });
+  }
+
+  // ================================================================
+  // STATIC FALLBACK
+  // ================================================================
+  function renderStatic() {
+    buildSkeleton();
+    renderDyn(0);
+    clipRect.setAttribute('width', '' + SVG_W);
+    barEls.forEach(function (b) { b.el.style.transform = 'scaleY(1)'; b.el.style.opacity = '1'; });
+    peakGlow.setAttribute('opacity', '0.55');
+    tooltipG.setAttribute('opacity', '1');
+    tooltipStem.setAttribute('stroke-dashoffset', '0');
+    xlabelEls.forEach(function (l) { l.setAttribute('opacity', '0.5'); });
+  }
+
+  // ================================================================
+  // INTERSECTION OBSERVER
+  // ================================================================
+  if (prefersReduced || !('IntersectionObserver' in window)) {
+    renderStatic();
+    return;
+  }
+
+  var _active = false;
+
+  var io = new IntersectionObserver(function (entries) {
+    entries.forEach(function (entry) {
+      if (entry.isIntersecting) {
+        if (!_active) {
+          _active = true;
+          cancel();
+          _tok = newToken();
+          runLoop(_tok);
+        }
+      } else {
+        _active = false;
+        cancel();
+        stopIdleClean();
+        hardReset();
+      }
+    });
+  }, { threshold: 0.3 });
+
+  io.observe(card);
 })();
 </script>
 </body>
