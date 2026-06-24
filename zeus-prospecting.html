@@ -532,6 +532,137 @@
   .vc-foot .recheck { font-size: 12px; color: var(--text-muted); }
   .vc-foot .deliver { font-size: 12px; font-weight: 700; letter-spacing: 0.03em; color: var(--green-accent); }
 
+  /* ============================================================
+     Verified Contacts — live verification animation (scoped to #vcPanel)
+     Fixed panel height; only opacity / transform / stroke / color animate.
+     ============================================================ */
+  #vcPanel { position: relative; overflow: hidden; min-height: 240px; }
+  #vcPanel .vc-body { will-change: transform, opacity; }
+  #vcPanel .vc-body.exit { animation: vcExit 0.4s ease-in forwards; }
+  @keyframes vcExit { to { opacity: 0; transform: translateY(-12px); } }
+
+  /* Avatar — spring entrance, landing ring, live inner glow */
+  #vcPanel .vc-av-wrap { position: relative; flex-shrink: 0; width: 48px; height: 48px; }
+  #vcPanel .vc-av { display: block; transform: scale(0); will-change: transform; }
+  #vcPanel .vc-av.enter { animation: vcAvIn 0.38s cubic-bezier(0.34, 1.56, 0.64, 1) forwards; }
+  @keyframes vcAvIn { 0% { transform: scale(0); } 60% { transform: scale(1.1); } 100% { transform: scale(1); } }
+  #vcPanel .vc-av.live { transform: scale(1); animation: vcAvGlow 2s ease-in-out infinite; }
+  @keyframes vcAvGlow {
+    0%, 100% { box-shadow: 0 0 8px rgba(34, 197, 94, 0.3); }
+    50%      { box-shadow: 0 0 16px rgba(34, 197, 94, 0.5); }
+  }
+  #vcPanel .vc-ring { position: absolute; inset: 0; border-radius: 12px; border: 2px solid var(--green-accent); opacity: 0; pointer-events: none; }
+  #vcPanel .vc-ring.go { animation: vcRing 0.5s ease-out forwards; }
+  @keyframes vcRing { 0% { transform: scale(1); opacity: 0.4; } 100% { transform: scale(2.2); opacity: 0; } }
+
+  /* Identity text + source pill */
+  #vcPanel .vc-name { opacity: 0; transform: translateX(-10px); transition: opacity 0.3s ease, transform 0.3s ease; }
+  #vcPanel .vc-name.in { opacity: 1; transform: translateX(0); }
+  #vcPanel .vc-sub { opacity: 0; transition: opacity 0.28s ease; }
+  #vcPanel .vc-sub.in { opacity: 0.55; }
+
+  #vcPanel .vc-via { position: relative; opacity: 0; transform: scale(0.8); transition: opacity 0.3s ease, transform 0.3s ease; overflow: visible; }
+  #vcPanel .vc-via.in { opacity: 1; transform: scale(1); }
+  #vcPanel .vc-via-svg { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; overflow: visible; }
+  #vcPanel .vc-via-rect { fill: none; stroke: var(--green-accent); stroke-width: 1.5; opacity: 0; }
+  #vcPanel .vc-via.pulse .vc-via-rect { animation: vcViaPulse 2.5s ease-in-out infinite; }
+  @keyframes vcViaPulse { 0%, 100% { opacity: 0.4; } 50% { opacity: 0.8; } }
+
+  /* Data rows */
+  #vcPanel .vc-row { position: relative; overflow: hidden; opacity: 0; transform: translateY(10px); transition: opacity 0.35s ease, transform 0.35s ease; will-change: transform, opacity; }
+  #vcPanel .vc-row.in { opacity: 1; transform: translateY(0); }
+  #vcPanel .vc-row::before {
+    content: ''; position: absolute; inset: 0; border-radius: 10px;
+    background: var(--green-accent); opacity: 0; pointer-events: none;
+  }
+  #vcPanel .vc-row.afterglow::before { animation: vcAfterglow 0.8s ease-out; }
+  @keyframes vcAfterglow { 0% { opacity: 0.04; } 100% { opacity: 0; } }
+
+  #vcPanel .vc-val { flex: 0 1 auto; opacity: 0.45; transition: opacity 0.2s ease, color 0.2s ease; }
+  #vcPanel .vc-val.link { color: #cdd6ee; }
+  #vcPanel .vc-val.link.verified { color: #34D399; opacity: 1; }
+  #vcPanel .vc-val.plain { color: #fff; }
+  #vcPanel .vc-val.plain.verified { opacity: 1; }
+  #vcPanel .vc-spacer { flex: 1 1 auto; }
+
+  /* Scan beam (clipped by row overflow) */
+  #vcPanel .vc-beam {
+    position: absolute; left: 0; top: 50%; height: 2px; width: 100%;
+    margin-top: -1px; background: rgba(34, 197, 94, 0.25);
+    transform: translateX(-100%); opacity: 0; pointer-events: none;
+  }
+  #vcPanel .vc-beam.scan { opacity: 1; animation: vcBeam 0.7s ease-in-out forwards; }
+  @keyframes vcBeam { from { transform: translateX(-100%); } to { transform: translateX(100%); } }
+
+  /* Processing dots */
+  #vcPanel .vc-dots { display: none; align-items: center; gap: 5px; }
+  #vcPanel .vc-dots.run { display: inline-flex; }
+  #vcPanel .vc-dots span { width: 4px; height: 4px; border-radius: 50%; background: var(--green-accent); opacity: 0.3; }
+  #vcPanel .vc-dots.run span { animation: vcDot 0.9s ease-in-out infinite; }
+  #vcPanel .vc-dots.run span:nth-child(2) { animation-delay: 0.15s; }
+  #vcPanel .vc-dots.run span:nth-child(3) { animation-delay: 0.3s; }
+  @keyframes vcDot { 0%, 100% { opacity: 0.3; } 50% { opacity: 1; } }
+
+  /* VALID badge — stamp + impact shadow + idle shimmer */
+  #vcPanel .vc-valid { position: relative; overflow: hidden; opacity: 0; will-change: transform, opacity; }
+  #vcPanel .vc-valid.stamp { animation: vcStamp 0.6s ease-out forwards; }
+  @keyframes vcStamp {
+    0%   { opacity: 0; transform: scale(1.5); box-shadow: 0 0 0 rgba(34, 197, 94, 0); }
+    28%  { opacity: 1; transform: scale(0.92); }
+    47%  { opacity: 1; transform: scale(1); box-shadow: 0 2px 8px rgba(34, 197, 94, 0.25); }
+    100% { opacity: 1; transform: scale(1); box-shadow: 0 2px 8px rgba(34, 197, 94, 0); }
+  }
+  #vcPanel .vc-check { width: 15px; height: 15px; flex-shrink: 0; }
+  #vcPanel .vc-check-c { fill: none; stroke: var(--green-accent); stroke-width: 2; opacity: 0.85; }
+  #vcPanel .vc-check-p { fill: none; stroke: var(--green-accent); stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; }
+  #vcPanel .vc-valid.stamp .vc-check-p { animation: vcCheck 0.2s ease-out forwards; }
+  @keyframes vcCheck { to { stroke-dashoffset: 0; } }
+  #vcPanel .vc-valid-txt { opacity: 0; }
+  #vcPanel .vc-valid.stamp .vc-valid-txt { animation: vcTxt 0.25s ease-out 0.08s forwards; }
+  @keyframes vcTxt { to { opacity: 1; } }
+  #vcPanel .vc-valid::after {
+    content: ''; position: absolute; inset: 0; pointer-events: none;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.5), transparent);
+    transform: translateX(-100%); opacity: 0;
+  }
+  #vcPanel .vc-valid.shimmer::after { animation: vcShimmer 4s ease-in-out infinite; }
+  @keyframes vcShimmer {
+    0%   { transform: translateX(-100%); opacity: 0; }
+    7%   { opacity: 0.2; }
+    15%  { transform: translateX(100%); opacity: 0; }
+    100% { transform: translateX(100%); opacity: 0; }
+  }
+
+  /* Footer / deliverability */
+  #vcPanel .vc-foot { opacity: 0; transition: opacity 0.3s ease; }
+  #vcPanel .vc-foot.in { opacity: 1; }
+  #vcPanel .vc-foot .recheck.breathe { animation: vcBreathe 3s ease-in-out infinite; }
+  @keyframes vcBreathe { 0%, 100% { opacity: 1; } 50% { opacity: 0.55; } }
+  #vcPanel .deliver-lbl { opacity: 0; transition: opacity 0.25s ease; }
+  #vcPanel .deliver-lbl.in { opacity: 1; }
+  #vcPanel .deliver-num.glow { animation: vcNumGlow 0.4s ease-out; }
+  @keyframes vcNumGlow { 0% { text-shadow: 0 0 8px rgba(34, 197, 94, 0.7); } 100% { text-shadow: 0 0 0 rgba(34, 197, 94, 0); } }
+
+  /* Static fallback (reduced motion / no-JS) */
+  #vcPanel.is-static .vc-av { transform: none !important; animation: none !important; }
+  #vcPanel.is-static .vc-name,
+  #vcPanel.is-static .vc-via,
+  #vcPanel.is-static .vc-row,
+  #vcPanel.is-static .vc-valid,
+  #vcPanel.is-static .vc-valid-txt,
+  #vcPanel.is-static .vc-foot,
+  #vcPanel.is-static .deliver-lbl { opacity: 1 !important; transform: none !important; animation: none !important; }
+  #vcPanel.is-static .vc-sub { opacity: 0.55 !important; }
+  #vcPanel.is-static .vc-val { opacity: 1 !important; }
+  #vcPanel.is-static .vc-check-p { stroke-dashoffset: 0 !important; }
+
+  @media (prefers-reduced-motion: reduce) {
+    #vcPanel .vc-av.live,
+    #vcPanel .vc-foot .recheck.breathe,
+    #vcPanel .vc-valid.shimmer::after,
+    #vcPanel .vc-via.pulse .vc-via-rect { animation: none; }
+  }
+
   /* --- Buying Signals --- */
   .bs-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 4px; }
   .bs-head .bs-title { font-size: 14px; font-weight: 700; color: #fff; }
@@ -1312,26 +1443,58 @@
 
       <!-- Card 2: Verified Contacts -->
       <article class="bento-card" data-reveal>
-        <div class="bc-panel">
-          <div class="vc-head">
-            <img class="vc-av" src="avatars/Container-6.png" alt="Sofia Lang" />
-            <div class="vc-id"><div class="vc-name">Sofia Lang</div><div class="vc-sub">VP Marketing · Vertex</div></div>
-            <span class="vc-via">via Verifyrit</span>
+        <div class="bc-panel" id="vcPanel">
+          <div class="vc-body">
+            <div class="vc-head">
+              <span class="vc-av-wrap">
+                <img class="vc-av" src="avatars/Container-6.png" alt="" />
+                <span class="vc-ring" aria-hidden="true"></span>
+              </span>
+              <div class="vc-id"><div class="vc-name"></div><div class="vc-sub"></div></div>
+              <span class="vc-via">
+                <span class="vc-via-txt">via Verifyrit</span>
+                <svg class="vc-via-svg" aria-hidden="true" preserveAspectRatio="none"><rect class="vc-via-rect"></rect></svg>
+              </span>
+            </div>
+            <div class="vc-row" data-field="email">
+              <i data-lucide="mail"></i>
+              <span class="vc-val link"></span>
+              <span class="vc-dots" aria-hidden="true"><span></span><span></span><span></span></span>
+              <span class="vc-spacer"></span>
+              <span class="vc-valid">
+                <svg class="vc-check" viewBox="0 0 22 22" aria-hidden="true">
+                  <circle class="vc-check-c" cx="11" cy="11" r="9"></circle>
+                  <path class="vc-check-p" d="M6.4 11.3 L9.5 14.4 L15.6 7.4"></path>
+                </svg>
+                <span class="vc-valid-txt">VALID</span>
+              </span>
+              <span class="vc-beam" aria-hidden="true"></span>
+            </div>
+            <div class="vc-row" data-field="phone">
+              <i data-lucide="phone"></i>
+              <span class="vc-val plain"></span>
+              <span class="vc-dots" aria-hidden="true"><span></span><span></span><span></span></span>
+              <span class="vc-spacer"></span>
+              <span class="vc-valid">
+                <svg class="vc-check" viewBox="0 0 22 22" aria-hidden="true">
+                  <circle class="vc-check-c" cx="11" cy="11" r="9"></circle>
+                  <path class="vc-check-p" d="M6.4 11.3 L9.5 14.4 L15.6 7.4"></path>
+                </svg>
+                <span class="vc-valid-txt">VALID</span>
+              </span>
+              <span class="vc-beam" aria-hidden="true"></span>
+            </div>
+            <div class="vc-foot">
+              <span class="recheck">Re-checked 4 min ago</span>
+              <span class="deliver"><span class="deliver-num">0.0%</span> <span class="deliver-lbl">DELIVERABLE</span></span>
+            </div>
           </div>
-          <div class="vc-row">
-            <i data-lucide="mail"></i>
-            <span class="vc-val link">[email&nbsp;protected]</span>
-            <span class="vc-valid"><i data-lucide="check-circle-2"></i> VALID</span>
-          </div>
-          <div class="vc-row">
-            <i data-lucide="phone"></i>
-            <span class="vc-val plain">+1 (415) 660-0112</span>
-            <span class="vc-valid"><i data-lucide="check-circle-2"></i> VALID</span>
-          </div>
-          <div class="vc-foot">
-            <span class="recheck">Re-checked 4 min ago</span>
-            <span class="deliver">99.2% DELIVERABLE</span>
-          </div>
+          <!-- Static fallback (prefers-reduced-motion / no-JS) -->
+          <noscript>
+            <div style="margin-top:10px;color:var(--text-secondary);font-size:13px">
+              Sofia Lang · VP Marketing · Vertex — sofia@vertex.io VALID · +1 (415) 660-0112 VALID · 99.2% DELIVERABLE
+            </div>
+          </noscript>
         </div>
         <div class="bc-text">
           <h3>Verified Contacts</h3>
@@ -2389,6 +2552,286 @@
   }
 
   window.addEventListener('resize', function () { if (active) sizeSvg(); });
+
+  var io = new IntersectionObserver(function (entries) {
+    entries.forEach(function (entry) {
+      if (entry.isIntersecting) {
+        if (!active) { active = newToken(); runLoop(active); }
+      } else {
+        cancel();
+        clearAll();
+      }
+    });
+  }, { threshold: 0.35 });
+  io.observe(panel);
+})();
+</script>
+
+<!-- ================================================================
+     Verified Contacts — live verification storytelling animation.
+     Fully self-contained. Scroll-triggered, loops two alternating
+     contacts, cancels + resets on viewport exit. No global state.
+     ================================================================ -->
+<script>
+(function () {
+  var panel = document.getElementById('vcPanel');
+  if (!panel) return;
+
+  // ---- Contact config — swap records here only ----
+  var CONTACTS = [
+    { avatar: 'avatars/Container-6.png', name: 'Sofia Lang', role: 'VP Marketing · Vertex',
+      email: 'sofia@vertex.io', phone: '+1 (415) 660-0112', score: 99.2 },
+    { avatar: 'avatars/Container-7.png', name: 'James Obi', role: 'Head of Growth · Crestline',
+      email: 'j.obi@crestline.co', phone: '+1 (332) 874-5509', score: 97.8 }
+  ];
+
+  // ---- Element handles ----
+  var body     = panel.querySelector('.vc-body');
+  var avatar   = panel.querySelector('.vc-av');
+  var ring     = panel.querySelector('.vc-ring');
+  var nameEl   = panel.querySelector('.vc-name');
+  var subEl    = panel.querySelector('.vc-sub');
+  var via      = panel.querySelector('.vc-via');
+  var viaSvg   = panel.querySelector('.vc-via-svg');
+  var viaRect  = panel.querySelector('.vc-via-rect');
+  var emailRow = panel.querySelector('.vc-row[data-field="email"]');
+  var phoneRow = panel.querySelector('.vc-row[data-field="phone"]');
+  var foot     = panel.querySelector('.vc-foot');
+  var recheck  = panel.querySelector('.recheck');
+  var deliverNum = panel.querySelector('.deliver-num');
+  var deliverLbl = panel.querySelector('.deliver-lbl');
+
+  function rowParts(row) {
+    return {
+      row: row,
+      val: row.querySelector('.vc-val'),
+      dots: row.querySelector('.vc-dots'),
+      badge: row.querySelector('.vc-valid'),
+      beam: row.querySelector('.vc-beam'),
+      checkP: row.querySelector('.vc-check-p')
+    };
+  }
+  var email = rowParts(emailRow);
+  var phone = rowParts(phoneRow);
+
+  var prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  // ---- Easing + color helpers ----
+  function easeOutCubic(t) { return 1 - Math.pow(1 - t, 3); }
+  function lerp(a, b, t) { return Math.round(a + (b - a) * t); }
+
+  // ---- Cancellable token + waiter ----
+  var active = null;
+  function newToken() { return { cancelled: false, timers: [], rejectWait: null }; }
+  function cancel() {
+    if (!active) return;
+    active.cancelled = true;
+    active.timers.forEach(clearTimeout);
+    active.timers = [];
+    if (active.rejectWait) { try { active.rejectWait(); } catch (e) {} }
+    active = null;
+  }
+  function wait(token, ms) {
+    return new Promise(function (resolve, reject) {
+      if (token.cancelled) { reject(); return; }
+      token.rejectWait = reject;
+      var t = setTimeout(resolve, ms);
+      token.timers.push(t);
+    });
+  }
+  function frameLoop(token, dur, step) {
+    return new Promise(function (resolve) {
+      var start = performance.now();
+      (function tick(now) {
+        if (token.cancelled) { resolve(); return; }
+        var t = dur > 0 ? Math.min(1, (now - start) / dur) : 1;
+        step(t);
+        if (t < 1) requestAnimationFrame(tick); else resolve();
+      })(start);
+    });
+  }
+
+  // ---- One-time setup: checkmark path lengths + pill perimeter ----
+  function setupGeometry() {
+    [email.checkP, phone.checkP].forEach(function (p) {
+      var len = 16;
+      try { len = p.getTotalLength() || 16; } catch (e) {}
+      p.style.strokeDasharray = len;
+      p.style.strokeDashoffset = len;
+    });
+    var r = via.getBoundingClientRect();
+    var W = Math.round(r.width), H = Math.round(r.height);
+    if (W && H) {
+      var perim = 2 * ((W - 2) + (H - 2));
+      viaRect.setAttribute('x', 1); viaRect.setAttribute('y', 1);
+      viaRect.setAttribute('width', W - 2); viaRect.setAttribute('height', H - 2);
+      viaRect.setAttribute('rx', H / 2); viaRect.setAttribute('ry', H / 2);
+      viaSvg.setAttribute('viewBox', '0 0 ' + W + ' ' + H);
+      viaRect.style.strokeDasharray = perim + 'px';
+      viaRect.style.strokeDashoffset = perim + 'px';
+      via._perim = perim;
+    }
+  }
+
+  // ---- Deliverability counter (count up + white→green lerp) ----
+  function countScore(token, target) {
+    return frameLoop(token, 900, function (t) {
+      var e = easeOutCubic(t);
+      deliverNum.textContent = (e * target).toFixed(1) + '%';
+      if (t < 0.6) deliverNum.style.color = '#ffffff';
+      else {
+        var k = (t - 0.6) / 0.4;
+        deliverNum.style.color = 'rgb(' + lerp(255, 34, k) + ',' + lerp(255, 197, k) + ',' + lerp(255, 94, k) + ')';
+      }
+    });
+  }
+
+  // ---- Reset all field-level state ----
+  function clearAll() {
+    body.classList.remove('exit');
+    avatar.classList.remove('enter', 'live');
+    ring.classList.remove('go');
+    nameEl.classList.remove('in');
+    subEl.classList.remove('in');
+    via.classList.remove('in', 'pulse');
+    viaRect.style.transition = 'none';
+    viaRect.style.strokeDashoffset = (via._perim || 300) + 'px';
+    viaRect.style.opacity = '0';
+    foot.classList.remove('in');
+    recheck.classList.remove('breathe');
+    deliverLbl.classList.remove('in');
+    deliverNum.style.color = '#ffffff';
+    deliverNum.textContent = '0.0%';
+    [email, phone].forEach(function (f) {
+      f.row.classList.remove('in', 'afterglow');
+      f.val.classList.remove('verified');
+      f.dots.classList.remove('run');
+      f.badge.classList.remove('stamp', 'shimmer');
+      f.beam.classList.remove('scan');
+      f.beam.style.opacity = '0';
+      f.checkP.style.strokeDashoffset = (f.checkP.style.strokeDasharray || 16);
+    });
+  }
+
+  // ---- Bind a contact's data into the DOM ----
+  function bind(cfg) {
+    avatar.src = cfg.avatar;
+    avatar.alt = cfg.name;
+    nameEl.textContent = cfg.name;
+    subEl.textContent = cfg.role;
+    email.val.textContent = cfg.email;
+    phone.val.textContent = cfg.phone;
+  }
+
+  // ---- Verify a single field row (beam scan + dots + stamp) ----
+  function verifyField(token, f, opts) {
+    f.row.classList.add('in');
+    return wait(token, opts.beamDelay).then(function () {
+      f.beam.style.animationDuration = opts.beamDur + 'ms';
+      f.beam.classList.remove('scan'); void f.beam.offsetWidth; f.beam.classList.add('scan');
+      f.dots.classList.add('run');
+      return wait(token, opts.dotsDur);
+    }).then(function () {
+      f.dots.classList.remove('run');
+      f.row.classList.add('afterglow');
+      f.badge.classList.add('stamp');
+      f.val.classList.add('verified');
+    });
+  }
+
+  // ---- One full contact verification cycle (Phases 3–8) ----
+  function runContact(token, cfg) {
+    return Promise.resolve()
+      // Phase 3 — identity loads
+      .then(function () {
+        avatar.classList.add('enter');
+        setTimeout(function () { ring.classList.add('go'); }, 360);
+        return wait(token, 150);
+      })
+      .then(function () { nameEl.classList.add('in'); return wait(token, 130); })
+      .then(function () { subEl.classList.add('in'); return wait(token, 120); })
+      .then(function () {
+        via.classList.add('in');
+        // pill border draws around perimeter
+        viaRect.style.opacity = '1';
+        void viaRect.getBoundingClientRect();
+        viaRect.style.transition = 'stroke-dashoffset 0.45s ease-out';
+        viaRect.style.strokeDashoffset = '0px';
+        return wait(token, 300);
+      })
+      .then(function () { avatar.classList.remove('enter'); avatar.classList.add('live'); return wait(token, 150); })
+      // Phase 4 — email verification
+      .then(function () { return verifyField(token, email, { beamDelay: 200, beamDur: 700, dotsDur: 700 }); })
+      // Phase 5 — phone verification (warmed up, faster)
+      .then(function () { return wait(token, 300); })
+      .then(function () { return verifyField(token, phone, { beamDelay: 150, beamDur: 550, dotsDur: 400 }); })
+      // Phase 6 — deliverability score
+      .then(function () { return wait(token, 350); })
+      .then(function () {
+        foot.classList.add('in');
+        return countScore(token, cfg.score);
+      })
+      .then(function () {
+        deliverNum.textContent = cfg.score.toFixed(1) + '%';
+        deliverNum.style.color = '#22C55E';
+        deliverNum.classList.remove('glow'); void deliverNum.offsetWidth; deliverNum.classList.add('glow');
+        return wait(token, 200);
+      })
+      .then(function () { deliverLbl.classList.add('in'); return wait(token, 100); })
+      // Phase 7 — idle hold
+      .then(function () {
+        recheck.classList.add('breathe');
+        email.badge.classList.add('shimmer');
+        phone.badge.classList.add('shimmer');
+        via.classList.add('pulse');
+        return wait(token, 2000);
+      })
+      // Phase 8 — swap out
+      .then(function () {
+        body.classList.add('exit');
+        return wait(token, 400);
+      })
+      .then(function () {
+        clearAll();
+        return wait(token, 300);
+      });
+  }
+
+  // ---- Master loop ----
+  function runLoop(token) {
+    setupGeometry();
+    clearAll();
+    var idx = 0;
+    function next() {
+      if (token.cancelled) return;
+      var cfg = CONTACTS[idx % CONTACTS.length];
+      bind(cfg);
+      runContact(token, cfg)
+        .then(function () { idx++; next(); })
+        .catch(function () { /* cancelled */ });
+    }
+    next();
+  }
+
+  // ---- Static fallback ----
+  function renderStatic() {
+    var cfg = CONTACTS[0];
+    panel.classList.add('is-static');
+    bind(cfg);
+    avatar.classList.add('live');
+    email.val.classList.add('verified');
+    phone.val.classList.add('verified');
+    deliverNum.textContent = cfg.score.toFixed(1) + '%';
+    deliverNum.style.color = '#22C55E';
+  }
+
+  if (prefersReduced || !('IntersectionObserver' in window)) {
+    setupGeometry();
+    renderStatic();
+    return;
+  }
+
+  window.addEventListener('resize', function () { if (active) setupGeometry(); });
 
   var io = new IntersectionObserver(function (entries) {
     entries.forEach(function (entry) {
