@@ -522,23 +522,45 @@
     text-transform: uppercase;
     margin-bottom: 28px;
   }
+  /* Continuous, seamless marquee. The track holds two identical sets and
+     slides -50% forever; faded edges hide the wrap. Pauses on hover so a
+     logo can be inspected; each logo grows a touch on hover. */
   .logobar .logos {
+    display: block;
+    overflow: hidden;
+    -webkit-mask-image: linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent);
+            mask-image: linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent);
+  }
+  .logobar .logos-track {
     display: flex;
     align-items: center;
-    justify-content: space-between;
-    flex-wrap: wrap;
-    gap: 40px;
+    width: max-content;
+    animation: logoMarquee 34s linear infinite;
+    will-change: transform;
+  }
+  .logobar .logos:hover .logos-track { animation-play-state: paused; }
+  @keyframes logoMarquee {
+    from { transform: translateX(0); }
+    to   { transform: translateX(-50%); }
   }
   .logobar .logos .brand-logo {
     height: 26px;
     width: auto;
     flex: 0 0 auto;
-    /* Recolor any-colored SVG to a muted white for dark mode */
+    margin-right: 64px;
+    /* Recolor any-colored SVG to white for dark mode */
     filter: brightness(0) invert(1);
-    opacity: 0.5;
-    transition: opacity 0.2s ease;
+    opacity: 0.85;
+    transform-origin: center;
+    transition: opacity 0.25s ease, transform 0.25s ease;
   }
-  .logobar .logos .brand-logo:hover { opacity: 0.9; }
+  .logobar .logos .brand-logo:hover { opacity: 1; transform: scale(1.15); }
+
+  @media (prefers-reduced-motion: reduce) {
+    .logobar .logos { -webkit-mask-image: none; mask-image: none; }
+    .logobar .logos-track { animation: none; flex-wrap: wrap; width: auto; justify-content: center; row-gap: 28px; }
+    .logobar .logos .brand-logo.dup { display: none; }
+  }
 
   /* =========================================================
      4. FEATURES GRID
@@ -2008,13 +2030,24 @@
   <div class="container" data-reveal-stagger="100">
     <p class="label" data-reveal>Trusted by growing businesses worldwide</p>
     <div class="logos" data-reveal>
-      <img class="brand-logo" src="logos/allstate.svg" alt="Allstate" loading="lazy" />
-      <img class="brand-logo" src="logos/abbott.svg" alt="Abbott" loading="lazy" />
-      <img class="brand-logo" src="logos/alaska.svg" alt="Alaska Airlines" loading="lazy" />
-      <img class="brand-logo" src="logos/blackrock.svg" alt="BlackRock" loading="lazy" />
-      <img class="brand-logo" src="logos/adm.svg" alt="ADM" loading="lazy" />
-      <img class="brand-logo" src="logos/coterra.svg" alt="Coterra" loading="lazy" />
-      <img class="brand-logo" src="logos/camden.svg" alt="Camden" loading="lazy" />
+      <div class="logos-track">
+        <!-- set 1 -->
+        <img class="brand-logo" src="logos/allstate.svg" alt="Allstate" loading="lazy" />
+        <img class="brand-logo" src="logos/abbott.svg" alt="Abbott" loading="lazy" />
+        <img class="brand-logo" src="logos/alaska.svg" alt="Alaska Airlines" loading="lazy" />
+        <img class="brand-logo" src="logos/blackrock.svg" alt="BlackRock" loading="lazy" />
+        <img class="brand-logo" src="logos/adm.svg" alt="ADM" loading="lazy" />
+        <img class="brand-logo" src="logos/coterra.svg" alt="Coterra" loading="lazy" />
+        <img class="brand-logo" src="logos/camden.svg" alt="Camden" loading="lazy" />
+        <!-- set 2 (duplicate for a seamless loop) -->
+        <img class="brand-logo dup" src="logos/allstate.svg" alt="" aria-hidden="true" loading="lazy" />
+        <img class="brand-logo dup" src="logos/abbott.svg" alt="" aria-hidden="true" loading="lazy" />
+        <img class="brand-logo dup" src="logos/alaska.svg" alt="" aria-hidden="true" loading="lazy" />
+        <img class="brand-logo dup" src="logos/blackrock.svg" alt="" aria-hidden="true" loading="lazy" />
+        <img class="brand-logo dup" src="logos/adm.svg" alt="" aria-hidden="true" loading="lazy" />
+        <img class="brand-logo dup" src="logos/coterra.svg" alt="" aria-hidden="true" loading="lazy" />
+        <img class="brand-logo dup" src="logos/camden.svg" alt="" aria-hidden="true" loading="lazy" />
+      </div>
     </div>
   </div>
 </section>
