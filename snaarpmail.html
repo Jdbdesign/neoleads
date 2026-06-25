@@ -1,0 +1,1670 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Snaarpmail | Inbox & Infrastructure by NeoLeads</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap');
+
+  :root {
+    --bg-primary: #02071A;
+    --bg-alt: #04081F;
+    --bg-card: #080D1F;
+    --bg-card-border: #1A2040;
+    --brand: #6C2BDF;
+    --brand-light: #8B4DFF;
+    --grow-purple: #A576F8;
+    --brand-glow: rgba(108, 43, 223, 0.3);
+    --text-primary: #FFFFFF;
+    --text-secondary: #8B9CC8;
+    --text-muted: #4A5578;
+    --green-accent: #22C55E;
+    --nav-bg: rgba(2, 7, 26, 0.95);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--bg-primary);
+    color: var(--text-primary);
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    font-size: 15px;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
+  a { text-decoration: none; color: inherit; }
+  img { max-width: 100%; }
+  ul { list-style: none; }
+  :focus-visible { outline: 2px solid var(--brand); outline-offset: 2px; border-radius: 4px; }
+  :focus:not(:focus-visible) { outline: none; }
+
+  /* ===== Lucide defaults ===== */
+  .lucide { width: 20px; height: 20px; stroke-width: 2; flex-shrink: 0; }
+  .nav-links .caret .lucide { width: 14px; height: 14px; }
+  .social-row a .lucide { width: 16px; height: 16px; }
+  .btn-primary .lucide, .btn-ghost .lucide { width: 16px; height: 16px; }
+  .nav-toggle .lucide { width: 24px; height: 24px; }
+  .hero-badge .lucide { width: 15px; height: 15px; color: var(--brand-light); }
+
+  /* ===== Container ===== */
+  .container { max-width: 1160px; margin: 0 auto; padding: 0 24px; }
+
+  /* ===== Buttons ===== */
+  .btn-primary {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: var(--brand); color: #fff; border: none;
+    border-radius: 8px; padding: 11px 22px;
+    font-family: inherit; font-size: 14px; font-weight: 600;
+    cursor: pointer; transition: background 0.2s ease, transform 0.12s ease;
+  }
+  .btn-primary:hover { background: var(--brand-light); }
+  .btn-primary:active { transform: scale(0.97); }
+  .btn-ghost {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: transparent; color: #fff;
+    border: 1px solid var(--bg-card-border);
+    border-radius: 8px; padding: 11px 22px;
+    font-family: inherit; font-size: 14px; font-weight: 600;
+    cursor: pointer; transition: border-color 0.2s ease, transform 0.12s ease;
+  }
+  .btn-ghost:hover { border-color: var(--brand); }
+  .btn-ghost:active { transform: scale(0.97); }
+
+  /* =========================================================
+     NAVBAR
+  ========================================================= */
+  .navbar {
+    position: sticky; top: 0; z-index: 100; height: 72px;
+    background: var(--nav-bg);
+    -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(26, 32, 64, 0.6);
+  }
+  .navbar .container { height: 100%; display: flex; align-items: center; justify-content: space-between; gap: 24px; }
+  .logo { display: flex; align-items: center; gap: 9px; font-family: 'Outfit', sans-serif; font-weight: 700; font-size: 23px; letter-spacing: -0.01em; color: #fff; }
+  .nav-links { display: flex; align-items: center; gap: 30px; }
+  .nav-links a { display: inline-flex; align-items: center; gap: 5px; color: #C7CEE2; font-size: 15px; font-weight: 500; transition: color 0.2s ease; }
+  .nav-links a:hover { color: #fff; }
+  .nav-links .caret { font-size: 10px; color: #6B79A8; }
+  .nav-right { display: flex; align-items: center; gap: 22px; }
+  .nav-right .login { color: #fff; font-size: 15px; font-weight: 500; transition: opacity 0.2s ease; }
+  .nav-right .login:hover { opacity: 0.75; }
+  .nav-right .nav-cta { padding: 10px 22px; font-size: 15px; border-radius: 8px; }
+  .nav-toggle { display: none; background: none; border: none; color: #fff; cursor: pointer; padding: 4px; }
+
+  /* Products mega-menu */
+  .nav-item { position: relative; display: inline-flex; align-items: center; }
+  .nav-trigger {
+    display: inline-flex; align-items: center; gap: 5px;
+    font-family: inherit; font-size: 15px; font-weight: 500;
+    color: #C7CEE2; background: none; border: none; cursor: pointer; padding: 0;
+    transition: color 0.2s ease;
+  }
+  .nav-trigger:hover, .nav-item.open .nav-trigger { color: #fff; }
+  .nav-trigger .caret { display: inline-flex; color: #6B79A8; transition: transform 0.25s ease, color 0.2s ease; }
+  .nav-item.open .nav-trigger .caret { transform: rotate(180deg); color: var(--brand-light); }
+  .mega-menu {
+    position: absolute; top: calc(100% + 18px); left: -22px;
+    width: 540px; padding: 14px;
+    background: #080D20; border: 1px solid #1E2647;
+    border-radius: 16px; box-shadow: 0 28px 64px rgba(0,0,0,0.55);
+    z-index: 200; opacity: 0; visibility: hidden; transform: translateY(-8px);
+    transition: opacity 0.2s ease, transform 0.24s cubic-bezier(0.22,1,0.36,1), visibility 0.2s;
+  }
+  .nav-item.open .mega-menu { opacity: 1; visibility: visible; transform: translateY(0); }
+  .mega-menu::before {
+    content: ""; position: absolute; top: -7px; left: 40px;
+    width: 13px; height: 13px; background: #080D20;
+    border-left: 1px solid #1E2647; border-top: 1px solid #1E2647;
+    transform: rotate(45deg);
+  }
+  .mega-grid { position: relative; display: grid; grid-template-columns: 1fr 1fr; gap: 4px; }
+  .mega-item { display: flex; align-items: flex-start; gap: 12px; padding: 12px 14px; border-radius: 12px; transition: background 0.18s ease; }
+  .mega-item:hover { background: rgba(139,77,255,0.08); }
+  .mega-item[aria-current="page"], .mobile-sub[aria-current="page"] { pointer-events: none; cursor: default; opacity: 0.45; }
+  .mega-ic {
+    width: 38px; height: 38px; border-radius: 10px; flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center; align-self: flex-start;
+    background: rgba(139,77,255,0.12); border: 1px solid rgba(139,77,255,0.2);
+    color: var(--grow-purple); transition: background 0.18s ease, border-color 0.18s ease;
+  }
+  .mega-ic .lucide { width: 18px; height: 18px; }
+  .mega-item.is-primary .mega-ic {
+    background: linear-gradient(135deg, var(--brand), var(--brand-light));
+    border-color: transparent; color: #fff;
+    box-shadow: 0 4px 16px rgba(108,43,223,0.45);
+  }
+  .mega-text { display: flex; flex-direction: column; gap: 3px; min-width: 0; align-self: flex-start; }
+  .mega-title { font-size: 14px; font-weight: 700; color: #fff; letter-spacing: -0.01em; line-height: 1.2; }
+  .mega-desc { font-size: 12px; line-height: 1.45; color: var(--text-secondary); }
+
+  /* =========================================================
+     SNAARPMAIL HERO
+  ========================================================= */
+  .sm-hero {
+    position: relative; text-align: center;
+    padding: 84px 0 90px; overflow: hidden;
+  }
+  .sm-hero::before {
+    content: ""; position: absolute; inset: 0;
+    background:
+      radial-gradient(ellipse at 30% 0%, rgba(108,43,223,0.20) 0%, transparent 55%),
+      radial-gradient(ellipse at 70% 0%, rgba(139,77,255,0.14) 0%, transparent 50%),
+      radial-gradient(ellipse at 50% 100%, rgba(108,43,223,0.06) 0%, transparent 60%);
+    z-index: 0;
+  }
+  .sm-hero .container { position: relative; z-index: 2; }
+
+  .hero-badge {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(108,43,223,0.45);
+    color: #D7DCEC; font-size: 13px; font-weight: 600;
+    border-radius: 30px; padding: 8px 18px; margin-bottom: 30px;
+  }
+
+  .sm-hero h1 {
+    font-family: 'Outfit', sans-serif;
+    font-size: 60px; font-weight: 800;
+    line-height: 1.08; letter-spacing: -0.02em;
+    margin: 0 auto 26px; max-width: 880px;
+  }
+  .sm-hero h1 .line-two {
+    display: block;
+    background: linear-gradient(135deg, #8B4DFF, #C084FC);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .sm-hero .hero-sub {
+    color: #9AA7C7; font-size: 17px; line-height: 1.7;
+    max-width: 680px; margin: 0 auto 38px;
+  }
+
+  .sm-ctas { display: flex; gap: 16px; justify-content: center; margin-bottom: 30px; }
+  .sm-ctas .btn-primary { padding: 14px 28px; font-size: 15px; }
+  .sm-ctas .btn-ghost { padding: 14px 28px; font-size: 15px; }
+
+  .sm-trust {
+    display: flex; flex-wrap: wrap; justify-content: center;
+    gap: 30px; margin-bottom: 60px;
+  }
+  .sm-trust .item {
+    display: flex; align-items: center; gap: 9px;
+    color: #C7CEE2; font-size: 14px; font-weight: 500;
+  }
+  .sm-trust .item .check-ic {
+    width: 18px; height: 18px; border-radius: 50%;
+    background: rgba(34,197,94,0.12); border: 1px solid rgba(34,197,94,0.3);
+    display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+    color: var(--green-accent);
+  }
+  .sm-trust .item .check-ic svg { width: 10px; height: 10px; stroke-width: 2.5; }
+
+  /* Dashboard frame */
+  .sm-dash {
+    position: relative; max-width: 1040px; margin: 0 auto;
+  }
+  .sm-dash-frame {
+    background: #080D20;
+    border: 1px solid rgba(26,32,64,0.9);
+    border-radius: 18px;
+    overflow: hidden;
+    box-shadow:
+      0 0 0 1px rgba(108,43,223,0.15),
+      0 40px 120px rgba(0,0,0,0.6),
+      0 0 80px rgba(108,43,223,0.08);
+  }
+  .sm-dash img {
+    display: block; width: 100%; height: auto;
+  }
+
+  /* =========================================================
+     SHARED SECTION STYLES
+  ========================================================= */
+  .section { padding: 100px 0; }
+  .section.alt { background: var(--bg-alt); }
+  .section-head { text-align: center; max-width: 640px; margin: 0 auto 56px; }
+  .section-head h2 { font-family: 'Outfit', sans-serif; font-size: 36px; font-weight: 700; line-height: 1.2; letter-spacing: -0.02em; margin-bottom: 16px; }
+  .section-head p { color: var(--text-secondary); font-size: 15px; max-width: 560px; margin: 0 auto; }
+  .section-label {
+    display: inline-block;
+    background: rgba(108,43,223,0.12); border: 1px solid rgba(108,43,223,0.35);
+    color: var(--brand-light); font-size: 11px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase;
+    border-radius: 20px; padding: 5px 14px; margin-bottom: 20px;
+  }
+  .card { background: var(--bg-card); border: 1px solid var(--bg-card-border); border-radius: 12px; padding: 24px; }
+  .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+  .testi-card { display: flex; flex-direction: column; }
+  .stars { color: #F5C542; font-size: 15px; letter-spacing: 2px; margin-bottom: 14px; }
+  .stars .lucide { width: 15px; height: 15px; fill: currentColor; }
+  .testi-card .quote { color: #fff; font-size: 15px; line-height: 1.6; margin-bottom: 20px; flex: 1; }
+  .testi-author { display: flex; align-items: center; gap: 12px; }
+  .testi-author .av { width: 38px; height: 38px; border-radius: 50%; background: linear-gradient(135deg,#2A3155,#3A4468); flex-shrink: 0; object-fit: cover; display: block; }
+  .testi-author .name { font-size: 13px; font-weight: 700; color: #fff; }
+  .testi-author .role { font-size: 12px; color: var(--text-secondary); }
+
+  .security-pill {
+    display: inline-flex; align-items: center; gap: 7px;
+    background: #F3F1FB; color: #2A2342; font-size: 14px; font-weight: 600;
+    padding: 8px 16px; border-radius: 999px; margin-bottom: 24px;
+  }
+  .security-pill .lucide { width: 15px; height: 15px; color: #6C2BDF; }
+  .badges-row { display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 40px; }
+  .comp-badge { width: 92px; height: 92px; flex-shrink: 0; transition: transform 0.25s ease; }
+  .comp-badge img { width: 100%; height: 100%; object-fit: contain; display: block; }
+  .comp-badge:hover { transform: translateY(-4px) scale(1.04); }
+
+  .final-cta { position: relative; text-align: center; padding: 100px 0; overflow: hidden; }
+  .final-cta::before {
+    content: ""; position: absolute; inset: 0;
+    background: radial-gradient(ellipse at 50% 50%, rgba(108,43,223,0.10) 0%, rgba(139,77,255,0.06) 40%, transparent 70%);
+    z-index: -1;
+  }
+  .final-cta h2 { font-family: 'Outfit', sans-serif; font-size: 40px; font-weight: 700; letter-spacing: -0.02em; margin-bottom: 16px; }
+  .final-cta > .container > p { color: var(--text-secondary); font-size: 16px; margin-bottom: 30px; }
+  .final-buttons { display: flex; gap: 14px; justify-content: center; margin-bottom: 30px; }
+  .final-buttons .btn-primary { padding: 14px 32px; }
+  .final-buttons .btn-ghost { padding: 14px 32px; }
+  .final-trust { display: flex; flex-wrap: wrap; justify-content: center; gap: 32px; color: var(--text-muted); font-size: 13px; }
+  .final-trust .item { display: flex; align-items: center; gap: 7px; }
+  .final-trust .item .lucide { width: 15px; height: 15px; }
+
+  /* =========================================================
+     FOOTER
+  ========================================================= */
+  .footer {
+    position: relative; overflow: hidden; border-top: none; padding: 76px 0 38px;
+    background:
+      radial-gradient(620px 420px at 12% -12%, rgba(138,104,255,0.55) 0%, transparent 62%),
+      linear-gradient(135deg, #3A1D8A 0%, #2C1568 55%, #25115C 100%);
+  }
+  .footer::before {
+    content: ""; position: absolute; inset: 0;
+    background-image:
+      radial-gradient(rgba(255,255,255,0.85) 1px, transparent 1.6px),
+      radial-gradient(rgba(255,255,255,0.6) 1px, transparent 1.6px);
+    background-size: 92px 92px, 134px 134px; background-position: 0 0, 46px 64px;
+    opacity: 0.10; pointer-events: none;
+  }
+  .footer .container { position: relative; z-index: 1; }
+  .footer-top { display: grid; grid-template-columns: 1.7fr 1fr 1fr 1fr 1.4fr; gap: 32px; margin-bottom: 56px; }
+  .footer-logo { font-size: 34px; font-weight: 800; color: #fff; letter-spacing: -0.01em; display: inline-block; margin-bottom: 20px; }
+  .footer-brand .tagline { color: #C9BEEC; font-size: 15px; line-height: 1.6; max-width: 320px; margin-bottom: 30px; }
+  .social-row { display: flex; gap: 18px; }
+  .social-row a { color: #EFEAFE; display: inline-flex; align-items: center; justify-content: center; transition: color 0.2s ease, transform 0.2s ease; }
+  .social-row a svg { width: 18px; height: 18px; fill: currentColor; }
+  .social-row a:hover { color: #fff; transform: translateY(-2px); }
+  .footer-col h4 { font-size: 16px; font-weight: 700; color: #fff; text-transform: none; letter-spacing: 0; margin-bottom: 20px; }
+  .footer-col ul { display: flex; flex-direction: column; gap: 14px; }
+  .footer-col a { color: #BCAEE4; font-size: 14px; transition: color 0.2s ease; }
+  .footer-col a:hover { color: #fff; }
+  .footer-contact .c-group { margin-bottom: 18px; }
+  .footer-contact .c-label { display: block; color: #fff; font-size: 14px; font-weight: 700; margin-bottom: 6px; }
+  .footer-contact .c-val { color: #BCAEE4; font-size: 13px; line-height: 1.5; }
+  .footer-bottom { border-top: 1px solid rgba(255,255,255,0.16); padding-top: 26px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px; }
+  .footer-bottom .copy, .footer-bottom .since { color: #C4B8E8; font-size: 13px; letter-spacing: 0.03em; }
+
+  /* =========================================================
+     INFRASTRUCTURE SECTION
+  ========================================================= */
+  .infra-section .section-label { display: inline-flex; align-items: center; gap: 7px; }
+  .infra-section .section-label .lucide { width: 13px; height: 13px; }
+
+  .infra-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+
+  .infra-card {
+    background: var(--bg-card); border: 1px solid var(--bg-card-border);
+    border-radius: 16px; overflow: hidden;
+    display: flex; flex-direction: column;
+  }
+  .infra-card-text { padding: 26px 26px 22px; }
+  .infra-card-text h3 {
+    font-family: 'Outfit', sans-serif; font-size: 20px; font-weight: 700;
+    color: #fff; letter-spacing: -0.015em; line-height: 1.2; margin-bottom: 10px;
+  }
+  .infra-card-text p { color: var(--text-secondary); font-size: 13.5px; line-height: 1.65; }
+
+  .infra-mockup {
+    margin: 0 16px 16px; flex: 1;
+    background: #070B1A; border: 1px solid #16213A; border-radius: 12px; padding: 16px;
+  }
+  .infra-card--rev .infra-mockup { margin: 16px 16px 0; order: -1; }
+
+  .mock-topbar {
+    display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px;
+  }
+  .mock-tl {
+    font-size: 9px; font-weight: 700; letter-spacing: 0.08em;
+    text-transform: uppercase; color: var(--text-muted);
+  }
+  .mock-cnt { font-size: 11px; font-weight: 600; color: var(--text-secondary); }
+
+  /* Mailboxes */
+  .mb-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .mb-item {
+    display: flex; align-items: center; gap: 8px;
+    background: #0C1224; border: 1px solid #1A2040; border-radius: 8px; padding: 10px 12px;
+  }
+  .mb-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--green-accent); flex-shrink: 0; }
+  .mb-addr {
+    font-size: 10.5px; color: var(--text-secondary);
+    overflow: hidden; text-overflow: ellipsis; white-space: nowrap; flex: 1;
+  }
+  .mb-add {
+    display: flex; align-items: center; justify-content: center; gap: 5px;
+    background: rgba(108,43,223,0.06); border: 1px solid rgba(108,43,223,0.45);
+    border-radius: 8px; padding: 10px 12px;
+    font-size: 10.5px; font-weight: 600; color: var(--brand-light);
+  }
+
+  /* DNS */
+  .dns-head {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 12px; padding-bottom: 12px; border-bottom: 1px solid #16213A;
+  }
+  .dns-domain-label {
+    font-size: 9px; font-weight: 700; letter-spacing: 0.08em;
+    text-transform: uppercase; color: var(--text-muted);
+  }
+  .dns-auth-pill {
+    background: rgba(34,197,94,0.12); border: 1px solid rgba(34,197,94,0.28);
+    color: #4ADE80; font-size: 9.5px; font-weight: 700;
+    padding: 3px 9px; border-radius: 20px;
+  }
+  .dns-rows { display: flex; flex-direction: column; }
+  .dns-row {
+    display: flex; align-items: center; gap: 10px;
+    padding: 10px 0; border-bottom: 1px solid #16213A;
+  }
+  .dns-row:last-child { border-bottom: none; }
+  .dns-type { font-size: 11px; font-weight: 700; color: #fff; min-width: 42px; }
+  .dns-val {
+    flex: 1; font-size: 10.5px; color: var(--text-secondary);
+    font-family: 'SF Mono', 'Fira Code', 'Consolas', monospace;
+    overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+  }
+  .dns-auto-badge {
+    display: inline-flex; align-items: center; gap: 4px;
+    font-size: 10px; font-weight: 600; color: #4ADE80; flex-shrink: 0;
+  }
+
+  /* AI Intent */
+  .intent-rows { display: flex; flex-direction: column; gap: 8px; }
+  .intent-row {
+    display: flex; align-items: center; gap: 10px;
+    background: #0C1224; border: 1px solid #1A2040; border-radius: 8px; padding: 10px 12px;
+  }
+  .intent-av {
+    width: 28px; height: 28px; border-radius: 6px; flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 9.5px; font-weight: 800; letter-spacing: 0.02em;
+  }
+  .av-green { background: rgba(34,197,94,0.2); color: #4ADE80; }
+  .av-amber { background: rgba(251,146,60,0.2); color: #FB923C; }
+  .av-blue  { background: rgba(96,165,250,0.2); color: #60A5FA; }
+  .intent-msg {
+    flex: 1; font-size: 11.5px; color: var(--text-secondary);
+    overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+  }
+  .intent-badge {
+    font-size: 9.5px; font-weight: 600; padding: 3px 10px;
+    border-radius: 20px; flex-shrink: 0;
+  }
+  .badge-interested { background: rgba(34,197,94,0.12); border: 1px solid rgba(34,197,94,0.3); color: #4ADE80; }
+  .badge-objection  { background: rgba(251,146,60,0.12); border: 1px solid rgba(251,146,60,0.3); color: #FB923C; }
+  .badge-notnow     { background: rgba(96,165,250,0.12); border: 1px solid rgba(96,165,250,0.3); color: #60A5FA; }
+
+  /* Conversation */
+  .conv-contact { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
+  .conv-av {
+    width: 32px; height: 32px; border-radius: 8px;
+    background: rgba(34,197,94,0.2); color: #4ADE80;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 10.5px; font-weight: 800; flex-shrink: 0;
+  }
+  .conv-name { font-size: 12px; font-weight: 600; color: #fff; }
+  .conv-company { color: var(--text-secondary); font-weight: 400; }
+  .conv-bubble {
+    background: #0C1224; border: 1px solid #1A2040; border-radius: 10px;
+    padding: 12px 14px; font-size: 12px; color: var(--text-secondary);
+    line-height: 1.5; margin-bottom: 12px;
+  }
+  .conv-tags { display: flex; align-items: center; gap: 7px; flex-wrap: wrap; }
+  .conv-tag {
+    font-size: 9px; font-weight: 700; letter-spacing: 0.06em;
+    text-transform: uppercase; color: var(--text-muted);
+  }
+  .conv-dot-sep { color: var(--text-muted); font-size: 9px; }
+
+  @media (min-width: 1280px) {
+    .infra-card-text h3 { font-size: 22px; }
+    .infra-card-text p { font-size: 14px; }
+    .infra-mockup { padding: 18px; margin: 0 18px 18px; }
+    .infra-card--rev .infra-mockup { margin: 18px 18px 0; }
+  }
+  @media (min-width: 1440px) {
+    .infra-grid { gap: 24px; }
+    .infra-card-text { padding: 30px 30px 26px; }
+    .infra-card-text h3 { font-size: 24px; }
+    .infra-card-text p { font-size: 15px; }
+    .infra-mockup { padding: 20px; margin: 0 20px 20px; }
+    .infra-card--rev .infra-mockup { margin: 20px 20px 0; }
+  }
+  @media (min-width: 1600px) {
+    .infra-grid { gap: 28px; }
+    .infra-card-text { padding: 34px 34px 28px; }
+    .infra-card-text h3 { font-size: 26px; }
+    .infra-card-text p { font-size: 16px; }
+  }
+  @media (max-width: 768px) {
+    .infra-grid { grid-template-columns: 1fr; }
+  }
+
+  /* =========================================================
+     SENDING INFRASTRUCTURE SECTION
+  ========================================================= */
+  .si-inner {
+    display: grid; grid-template-columns: 1.15fr 1fr;
+    gap: 72px; align-items: center;
+  }
+  .si-eyebrow {
+    display: block; font-size: 11px; font-weight: 700;
+    letter-spacing: 0.1em; text-transform: uppercase;
+    color: var(--text-muted); margin-bottom: 18px;
+  }
+  .si-h2 {
+    font-family: 'Outfit', sans-serif; font-size: 40px; font-weight: 700;
+    color: #fff; letter-spacing: -0.022em; line-height: 1.14;
+    margin-bottom: 20px;
+  }
+  .si-body {
+    color: var(--text-secondary); font-size: 14px; line-height: 1.72;
+    margin-bottom: 32px;
+  }
+  .si-features { display: flex; flex-direction: column; gap: 22px; }
+  .si-feat { display: flex; gap: 14px; align-items: flex-start; }
+  .si-feat-icon {
+    width: 36px; height: 36px; border-radius: 8px; flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .si-feat-icon .lucide { width: 16px; height: 16px; }
+  .icon-amber { background: rgba(251,146,60,0.1); border: 1px solid rgba(251,146,60,0.22); color: #FB923C; }
+  .icon-purple { background: rgba(108,43,223,0.1); border: 1px solid rgba(108,43,223,0.28); color: var(--brand-light); }
+  .si-feat-title { font-size: 14px; font-weight: 700; color: #fff; margin-bottom: 5px; }
+  .si-feat-desc { font-size: 13px; color: var(--text-secondary); line-height: 1.65; }
+  .si-feat-desc a { color: var(--brand-light); font-weight: 600; }
+
+  /* Dashboard card */
+  .si-dash {
+    background: var(--bg-card); border: 1px solid var(--bg-card-border);
+    border-radius: 16px; overflow: hidden;
+  }
+  .si-dash-head {
+    display: flex; align-items: center; gap: 8px;
+    padding: 16px 20px; border-bottom: 1px solid var(--bg-card-border);
+  }
+  .si-health-dot {
+    width: 8px; height: 8px; border-radius: 50%;
+    background: var(--green-accent); flex-shrink: 0;
+  }
+  .si-health-title { font-size: 14px; font-weight: 700; color: #fff; }
+  .si-health-domain { font-size: 13px; color: var(--text-secondary); margin-left: 3px; }
+  .si-metrics { padding: 4px 20px; }
+  .si-metric {
+    display: flex; align-items: center; gap: 12px;
+    padding: 13px 0; border-bottom: 1px solid rgba(26,32,64,0.55);
+  }
+  .si-metric:last-child { border-bottom: none; }
+  .si-metric-ic {
+    width: 30px; height: 30px; border-radius: 7px; flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+    background: #0D1326; border: 1px solid #1A2040;
+  }
+  .si-metric-ic .lucide { width: 14px; height: 14px; color: var(--text-secondary); }
+  .si-metric-label { flex: 1; font-size: 13px; color: #C7CEE2; font-weight: 500; }
+  .si-metric-value { font-size: 13px; font-weight: 700; color: #4ADE80; }
+  .si-no-incidents {
+    display: flex; align-items: center; gap: 10px;
+    margin: 4px 20px 16px;
+    background: rgba(34,197,94,0.08); border: 1px solid rgba(34,197,94,0.18);
+    border-radius: 10px; padding: 12px 16px;
+  }
+  .si-no-incidents .lucide { width: 16px; height: 16px; color: var(--green-accent); flex-shrink: 0; }
+  .si-no-incidents span { font-size: 13px; font-weight: 600; color: #4ADE80; }
+  .si-dash-footer {
+    display: flex; align-items: center; flex-wrap: wrap; gap: 5px;
+    padding: 12px 20px; border-top: 1px solid rgba(26,32,64,0.55);
+    background: rgba(7,11,26,0.4);
+  }
+  .si-foot-item { font-size: 9.5px; font-weight: 700; letter-spacing: 0.07em; text-transform: uppercase; color: var(--text-muted); }
+  .si-foot-active { color: var(--green-accent); }
+  .si-foot-sep { font-size: 9px; color: var(--text-muted); }
+
+  @media (min-width: 1280px) {
+    .si-inner { gap: 80px; }
+    .si-h2 { font-size: 44px; }
+    .si-body { font-size: 15px; }
+  }
+  @media (min-width: 1440px) {
+    .si-inner { gap: 96px; }
+    .si-h2 { font-size: 50px; }
+    .si-body { font-size: 15px; }
+    .si-feat-desc { font-size: 14px; }
+  }
+  @media (min-width: 1600px) {
+    .si-inner { gap: 108px; }
+    .si-h2 { font-size: 54px; }
+    .si-body { font-size: 16px; }
+    .si-feat-desc { font-size: 14.5px; }
+  }
+  @media (max-width: 768px) {
+    .si-inner { grid-template-columns: 1fr; gap: 40px; }
+    .si-h2 { font-size: 30px; }
+  }
+
+  /* =========================================================
+     UNIFIED INBOX SECTION
+  ========================================================= */
+  .ub-inner {
+    display: grid; grid-template-columns: 1.2fr 1fr;
+    gap: 64px; align-items: center;
+  }
+
+  /* Table card */
+  .ub-card {
+    background: var(--bg-card); border: 1px solid var(--bg-card-border);
+    border-radius: 16px; overflow: hidden;
+  }
+  .ub-thead, .ub-row {
+    display: grid;
+    grid-template-columns: 126px 102px 1fr 86px;
+    align-items: center; padding: 10px 18px; gap: 0;
+  }
+  .ub-thead { border-bottom: 1px solid var(--bg-card-border); }
+  .ub-row { border-bottom: 1px solid rgba(26,32,64,0.45); }
+  .ub-row:last-child { border-bottom: none; }
+  .ub-th {
+    font-size: 9.5px; font-weight: 700; letter-spacing: 0.08em;
+    text-transform: uppercase; color: var(--text-muted);
+  }
+  .ub-contact-name { font-size: 13px; font-weight: 700; color: #fff; line-height: 1.2; }
+  .ub-contact-sub { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
+  .ub-row .intent-badge { font-size: 10px; justify-self: start; }
+  .badge-referral { background: rgba(139,77,255,0.12); border: 1px solid rgba(139,77,255,0.3); color: var(--brand-light); }
+  .ub-preview { font-size: 12px; color: var(--text-secondary); line-height: 1.4; padding-right: 10px; }
+  .ub-btn {
+    display: inline-flex; align-items: center; justify-content: center;
+    padding: 7px 13px; border-radius: 7px; font-family: inherit;
+    font-size: 11.5px; font-weight: 600; cursor: default; border: none;
+    white-space: nowrap; justify-self: end;
+  }
+  .ub-btn-primary { background: var(--brand); color: #fff; }
+  .ub-btn-green { background: rgba(34,197,94,0.12); border: 1px solid rgba(34,197,94,0.28); color: #4ADE80; }
+  .ub-btn-dark { background: #0D1326; border: 1px solid #1A2040; color: var(--text-secondary); }
+  .ub-foot {
+    display: flex; align-items: center; gap: 20px;
+    padding: 11px 18px; border-top: 1px solid rgba(26,32,64,0.5);
+    background: rgba(7,11,26,0.45);
+  }
+  .ub-stat { font-size: 12px; font-weight: 600; }
+  .ub-stat-muted { color: var(--text-secondary); }
+  .ub-stat-amber { color: #FB923C; }
+  .ub-stat-green { color: #4ADE80; }
+
+  @media (min-width: 1280px) {
+    .ub-inner { gap: 72px; }
+    .ub-thead, .ub-row { grid-template-columns: 136px 110px 1fr 92px; padding: 11px 20px; }
+  }
+  @media (min-width: 1440px) {
+    .ub-inner { gap: 80px; }
+    .ub-thead, .ub-row { grid-template-columns: 146px 116px 1fr 98px; padding: 12px 22px; }
+    .ub-contact-name { font-size: 14px; }
+    .ub-preview { font-size: 13px; }
+  }
+  @media (min-width: 1600px) {
+    .ub-inner { gap: 96px; }
+    .ub-thead, .ub-row { grid-template-columns: 158px 122px 1fr 106px; padding: 13px 24px; }
+  }
+  @media (max-width: 900px) {
+    .ub-inner { grid-template-columns: 1fr; gap: 40px; }
+  }
+  @media (max-width: 600px) {
+    .ub-thead { grid-template-columns: 1fr 80px; }
+    .ub-thead .ub-th:nth-child(2), .ub-thead .ub-th:nth-child(3) { display: none; }
+    .ub-row { grid-template-columns: 1fr 80px; }
+    .ub-row > .ub-preview, .ub-row > .intent-badge { display: none; }
+  }
+
+  /* =========================================================
+     PIPELINE VISIBILITY SECTION
+  ========================================================= */
+  #pipeline-visibility .section-label { display: inline-flex; align-items: center; gap: 7px; }
+  #pipeline-visibility .section-label .lucide { width: 13px; height: 13px; }
+
+  .pv-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+
+  .pv-card {
+    background: var(--bg-card); border: 1px solid var(--bg-card-border);
+    border-radius: 16px; overflow: hidden;
+    display: flex; flex-direction: column;
+  }
+
+  .pv-card-text { padding: 24px 24px 18px; }
+  .pv-card-text h3 {
+    font-family: 'Outfit', sans-serif; font-size: 18px; font-weight: 700;
+    color: #fff; letter-spacing: -0.015em; line-height: 1.25; margin-bottom: 10px;
+  }
+  .pv-card-text p { color: var(--text-secondary); font-size: 13px; line-height: 1.65; }
+
+  .pv-mockup {
+    margin: 0 16px 16px; flex: 1;
+    background: #070B1A; border: 1px solid #16213A; border-radius: 12px; padding: 16px;
+    display: flex; flex-direction: column;
+  }
+
+  .pv-stat-label {
+    font-size: 9px; font-weight: 700; letter-spacing: 0.09em;
+    text-transform: uppercase; color: var(--text-muted); display: block; margin-bottom: 8px;
+  }
+  .pv-stat-row { display: flex; align-items: baseline; gap: 8px; margin-bottom: 14px; }
+  .pv-stat-num {
+    font-family: 'Outfit', sans-serif; font-size: 36px; font-weight: 800;
+    color: #fff; line-height: 1;
+  }
+  .pv-stat-delta {
+    font-size: 12px; font-weight: 700; color: var(--green-accent);
+    background: rgba(34,197,94,0.10); border: 1px solid rgba(34,197,94,0.22);
+    border-radius: 20px; padding: 3px 8px;
+  }
+  .pv-chart-wrap { flex: 1; min-height: 52px; }
+  .pv-chart-wrap svg { width: 100%; display: block; }
+  .pv-chart-days { display: flex; justify-content: space-between; margin-top: 6px; }
+  .pv-chart-days span { font-size: 9px; color: var(--text-muted); font-weight: 600; }
+
+  .pv-donut-row { display: flex; align-items: center; gap: 16px; flex: 1; }
+  .pv-donut-wrap { position: relative; width: 100px; height: 100px; flex-shrink: 0; }
+  .pv-donut-center {
+    position: absolute; inset: 0;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    pointer-events: none;
+  }
+  .pv-donut-num {
+    font-family: 'Outfit', sans-serif; font-size: 20px; font-weight: 800;
+    color: #fff; line-height: 1;
+  }
+  .pv-donut-sub {
+    font-size: 8px; font-weight: 700; letter-spacing: 0.10em;
+    color: var(--text-muted); text-transform: uppercase; margin-top: 2px;
+  }
+  .pv-legend { display: flex; flex-direction: column; gap: 9px; flex: 1; }
+  .pv-legend-item { display: flex; align-items: center; gap: 7px; }
+  .pv-legend-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+  .pv-legend-label { flex: 1; font-size: 11.5px; color: var(--text-secondary); }
+  .pv-legend-pct { font-size: 12px; font-weight: 700; }
+
+  .pv-queue-head {
+    display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px;
+  }
+  .pv-queue-title {
+    font-size: 9px; font-weight: 700; letter-spacing: 0.09em;
+    text-transform: uppercase; color: var(--text-muted);
+  }
+  .pv-queue-badge {
+    background: rgba(108,43,223,0.15); border: 1px solid rgba(108,43,223,0.35);
+    color: var(--brand-light); font-size: 10px; font-weight: 700;
+    padding: 3px 9px; border-radius: 20px;
+  }
+  .pv-queue-rows { display: flex; flex-direction: column; gap: 7px; }
+  .pv-queue-row {
+    display: flex; align-items: center; gap: 9px;
+    background: #0C1224; border: 1px solid #1A2040; border-radius: 9px; padding: 10px 12px;
+  }
+  .pv-q-av {
+    width: 28px; height: 28px; border-radius: 7px; flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 9.5px; font-weight: 800; letter-spacing: 0.02em;
+  }
+  .av-teal { background: rgba(20,184,166,0.2); color: #2DD4BF; }
+  .av-warm { background: rgba(251,146,60,0.18); color: #FB923C; }
+  .pv-q-info { flex: 1; }
+  .pv-q-name { font-size: 12px; font-weight: 700; color: #fff; line-height: 1.2; margin-bottom: 2px; }
+  .pv-q-sub { font-size: 10px; color: var(--text-muted); }
+  .pv-q-sub-dot { color: #22C55E; }
+  .pv-q-book { font-size: 11px; font-weight: 600; color: var(--brand-light); white-space: nowrap; }
+  .pv-queue-footer {
+    margin-top: 10px; padding-top: 10px; border-top: 1px solid #16213A;
+    text-align: center; font-size: 9px; font-weight: 700;
+    letter-spacing: 0.09em; text-transform: uppercase; color: var(--brand-light);
+  }
+
+  @media (min-width: 1280px) {
+    .pv-card-text h3 { font-size: 19px; }
+    .pv-card-text p { font-size: 13.5px; }
+    .pv-mockup { padding: 18px; margin: 0 18px 18px; }
+  }
+  @media (min-width: 1440px) {
+    .pv-grid { gap: 24px; }
+    .pv-card-text { padding: 28px 28px 20px; }
+    .pv-card-text h3 { font-size: 21px; }
+    .pv-card-text p { font-size: 14px; }
+    .pv-mockup { padding: 20px; margin: 0 20px 20px; }
+  }
+  @media (min-width: 1600px) {
+    .pv-grid { gap: 28px; }
+    .pv-card-text { padding: 30px 30px 22px; }
+    .pv-card-text h3 { font-size: 22px; }
+    .pv-card-text p { font-size: 15px; }
+  }
+  @media (max-width: 900px) {
+    .pv-grid { grid-template-columns: 1fr; }
+  }
+
+  /* =========================================================
+     SCROLL REVEAL
+  ========================================================= */
+  .reveal { opacity: 0; transform: translateY(24px); transition: opacity 0.6s ease, transform 0.6s ease; }
+  .reveal.visible { opacity: 1; transform: translateY(0); }
+  [data-reveal] { opacity: 0; transform: translateY(24px); }
+  [data-reveal].reveal-animating { transition: opacity 0.6s ease, transform 0.6s ease; will-change: opacity, transform; }
+  [data-reveal].is-revealed { opacity: 1; transform: translateY(0); }
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    .reveal { opacity: 1; transform: none; transition: none; }
+    [data-reveal] { opacity: 1 !important; transform: none !important; }
+    * { transition: none !important; }
+  }
+
+  /* =========================================================
+     MOBILE MENU
+  ========================================================= */
+  .mobile-menu {
+    display: none; flex-direction: column; gap: 4px;
+    padding: 12px 24px 20px; background: var(--nav-bg);
+    -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--bg-card-border);
+    position: sticky; top: 72px; z-index: 99;
+  }
+  .mobile-menu.open { display: flex; }
+  .mobile-menu a { color: var(--text-secondary); font-size: 14px; padding: 10px 0; }
+  .mobile-menu a:hover { color: #fff; }
+  .mobile-group-label { color: var(--text-muted); font-size: 11px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; padding: 8px 0 2px; }
+  .mobile-menu a.mobile-sub { padding: 8px 0 8px 14px; font-weight: 500; color: #C7CEE2; }
+
+  /* =========================================================
+     RESPONSIVE — MOBILE
+  ========================================================= */
+  @media (max-width: 980px) {
+    .footer-top { grid-template-columns: 1fr 1fr 1fr; }
+    .footer-brand { grid-column: 1 / -1; }
+  }
+  @media (max-width: 768px) {
+    .nav-links { display: none; }
+    .nav-toggle { display: block; }
+    .nav-right .login { display: none; }
+    .nav-right .btn-primary { padding: 7px 14px; }
+    .sm-hero { padding: 56px 0 64px; }
+    .sm-hero h1 { font-size: 38px; }
+    .sm-hero .hero-sub { font-size: 15px; }
+    .sm-ctas { flex-wrap: wrap; }
+    .footer-top { grid-template-columns: 1fr 1fr; }
+    .grid-3 { grid-template-columns: 1fr; }
+    .section { padding: 64px 0; }
+    .section-head h2 { font-size: 28px; }
+    .final-cta h2 { font-size: 30px; }
+    .final-buttons { flex-wrap: wrap; }
+  }
+  @media (max-width: 480px) {
+    .sm-hero h1 { font-size: 30px; }
+    .footer-top { grid-template-columns: 1fr; }
+    .footer-bottom { flex-direction: column; align-items: flex-start; }
+  }
+
+  /* =========================================================
+     LARGE SCREENS  ≥1280px & ≥1440px & ≥1600px
+  ========================================================= */
+  @media (min-width: 1280px) {
+    .container { max-width: 1260px; }
+    .sm-hero h1 { font-size: 66px; }
+    .sm-hero .hero-sub { font-size: 18px; }
+    .section-head { max-width: 680px; }
+    .section-head h2 { font-size: 38px; }
+  }
+  @media (min-width: 1440px) {
+    .container { max-width: 1460px; }
+    .sm-hero { padding: 100px 0 110px; }
+    .sm-hero h1 { font-size: 74px; max-width: 980px; }
+    .sm-hero .hero-sub { font-size: 19px; max-width: 640px; }
+    .sm-ctas .btn-primary { padding: 16px 34px; font-size: 16px; }
+    .sm-ctas .btn-ghost   { padding: 16px 34px; font-size: 16px; }
+    .section { padding: 110px 0; }
+    .section-head { max-width: 720px; margin-bottom: 64px; }
+    .section-head h2 { font-size: 42px; }
+    .section-head p { font-size: 16px; max-width: 620px; }
+    .sm-dash { max-width: 1160px; }
+  }
+  @media (min-width: 1600px) {
+    .container { max-width: 1560px; }
+    .sm-hero h1 { font-size: 80px; max-width: 1060px; }
+    .sm-hero .hero-sub { font-size: 20px; max-width: 680px; }
+    .sm-ctas .btn-primary { padding: 18px 38px; font-size: 17px; }
+    .sm-ctas .btn-ghost   { padding: 18px 38px; font-size: 17px; }
+    .section { padding: 120px 0; }
+    .section-head { max-width: 760px; }
+    .section-head h2 { font-size: 46px; }
+    .section-head p { font-size: 17px; max-width: 660px; }
+    .sm-dash { max-width: 1260px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ===================== NAVBAR ===================== -->
+<header class="navbar">
+  <nav class="container" aria-label="Primary">
+    <a class="logo" href="index.html">NeoLeads</a>
+    <div class="nav-links">
+      <div class="nav-item" id="productsNav">
+        <button class="nav-trigger" type="button" aria-haspopup="true" aria-expanded="false" aria-controls="productsMenu">
+          Products <span class="caret" aria-hidden="true"><i data-lucide="chevron-down"></i></span>
+        </button>
+        <div class="mega-menu" id="productsMenu" role="menu" aria-label="Products">
+          <div class="mega-grid">
+            <a class="mega-item" role="menuitem" href="zeus-prospecting.html">
+              <span class="mega-ic"><i data-lucide="search"></i></span>
+              <span class="mega-text">
+                <span class="mega-title">Zeus</span>
+                <span class="mega-desc">Find verified decision-makers before your competitors do</span>
+              </span>
+            </a>
+            <a class="mega-item" role="menuitem" href="sendrit.html">
+              <span class="mega-ic"><i data-lucide="send"></i></span>
+              <span class="mega-text">
+                <span class="mega-title">Sendrit</span>
+                <span class="mega-desc">AI-written, multichannel sequences that actually get replies</span>
+              </span>
+            </a>
+            <a class="mega-item" role="menuitem" href="verifyrit.html">
+              <span class="mega-ic"><i data-lucide="badge-check"></i></span>
+              <span class="mega-text">
+                <span class="mega-title">Verifyrit</span>
+                <span class="mega-desc">Clean every email address before it costs you a bounce</span>
+              </span>
+            </a>
+            <a class="mega-item is-primary" role="menuitem" aria-current="page">
+              <span class="mega-ic"><i data-lucide="inbox"></i></span>
+              <span class="mega-text">
+                <span class="mega-title">Snaarpmail</span>
+                <span class="mega-desc">Bulletproof sending infrastructure and one inbox for every reply</span>
+              </span>
+            </a>
+            <a class="mega-item" role="menuitem" href="index.html#platform">
+              <span class="mega-ic"><i data-lucide="flame"></i></span>
+              <span class="mega-text">
+                <span class="mega-title">Warmrit</span>
+                <span class="mega-desc">Build sender reputation so your emails land not spam</span>
+              </span>
+            </a>
+            <a class="mega-item" role="menuitem" href="index.html#platform">
+              <span class="mega-ic"><i data-lucide="brain-circuit"></i></span>
+              <span class="mega-text">
+                <span class="mega-title">NeoBrain AI</span>
+                <span class="mega-desc">The AI layer that qualifies leads and scores every conversation</span>
+              </span>
+            </a>
+          </div>
+        </div>
+      </div>
+      <a href="index.html#testimonials">Case Studies <span class="caret" aria-hidden="true"><i data-lucide="chevron-down"></i></span></a>
+      <a href="index.html#pricing">Pricing</a>
+      <a href="index.html#integrations">Integration</a>
+      <a href="index.html#features">Resources <span class="caret" aria-hidden="true"><i data-lucide="chevron-down"></i></span></a>
+      <a href="index.html#features">Tools <span class="caret" aria-hidden="true"><i data-lucide="chevron-down"></i></span></a>
+    </div>
+    <div class="nav-right">
+      <a class="login" href="#">Log In</a>
+      <button class="btn-primary nav-cta">Get Started</button>
+      <button class="nav-toggle" aria-label="Toggle menu" aria-expanded="false" id="navToggle"><i data-lucide="menu"></i></button>
+    </div>
+  </nav>
+</header>
+<div class="mobile-menu" id="mobileMenu">
+  <span class="mobile-group-label">Products</span>
+  <a class="mobile-sub" href="zeus-prospecting.html">Zeus</a>
+  <a class="mobile-sub" href="sendrit.html">Sendrit</a>
+  <a class="mobile-sub" href="verifyrit.html">Verifyrit</a>
+  <a class="mobile-sub" aria-current="page">Snaarpmail</a>
+  <a class="mobile-sub" href="index.html#platform">Warmrit</a>
+  <a class="mobile-sub" href="index.html#platform">NeoBrain AI</a>
+  <a href="index.html#testimonials">Case Studies</a>
+  <a href="index.html#pricing">Pricing</a>
+  <a href="index.html#integrations">Integration</a>
+  <a href="index.html#features">Resources</a>
+  <a href="index.html#features">Tools</a>
+  <a href="#">Log In</a>
+</div>
+
+<main>
+
+<!-- ===================== HERO ===================== -->
+<section class="sm-hero">
+  <div class="container" data-reveal-stagger="100" data-reveal-onload>
+
+    <span class="hero-badge" data-reveal>
+      <i data-lucide="inbox" aria-hidden="true"></i>
+      Snaarpmail Info &amp; Inbox by NeoLeads
+    </span>
+
+    <h1 data-reveal>
+      Every Reply. Full Context.<br />
+      <span class="line-two">One Inbox.</span>
+    </h1>
+
+    <p class="hero-sub" data-reveal>
+      Snaarpmail handles the two things that break most outbound operations: the
+      infrastructure that keeps your sending domains healthy and out of spam, and the inbox
+      where every reply arrives already tagged, classified, and ready to close.
+    </p>
+
+    <div class="sm-ctas" data-reveal>
+      <button class="btn-primary">Set Up Your Inbox Free <i data-lucide="arrow-right"></i></button>
+      <button class="btn-ghost">See Snaarpmail in Action</button>
+    </div>
+
+    <div class="sm-trust" data-reveal>
+      <span class="item">
+        <span class="check-ic">
+          <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="2 6 5 9 10 3"/></svg>
+        </span>
+        Unlimited mailboxes
+      </span>
+      <span class="item">
+        <span class="check-ic">
+          <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="2 6 5 9 10 3"/></svg>
+        </span>
+        Auto DNS: SPF/DKIM/DMARC
+      </span>
+      <span class="item">
+        <span class="check-ic">
+          <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="2 6 5 9 10 3"/></svg>
+        </span>
+        AI intent classification
+      </span>
+    </div>
+
+    <div class="sm-dash" data-reveal>
+      <div class="sm-dash-frame">
+        <img src="Snaarpmail%20dashboard%201.png" alt="Snaarpmail unified inbox: replies tagged, classified, and ready to close" />
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ===================== INFRASTRUCTURE SECTION ===================== -->
+<section class="section infra-section" id="how-it-works">
+  <div class="container">
+    <div class="section-head" data-reveal-stagger="100">
+      <span class="section-label" data-reveal>
+        <i data-lucide="git-fork" aria-hidden="true"></i>
+        TWO PROBLEMS. ONE PRODUCT.
+      </span>
+      <h2 data-reveal>The Infrastructure That Sends.<br />The Inbox That Converts.</h2>
+      <p data-reveal>Every campaign you launch runs on four systems working simultaneously so the right message reaches the right person at exactly the right moment, every time.</p>
+    </div>
+
+    <div class="infra-grid" data-reveal-stagger="120">
+
+      <!-- Card 1: Unlimited Mailboxes — text top, mock bottom -->
+      <article class="infra-card" data-reveal>
+        <div class="infra-card-text">
+          <h3>Unlimited Mailboxes</h3>
+          <p>Connect as many sending domains and mailboxes as your campaigns need no per-inbox pricing, no artificial caps, no scaling ceiling.</p>
+        </div>
+        <div class="infra-mockup">
+          <div class="mock-topbar">
+            <span class="mock-tl">CONNECTED MAILBOXES</span>
+            <span class="mock-cnt">12</span>
+          </div>
+          <div class="mb-grid">
+            <div class="mb-item"><span class="mb-dot"></span><span class="mb-addr">james@neoleads.io</span></div>
+            <div class="mb-item"><span class="mb-dot"></span><span class="mb-addr">sarah@neoleads.io</span></div>
+            <div class="mb-item"><span class="mb-dot"></span><span class="mb-addr">sales@neoleads.io</span></div>
+            <div class="mb-add"><span aria-hidden="true">+</span> Add Mailbox</div>
+          </div>
+        </div>
+      </article>
+
+      <!-- Card 2: DNS — mock top, text bottom -->
+      <article class="infra-card infra-card--rev" data-reveal>
+        <div class="infra-mockup">
+          <div class="dns-head">
+            <span class="dns-domain-label">DOMAIN SETUP &middot; NEOLEADS.IO</span>
+            <span class="dns-auth-pill">Authenticated</span>
+          </div>
+          <div class="dns-rows">
+            <div class="dns-row">
+              <span class="dns-type">SPF</span>
+              <span class="dns-val">v=spf1 include:...</span>
+              <span class="dns-auto-badge">&#10003; Auto</span>
+            </div>
+            <div class="dns-row">
+              <span class="dns-type">DKIM</span>
+              <span class="dns-val">k=rsa; p=MIGf...</span>
+              <span class="dns-auto-badge">&#10003; Auto</span>
+            </div>
+            <div class="dns-row">
+              <span class="dns-type">DMARC</span>
+              <span class="dns-val">p=quarantine;...</span>
+              <span class="dns-auto-badge">&#10003; Auto</span>
+            </div>
+          </div>
+        </div>
+        <div class="infra-card-text">
+          <h3>Automatic DNS &amp; Domain Setup</h3>
+          <p>SPF, DKIM, and DMARC configured automatically for every connected domain no manual DNS editing, no waiting on IT, no misconfigured records silently killing deliverability.</p>
+        </div>
+      </article>
+
+      <!-- Card 3: AI Intent — text top, mock bottom -->
+      <article class="infra-card" data-reveal>
+        <div class="infra-card-text">
+          <h3>AI Intent Classification</h3>
+          <p>NeoBrain AI reads every incoming reply and classifies it Interested, Objection, Not Now, Referral, Unsubscribe so your team opens the inbox knowing exactly what needs attention first.</p>
+        </div>
+        <div class="infra-mockup">
+          <div class="mock-topbar">
+            <span class="mock-tl">INCOMING &middot; CLASSIFIED BY NEOBRAIN</span>
+          </div>
+          <div class="intent-rows">
+            <div class="intent-row">
+              <span class="intent-av av-green" aria-hidden="true">MT</span>
+              <span class="intent-msg">"Great timing, send pricing"</span>
+              <span class="intent-badge badge-interested">&#9679; Interested</span>
+            </div>
+            <div class="intent-row">
+              <span class="intent-av av-amber" aria-hidden="true">PN</span>
+              <span class="intent-msg">"Locked in until Q1..."</span>
+              <span class="intent-badge badge-objection">&#9679; Objection</span>
+            </div>
+            <div class="intent-row">
+              <span class="intent-av av-blue" aria-hidden="true">DO</span>
+              <span class="intent-msg">"Reach out in 3 months"</span>
+              <span class="intent-badge badge-notnow">&#9679; Not Now</span>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <!-- Card 4: Full Conversation Context — mock top, text bottom -->
+      <article class="infra-card infra-card--rev" data-reveal>
+        <div class="infra-mockup">
+          <div class="mock-topbar">
+            <span class="mock-tl">OPEN CONVERSATION</span>
+          </div>
+          <div class="conv-contact">
+            <span class="conv-av" aria-hidden="true">CW</span>
+            <span class="conv-name">Chen Wu &middot; <span class="conv-company">Orion Health</span></span>
+          </div>
+          <div class="conv-bubble">
+            "Yes, happy to jump on a call &mdash; when works for you?"
+          </div>
+          <div class="conv-tags">
+            <span class="conv-tag">SIGNAL: NEW CRO HIRED</span>
+            <span class="conv-dot-sep" aria-hidden="true">&middot;</span>
+            <span class="conv-tag">SEQUENCE: STEP 3</span>
+            <span class="conv-dot-sep" aria-hidden="true">&middot;</span>
+            <span class="conv-tag">SCORE: 91</span>
+          </div>
+        </div>
+        <div class="infra-card-text">
+          <h3>Full Conversation Context</h3>
+          <p>Every reply arrives with the original buying signal, the full Sendrit sequence thread, and the prospect's lead score visible in the same view &mdash; no tab-switching, no guessing why you reached out.</p>
+        </div>
+      </article>
+
+    </div>
+  </div>
+</section>
+
+<!-- ===================== SENDING INFRASTRUCTURE ===================== -->
+<section class="section" id="infrastructure">
+  <div class="container">
+    <div class="si-inner">
+
+      <!-- Left: copy -->
+      <div>
+        <span class="si-eyebrow" data-reveal>SENDING INFRASTRUCTURE</span>
+        <h2 class="si-h2" data-reveal>Set Up Once. Snaarpmail Keeps Every Mailbox Healthy So You Don't Have To.</h2>
+        <p class="si-body" data-reveal>Managing sending infrastructure manually DNS records, inbox rotation, blacklist monitoring, IP health is a full-time job that has nothing to do with closing deals. Snaarpmail automates all of it so your team stays focused on conversations, not configuration.</p>
+        <div class="si-features" data-reveal-stagger="110">
+          <div class="si-feat" data-reveal>
+            <span class="si-feat-icon icon-amber"><i data-lucide="refresh-cw" aria-hidden="true"></i></span>
+            <div>
+              <div class="si-feat-title">Dynamic IP &amp; Inbox Rotation</div>
+              <p class="si-feat-desc">Sending volume is automatically distributed across your connected mailboxes and IPs, so no single account triggers spam filters or hits daily send limits mid-campaign.</p>
+            </div>
+          </div>
+          <div class="si-feat" data-reveal>
+            <span class="si-feat-icon icon-purple"><i data-lucide="activity" aria-hidden="true"></i></span>
+            <div>
+              <div class="si-feat-title">Real-Time Domain Health Monitoring</div>
+              <p class="si-feat-desc">Snaarpmail watches every sending domain for blacklist appearances, reputation drops, and deliverability shifts &mdash; and alerts your team before a problem becomes a pipeline blocker. Warm-up itself is handled by <a href="index.html#platform">Warmrit</a> &rarr;</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right: domain health card -->
+      <div class="si-dash" data-reveal>
+        <div class="si-dash-head">
+          <span class="si-health-dot" aria-hidden="true"></span>
+          <span class="si-health-title">Domain Health</span>
+          <span class="si-health-domain">neoleads.in</span>
+        </div>
+        <div class="si-metrics">
+          <div class="si-metric">
+            <span class="si-metric-ic"><i data-lucide="shield" aria-hidden="true"></i></span>
+            <span class="si-metric-label">Blacklists</span>
+            <span class="si-metric-value">Clear &middot; 0/80</span>
+          </div>
+          <div class="si-metric">
+            <span class="si-metric-ic"><i data-lucide="star" aria-hidden="true"></i></span>
+            <span class="si-metric-label">Reputation</span>
+            <span class="si-metric-value">Excellent</span>
+          </div>
+          <div class="si-metric">
+            <span class="si-metric-ic"><i data-lucide="inbox" aria-hidden="true"></i></span>
+            <span class="si-metric-label">Inbox Placement</span>
+            <span class="si-metric-value">98% Primary</span>
+          </div>
+        </div>
+        <div class="si-no-incidents">
+          <i data-lucide="check-circle-2" aria-hidden="true"></i>
+          <span>No Incidents in the last 30 days</span>
+        </div>
+        <div class="si-dash-footer">
+          <span class="si-foot-item">IP ROTATION: <span class="si-foot-active">ACTIVE</span></span>
+          <span class="si-foot-sep" aria-hidden="true">&middot;</span>
+          <span class="si-foot-item">LAST DNS CHECK: <span>4 MINS AGO</span></span>
+          <span class="si-foot-sep" aria-hidden="true">&middot;</span>
+          <span class="si-foot-item">U ARMIT STATUS: <span class="si-foot-active">ARMED</span> &rarr;</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ===================== UNIFIED INBOX ===================== -->
+<section class="section alt" id="unified-inbox">
+  <div class="container">
+    <div class="ub-inner">
+
+      <!-- Left: inbox table mockup -->
+      <div class="ub-card" data-reveal>
+        <div class="ub-thead">
+          <span class="ub-th">CONTACT</span>
+          <span class="ub-th">INTENT</span>
+          <span class="ub-th">REPLY PREVIEW</span>
+          <span class="ub-th">ACTION</span>
+        </div>
+
+        <div class="ub-row">
+          <div><div class="ub-contact-name">Marcus T.</div><div class="ub-contact-sub">Acme Corp &middot; Q3 SaaS</div></div>
+          <span class="intent-badge badge-interested">&#9679; Interested</span>
+          <span class="ub-preview">"Great timing &mdash; we're evaluating..."</span>
+          <button class="ub-btn ub-btn-primary">Reply</button>
+        </div>
+
+        <div class="ub-row">
+          <div><div class="ub-contact-name">Priya N.</div><div class="ub-contact-sub">Vertex AI &middot; Series B</div></div>
+          <span class="intent-badge badge-objection">&#9679; Objection</span>
+          <span class="ub-preview">"Locked in with a vendor until Q1..."</span>
+          <button class="ub-btn ub-btn-dark">Snooze</button>
+        </div>
+
+        <div class="ub-row">
+          <div><div class="ub-contact-name">David O.</div><div class="ub-contact-sub">Stackline &middot; Agency</div></div>
+          <span class="intent-badge badge-notnow">&#9679; Not Now</span>
+          <span class="ub-preview">"Reach out in 3 months, mid-migration"</span>
+          <button class="ub-btn ub-btn-dark">Schedule</button>
+        </div>
+
+        <div class="ub-row">
+          <div><div class="ub-contact-name">Chen W.</div><div class="ub-contact-sub">Orion Health &middot; EMEA</div></div>
+          <span class="intent-badge badge-interested">&#9679; Interested</span>
+          <span class="ub-preview">"Yes, happy to jump on a call..."</span>
+          <button class="ub-btn ub-btn-green">Book Call</button>
+        </div>
+
+        <div class="ub-row">
+          <div><div class="ub-contact-name">Amara F.</div><div class="ub-contact-sub">Nexford &middot; Q1 SaaS</div></div>
+          <span class="intent-badge badge-referral">&#9679; Referral</span>
+          <span class="ub-preview">"Not the right person, but talk to..."</span>
+          <button class="ub-btn ub-btn-dark">Reassign</button>
+        </div>
+
+        <div class="ub-foot">
+          <span class="ub-stat ub-stat-muted">5 replies</span>
+          <span class="ub-stat ub-stat-amber">2 high-priority</span>
+          <span class="ub-stat ub-stat-green">1 meeting ready to book</span>
+        </div>
+      </div>
+
+      <!-- Right: copy -->
+      <div data-reveal-stagger="100">
+        <span class="si-eyebrow" data-reveal>UNIFIED INBOX</span>
+        <h2 class="si-h2" data-reveal>Every Reply From Every Campaign. One Place. Already Sorted.</h2>
+        <p class="si-body" data-reveal>Stop opening fifteen tabs to check which campaign got a reply, who sent it, and what they said. Snaarpmail pulls every response from every Sendrit campaign into one view with NeoBrain AI's intent classification applied before you open a single message.</p>
+        <div class="si-features" data-reveal-stagger="110">
+          <div class="si-feat" data-reveal>
+            <span class="si-feat-icon icon-purple"><i data-lucide="pause" aria-hidden="true"></i></span>
+            <div>
+              <div class="si-feat-title">Sequence Auto-Pause on Reply</div>
+              <p class="si-feat-desc">The moment a prospect replies, Snaarpmail automatically pauses their active Sendrit sequence &mdash; so they never receive a follow-up that makes it obvious the left hand doesn't know what the right hand is doing.</p>
+            </div>
+          </div>
+          <div class="si-feat" data-reveal>
+            <span class="si-feat-icon icon-purple"><i data-lucide="git-branch" aria-hidden="true"></i></span>
+            <div>
+              <div class="si-feat-title">Team Routing &amp; Assignment</div>
+              <p class="si-feat-desc">Hot replies route automatically to the right rep based on campaign ownership, geography, or account tier so interested prospects get a response in minutes, not hours. Pipeline Visibility</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ===================== PIPELINE VISIBILITY ===================== -->
+<section class="section" id="pipeline-visibility">
+  <div class="container">
+    <div class="section-head" data-reveal-stagger="100">
+      <span class="section-label" data-reveal>
+        <i data-lucide="refresh-cw" aria-hidden="true"></i>
+        PIPELINE VISIBILITY
+      </span>
+      <h2 data-reveal>Know What's in Your Inbox<br />Before You Open It</h2>
+      <p data-reveal>Snaarpmail gives you a live summary of everything that came back from your campaigns &mdash; intent breakdown, reply volume, and which conversations are one message away from a meeting &mdash; so you always know where to focus first.</p>
+    </div>
+
+    <div class="pv-grid" data-reveal-stagger="120">
+
+      <!-- Card 1: Reply Volume Tracking -->
+      <article class="pv-card" data-reveal>
+        <div class="pv-card-text">
+          <h3>Reply Volume Tracking</h3>
+          <p>See how many replies have come in across all active campaigns broken out by day, by campaign, and by channel so you can spot surges and gaps in real time.</p>
+        </div>
+        <div class="pv-mockup">
+          <span class="pv-stat-label">REPLIES THIS WEEK</span>
+          <div class="pv-stat-row">
+            <span class="pv-stat-num">47</span>
+            <span class="pv-stat-delta">+ 23%</span>
+          </div>
+          <div class="pv-chart-wrap">
+            <svg viewBox="0 0 240 56" preserveAspectRatio="none" fill="none" aria-hidden="true">
+              <defs>
+                <linearGradient id="pvLineGrad" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stop-color="#8B4DFF" stop-opacity="0.35"/>
+                  <stop offset="100%" stop-color="#8B4DFF" stop-opacity="0"/>
+                </linearGradient>
+              </defs>
+              <path d="M0 38 C20 42 40 34 65 29 C85 24 100 16 120 13 C140 10 158 19 178 25 C198 30 220 34 240 32 L240 56 L0 56 Z" fill="url(#pvLineGrad)"/>
+              <path d="M0 38 C20 42 40 34 65 29 C85 24 100 16 120 13 C140 10 158 19 178 25 C198 30 220 34 240 32" stroke="#8B4DFF" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+          <div class="pv-chart-days">
+            <span>Mon</span><span>Wed</span><span>Fri</span><span>Sun</span>
+          </div>
+        </div>
+      </article>
+
+      <!-- Card 2: Intent Breakdown Dashboard -->
+      <article class="pv-card" data-reveal>
+        <div class="pv-card-text">
+          <h3>Intent Breakdown Dashboard</h3>
+          <p>A live donut of today's reply intent &mdash; how many Interested, Objections, Not Now, and Unsubscribes &mdash; so you know before opening the inbox whether this is a great day or a triage day.</p>
+        </div>
+        <div class="pv-mockup">
+          <div class="pv-donut-row">
+            <div class="pv-donut-wrap">
+              <svg viewBox="0 0 104 104" width="100" height="100" fill="none" aria-hidden="true">
+                <!-- background ring -->
+                <circle cx="52" cy="52" r="40" stroke="#1A2040" stroke-width="12"/>
+                <!-- Interested 38%: start at 12-o'clock (-90°), length=95.5 of 251.33 -->
+                <circle cx="52" cy="52" r="40" fill="none" stroke="#22C55E" stroke-width="12"
+                  stroke-dasharray="95.5 251.33" transform="rotate(-90 52 52)"/>
+                <!-- Objection 22%: start at 46.8° (cumulative 38% from 12-o'clock) -->
+                <circle cx="52" cy="52" r="40" fill="none" stroke="#FBBF24" stroke-width="12"
+                  stroke-dasharray="55.3 251.33" transform="rotate(46.8 52 52)"/>
+                <!-- Not Now 31%: start at 126° (cumulative 60% from 12-o'clock) -->
+                <circle cx="52" cy="52" r="40" fill="none" stroke="#818CF8" stroke-width="12"
+                  stroke-dasharray="77.9 251.33" transform="rotate(126 52 52)"/>
+                <!-- Other 9%: start at 237.6° (cumulative 91% from 12-o'clock) -->
+                <circle cx="52" cy="52" r="40" fill="none" stroke="#2E3E6A" stroke-width="12"
+                  stroke-dasharray="22.6 251.33" transform="rotate(237.6 52 52)"/>
+                <!-- center hole -->
+                <circle cx="52" cy="52" r="33" fill="#070B1A"/>
+              </svg>
+              <div class="pv-donut-center">
+                <span class="pv-donut-num">47</span>
+                <span class="pv-donut-sub">TODAY</span>
+              </div>
+            </div>
+            <div class="pv-legend">
+              <div class="pv-legend-item">
+                <span class="pv-legend-dot" style="background:#22C55E"></span>
+                <span class="pv-legend-label">Interested</span>
+                <span class="pv-legend-pct" style="color:#22C55E">38%</span>
+              </div>
+              <div class="pv-legend-item">
+                <span class="pv-legend-dot" style="background:#FBBF24"></span>
+                <span class="pv-legend-label">Objection</span>
+                <span class="pv-legend-pct" style="color:#FBBF24">22%</span>
+              </div>
+              <div class="pv-legend-item">
+                <span class="pv-legend-dot" style="background:#818CF8"></span>
+                <span class="pv-legend-label">Not Now</span>
+                <span class="pv-legend-pct" style="color:#818CF8">31%</span>
+              </div>
+              <div class="pv-legend-item">
+                <span class="pv-legend-dot" style="background:#4A5578"></span>
+                <span class="pv-legend-label">Other</span>
+                <span class="pv-legend-pct" style="color:#4A5578">9%</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <!-- Card 3: Meeting-Ready Queue -->
+      <article class="pv-card" data-reveal>
+        <div class="pv-card-text">
+          <h3>Meeting-Ready Queue</h3>
+          <p>A prioritized shortlist of prospects who replied positively and haven't been booked yet &mdash; sorted by reply recency so no warm reply goes cold while sitting unnoticed in a full inbox.</p>
+        </div>
+        <div class="pv-mockup">
+          <div class="pv-queue-head">
+            <span class="pv-queue-title">MEETING-READY</span>
+            <span class="pv-queue-badge">3 waiting</span>
+          </div>
+          <div class="pv-queue-rows">
+            <div class="pv-queue-row">
+              <span class="pv-q-av av-teal" aria-hidden="true">CW</span>
+              <div class="pv-q-info">
+                <div class="pv-q-name">Chen Wu</div>
+                <div class="pv-q-sub"><span class="pv-q-sub-dot">&#9679;</span> Interested &middot; 4m ago</div>
+              </div>
+              <span class="pv-q-book">Book &rarr;</span>
+            </div>
+            <div class="pv-queue-row">
+              <span class="pv-q-av av-warm" aria-hidden="true">MT</span>
+              <div class="pv-q-info">
+                <div class="pv-q-name">Marcus Tran</div>
+                <div class="pv-q-sub"><span class="pv-q-sub-dot">&#9679;</span> Interested &middot; 18m ago</div>
+              </div>
+              <span class="pv-q-book">Book &rarr;</span>
+            </div>
+          </div>
+          <div class="pv-queue-footer">VIA KALENDER INTEGRATION</div>
+        </div>
+      </article>
+
+    </div>
+  </div>
+</section>
+
+<!-- ===================== CUSTOMER STORIES ===================== -->
+<section class="section" id="testimonials">
+  <div class="container">
+    <div class="section-head" data-reveal-stagger="100">
+      <span class="section-label" data-reveal>CUSTOMER STORIES</span>
+      <h2 data-reveal>Don't just take our word for it.</h2>
+    </div>
+    <div class="grid-3" data-reveal-stagger="120">
+      <article class="card testi-card" data-reveal>
+        <div class="stars" aria-label="5 out of 5 stars"><i data-lucide="star"></i><i data-lucide="star"></i><i data-lucide="star"></i><i data-lucide="star"></i><i data-lucide="star"></i></div>
+        <p class="quote">"NeoLeads completely changed our outbound workflow. We went from 5% reply rate to over 23% in 3 weeks."</p>
+        <div class="testi-author"><img class="av" src="avatars/Container.png" alt="James T." /><div><div class="name">James T.</div><div class="role">VP Sales, TechCorp</div></div></div>
+      </article>
+      <article class="card testi-card" data-reveal>
+        <div class="stars" aria-label="5 out of 5 stars"><i data-lucide="star"></i><i data-lucide="star"></i><i data-lucide="star"></i><i data-lucide="star"></i><i data-lucide="star"></i></div>
+        <p class="quote">"The pay-per-conversation model is genius. We only pay for actual results, not wasted software subscriptions."</p>
+        <div class="testi-author"><img class="av" src="avatars/Container-2.png" alt="Maria K." /><div><div class="name">Maria K.</div><div class="role">Founder, GrowthLab</div></div></div>
+      </article>
+      <article class="card testi-card" data-reveal>
+        <div class="stars" aria-label="5 out of 5 stars"><i data-lucide="star"></i><i data-lucide="star"></i><i data-lucide="star"></i><i data-lucide="star"></i><i data-lucide="star"></i></div>
+        <p class="quote">"NeoBrain AI is scary good. It replies to leads like a human, qualifies them and books meetings on autopilot."</p>
+        <div class="testi-author"><img class="av" src="avatars/Container-1.png" alt="Derek W." /><div><div class="name">Derek W.</div><div class="role">Head of Growth, ScaleUp</div></div></div>
+      </article>
+      <article class="card testi-card" data-reveal>
+        <div class="stars" aria-label="5 out of 5 stars"><i data-lucide="star"></i><i data-lucide="star"></i><i data-lucide="star"></i><i data-lucide="star"></i><i data-lucide="star"></i></div>
+        <p class="quote">"Setup was fast and the results came quickly. This is the future of outbound sales."</p>
+        <div class="testi-author"><img class="av" src="avatars/Container-6.png" alt="Priya S." /><div><div class="name">Priya S.</div><div class="role">Marketing Director, FintechHub</div></div></div>
+      </article>
+      <article class="card testi-card" data-reveal>
+        <div class="stars" aria-label="5 out of 5 stars"><i data-lucide="star"></i><i data-lucide="star"></i><i data-lucide="star"></i><i data-lucide="star"></i><i data-lucide="star"></i></div>
+        <p class="quote">"Best investment we made this year. Our pipeline has never been healthier."</p>
+        <div class="testi-author"><img class="av" src="avatars/Container-3.png" alt="Carlos M." /><div><div class="name">Carlos M.</div><div class="role">CEO, LaunchPad</div></div></div>
+      </article>
+      <article class="card testi-card" data-reveal>
+        <div class="stars" aria-label="5 out of 5 stars"><i data-lucide="star"></i><i data-lucide="star"></i><i data-lucide="star"></i><i data-lucide="star"></i><i data-lucide="star"></i></div>
+        <p class="quote">"The unified inbox alone is worth it. Managing 10 mailboxes from one place is a game changer."</p>
+        <div class="testi-author"><img class="av" src="avatars/Container-7.png" alt="Sophie L." /><div><div class="name">Sophie L.</div><div class="role">Sales Lead, Nexvio</div></div></div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== COMPLIANCE ===================== -->
+<section class="section alt" id="security">
+  <div class="container">
+    <div class="section-head" data-reveal-stagger="100">
+      <span class="security-pill" data-reveal><i data-lucide="shield-check"></i> Compliant</span>
+      <h2 data-reveal>Keep your organization secure<br />and compliant.</h2>
+    </div>
+    <div class="badges-row" data-reveal-stagger="80">
+      <span class="comp-badge" title="AICPA SOC" data-reveal><img src="logos/compliance-1.png" alt="AICPA SOC 2 certified" /></span>
+      <span class="comp-badge" title="PCI DSS" data-reveal><img src="logos/compliance-2.png" alt="PCI DSS compliant" /></span>
+      <span class="comp-badge" title="GDPR" data-reveal><img src="logos/compliance-3.png" alt="GDPR compliant" /></span>
+      <span class="comp-badge" title="Privacy" data-reveal><img src="logos/compliance-4.png" alt="Data privacy" /></span>
+      <span class="comp-badge" title="CSA STAR Level One" data-reveal><img src="logos/compliance-5.png" alt="CSA STAR Level One" /></span>
+      <span class="comp-badge" title="ISO/IEC 27001" data-reveal><img src="logos/compliance-6.png" alt="ISO/IEC 27001 certified" /></span>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== FINAL CTA — GET STARTED ===================== -->
+<section class="final-cta">
+  <div class="container" data-reveal-stagger="100">
+    <span class="section-label" data-reveal>GET STARTED</span>
+    <h2 data-reveal>Ready to Take Control<br />of Your Inbox?</h2>
+    <p data-reveal>One inbox for every reply, with full context, auto-classification, and bulletproof infrastructure behind every send.</p>
+    <div class="final-buttons" data-reveal>
+      <button class="btn-primary">Set Up Your Inbox Free <i data-lucide="arrow-right"></i></button>
+      <button class="btn-ghost">Book a Demo</button>
+    </div>
+    <div class="final-trust" data-reveal>
+      <span class="item"><i data-lucide="shield-check"></i> SOC 2 Certified</span>
+      <span class="item"><i data-lucide="check"></i> No credit card</span>
+      <span class="item"><i data-lucide="check"></i> Cancel anytime</span>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<!-- ===================== FOOTER ===================== -->
+<footer class="footer">
+  <div class="container">
+    <div class="footer-top" data-reveal-stagger="100">
+      <div class="footer-brand" data-reveal>
+        <a class="footer-logo" href="index.html">Neoleads</a>
+        <p class="tagline">Every tool your business needs to find, reach, verify and close, in one connected stack.</p>
+        <div class="social-row">
+          <a href="#" aria-label="X"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231 5.45-6.231zm-1.161 17.52h1.833L7.084 4.126H5.117l11.966 15.644z"/></svg></a>
+          <a href="#" aria-label="Facebook"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M24 12.073C24 5.405 18.627 0 12 0S0 5.405 0 12.073c0 6.02 4.388 11.01 10.125 11.927v-8.437H7.078v-3.49h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.49h-2.796v8.437C19.612 23.083 24 18.093 24 12.073z"/></svg></a>
+          <a href="#" aria-label="Instagram"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg></a>
+          <a href="#" aria-label="LinkedIn"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.225 0z"/></svg></a>
+        </div>
+      </div>
+      <div class="footer-col" data-reveal>
+        <h4>Solutions</h4>
+        <ul>
+          <li><a href="#">For sales teams</a></li>
+          <li><a href="#">For marketing</a></li>
+          <li><a href="#">For founders</a></li>
+          <li><a href="#">For agencies</a></li>
+          <li><a href="#">For enterprise</a></li>
+        </ul>
+      </div>
+      <div class="footer-col" data-reveal>
+        <h4>Company</h4>
+        <ul>
+          <li><a href="#">About</a></li>
+          <li><a href="#">Resources</a></li>
+          <li><a href="#">API docs</a></li>
+          <li><a href="#">Privacy policy</a></li>
+          <li><a href="#">Terms of service</a></li>
+        </ul>
+      </div>
+      <div class="footer-col" data-reveal>
+        <h4>Product</h4>
+        <ul>
+          <li><a href="#">Kalender</a></li>
+          <li><a href="zeus-prospecting.html">Zeus</a></li>
+          <li><a href="#">Snaarplock</a></li>
+          <li><a href="snaarpmail.html">Snaarpmail</a></li>
+          <li><a href="verifyrit.html">Verifyrit</a></li>
+          <li><a href="sendrit.html">Sendrit</a></li>
+        </ul>
+      </div>
+      <div class="footer-col footer-contact" data-reveal>
+        <h4>Contact Information</h4>
+        <div class="c-group">
+          <span class="c-label">Email</span>
+          <span class="c-val">support@snaarp.com</span>
+        </div>
+        <div class="c-group">
+          <span class="c-label">Phone</span>
+          <span class="c-val">+1 (800) 123-4567</span>
+        </div>
+        <div class="c-group">
+          <span class="c-label">Office Address</span>
+          <span class="c-val">Neoleads<br />1234 Sales Street, Suite 500<br />San Francisco, CA 94105, USA</span>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom" data-reveal data-reveal-delay="150">
+      <span class="since">SINCE. 2026</span>
+      <span class="copy">&copy;Neoleads. All rights reserved.</span>
+    </div>
+  </div>
+</footer>
+
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+<script>
+  if (window.lucide) { lucide.createIcons(); }
+
+  // Mobile menu
+  (function () {
+    var toggle = document.getElementById('navToggle');
+    var menu = document.getElementById('mobileMenu');
+    if (!toggle || !menu) return;
+    toggle.addEventListener('click', function () {
+      var open = menu.classList.toggle('open');
+      toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+    });
+    menu.querySelectorAll('a').forEach(function (a) {
+      a.addEventListener('click', function () {
+        menu.classList.remove('open');
+        toggle.setAttribute('aria-expanded', 'false');
+      });
+    });
+  })();
+
+  // Products mega-menu
+  (function () {
+    var nav = document.getElementById('productsNav');
+    if (!nav) return;
+    var trigger = nav.querySelector('.nav-trigger');
+    function close() { nav.classList.remove('open'); trigger.setAttribute('aria-expanded', 'false'); }
+    trigger.addEventListener('click', function (e) {
+      e.stopPropagation();
+      var open = nav.classList.toggle('open');
+      trigger.setAttribute('aria-expanded', open ? 'true' : 'false');
+    });
+    document.addEventListener('click', function (e) { if (!nav.contains(e.target)) close(); });
+    document.addEventListener('keydown', function (e) { if (e.key === 'Escape') close(); });
+    nav.querySelectorAll('.mega-item').forEach(function (item) { item.addEventListener('click', close); });
+  })();
+
+  // Scroll reveal engine
+  (function () {
+    var prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    var hasIO = 'IntersectionObserver' in window;
+    var slice = Array.prototype.slice;
+
+    slice.call(document.querySelectorAll('[data-reveal-stagger]')).forEach(function (group) {
+      var step = parseInt(group.getAttribute('data-reveal-stagger'), 10) || 120;
+      var base = parseInt(group.getAttribute('data-reveal-base'), 10) || 0;
+      var onload = group.hasAttribute('data-reveal-onload');
+      var kids = group.querySelectorAll(':scope > [data-reveal]');
+      slice.call(kids).forEach(function (kid, i) {
+        if (kid.getAttribute('data-reveal-delay') === null) kid.setAttribute('data-reveal-delay', base + i * step);
+        if (onload) kid.setAttribute('data-reveal-onload', '');
+      });
+    });
+
+    var legacy = slice.call(document.querySelectorAll('.reveal'));
+    var items = slice.call(document.querySelectorAll('[data-reveal]'));
+
+    if (prefersReduced || !hasIO) {
+      legacy.forEach(function (el) { el.classList.add('visible'); });
+      items.forEach(function (el) { el.classList.add('is-revealed'); el.removeAttribute('data-reveal'); });
+      return;
+    }
+
+    var legacyObs = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (entry.isIntersecting) { entry.target.classList.add('visible'); legacyObs.unobserve(entry.target); }
+      });
+    }, { threshold: 0.12 });
+    legacy.forEach(function (el) { legacyObs.observe(el); });
+
+    function settle(el) { el.classList.remove('reveal-animating'); el.style.transitionDelay = ''; el.removeAttribute('data-reveal'); }
+    function reveal(el, animate) {
+      if (!animate) { el.classList.add('is-revealed'); settle(el); return; }
+      var delay = parseInt(el.getAttribute('data-reveal-delay'), 10) || 0;
+      if (delay) el.style.transitionDelay = delay + 'ms';
+      el.classList.add('reveal-animating');
+      requestAnimationFrame(function () { requestAnimationFrame(function () { el.classList.add('is-revealed'); }); });
+      window.setTimeout(function () { settle(el); }, 700 + delay);
+    }
+
+    var obs = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (entry.isIntersecting) { reveal(entry.target, true); obs.unobserve(entry.target); }
+      });
+    }, { threshold: 0.1, rootMargin: '0px 0px -5% 0px' });
+
+    var vh = window.innerHeight || document.documentElement.clientHeight;
+    items.forEach(function (el) {
+      var r = el.getBoundingClientRect();
+      var aboveFold = r.top < vh * 0.9 && r.bottom > 0;
+      if (aboveFold) reveal(el, el.hasAttribute('data-reveal-onload'));
+      else obs.observe(el);
+    });
+  })();
+</script>
+
+</body>
+</html>
