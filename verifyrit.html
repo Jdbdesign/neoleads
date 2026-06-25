@@ -832,11 +832,12 @@
 
   /* ---- Domain Health ---- */
   .dom-top-row {
+    position: relative;
     display: flex; align-items: center; gap: 10px;
-    padding-bottom: 14px; margin-bottom: 2px;
-    border-bottom: 1px solid rgba(26,32,64,0.9);
+    padding-bottom: 12px;
   }
   .dom-globe-ic {
+    position: relative;
     width: 36px; height: 36px; border-radius: 9px; flex-shrink: 0;
     background: rgba(139,77,255,0.14); border: 1px solid rgba(139,77,255,0.25);
     display: flex; align-items: center; justify-content: center; color: var(--grow-purple);
@@ -846,12 +847,11 @@
   .dom-name { font-size: 14px; font-weight: 700; color: #fff; display: block; }
   .dom-sub  { font-size: 11px; color: var(--text-muted); display: block; margin-top: 1px; }
   .dom-live-badge {
+    position: relative; overflow: visible;
     font-size: 9.5px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; flex-shrink: 0;
     background: rgba(34,197,94,0.12); color: #4ADE80; border: 1px solid rgba(34,197,94,0.25);
     border-radius: 5px; padding: 4px 10px;
-    animation: livePulse 2.4s ease-in-out infinite;
   }
-  @keyframes livePulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
   .dom-checks { display: flex; flex-direction: column; }
   .dom-check-row {
     display: flex; align-items: center; justify-content: space-between;
@@ -862,49 +862,380 @@
   .dom-check-val { display: flex; align-items: center; gap: 5px; font-size: 12.5px; font-weight: 600; }
   .dom-check-val.ok   { color: #4ADE80; }
   .dom-check-val.teal { color: var(--vr-teal-light); }
+  .dom-check-val.dom-livecount { color: #4ADE80; }
   .dom-check-val .lucide { width: 13px; height: 13px; }
 
-  /* ---- Spam Trap ---- */
-  .spam-alert {
-    background: rgba(100,8,8,0.40); border: 1px solid rgba(239,68,68,0.32);
-    border-radius: 10px; padding: 14px; margin-bottom: 10px;
-    animation: spamGlow 3s ease-in-out infinite;
-  }
-  @keyframes spamGlow {
-    0%, 100% { box-shadow: 0 0 0 0 rgba(239,68,68,0); }
-    50%       { box-shadow: 0 0 14px 0 rgba(239,68,68,0.12); }
-  }
-  .spam-alert-hd { display: flex; align-items: center; gap: 7px; font-size: 13.5px; font-weight: 700; color: #F87171; margin-bottom: 7px; }
-  .spam-alert-hd .lucide { width: 15px; height: 15px; color: #F59E0B; }
-  .spam-email-addr { font-family: 'Courier New', monospace; font-size: 11.5px; color: rgba(248,113,113,0.6); margin-bottom: 10px; }
-  .spam-tags { display: flex; flex-wrap: wrap; gap: 6px; }
-  .spam-tag { font-size: 9.5px; font-weight: 700; letter-spacing: 0.04em; border-radius: 5px; padding: 3px 9px; }
-  .spam-tag.t-trap  { background: rgba(249,115,22,0.15); color: #FB923C; border: 1px solid rgba(249,115,22,0.3); }
-  .spam-tag.t-role  { background: rgba(245,158,11,0.12); color: #FCD34D; border: 1px solid rgba(245,158,11,0.28); }
-  .spam-tag.t-honey { background: rgba(239,68,68,0.12); color: #F87171; border: 1px solid rgba(239,68,68,0.28); }
-  .spam-protected {
-    display: flex; align-items: center; gap: 8px;
-    background: rgba(34,197,94,0.06); border: 1px solid rgba(34,197,94,0.18);
-    border-radius: 8px; padding: 10px 13px;
-    font-size: 12px; font-weight: 500; color: #4ADE80;
-  }
-  .spam-protected .lucide { width: 15px; height: 15px; flex-shrink: 0; }
+  /* ---- Domain Health: live DNS diagnostic ---- */
+  #domPanel { position: relative; min-height: 266px; }
 
-  /* ---- Catch-All ---- */
-  .catch-box { border-radius: 10px; padding: 14px; }
-  .catch-box.c-stop    { background: rgba(255,255,255,0.03); border: 1px solid var(--bg-card-border); }
-  .catch-box.c-resolve { background: rgba(34,197,94,0.07); border: 1px solid rgba(34,197,94,0.22); }
-  .catch-eyebrow { font-size: 9.5px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 7px; }
-  .catch-eyebrow.stop-lbl    { color: var(--vr-amber); }
-  .catch-eyebrow.resolve-lbl { color: var(--green-accent); }
-  .catch-email { font-family: 'Courier New', monospace; font-size: 12.5px; color: #cdd6ee; margin-bottom: 5px; }
-  .catch-unknown { font-size: 11px; color: var(--text-muted); letter-spacing: 0.05em; }
-  .catch-deliverable { display: flex; align-items: center; gap: 12px; font-size: 12px; font-weight: 600; }
-  .catch-deliverable .cd-ok { color: #4ADE80; display: flex; align-items: center; gap: 4px; }
-  .catch-deliverable .cd-ok .lucide { width: 13px; height: 13px; }
-  .catch-deliverable .cd-score { color: var(--grow-purple); }
-  .catch-arrow-row { text-align: center; padding: 10px 0; color: var(--grow-purple); }
+  /* Initial hidden states (only active once JS adds .dom-diag-on, before first paint) */
+  .dom-diag-on .dom-top-row   { opacity: 0; transform: translateY(10px); }
+  .dom-diag-on .dom-globe-ic  { transform: scale(0); }
+  .dom-diag-on .dom-name      { opacity: 0; }
+  .dom-diag-on .dom-sub       { opacity: 0; transform: translateX(-6px); }
+  .dom-diag-on .dom-live-badge{ opacity: 0; transform: scale(0.7); }
+  .dom-diag-on .dom-check-row { opacity: 0; transform: translateY(8px); }
+
+  /* Domain row / globe entrance */
+  .dom-top-row  { transition: opacity 0.38s ease, transform 0.38s ease; will-change: opacity, transform; }
+  .dom-top-row.in { opacity: 1; transform: none; }
+  .dom-globe-ic { transition: transform 0.36s cubic-bezier(0.34,1.56,0.64,1); }
+  .dom-globe-ic.in { transform: scale(1); }
+  .dom-globe-ic .lucide { animation: domGlobeSpin 12s linear infinite; transform-origin: 50% 50%; }
+  @keyframes domGlobeSpin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+
+  /* Globe pulse ring (purple on load, green on completion) */
+  .dom-globe-pulse {
+    position: absolute; inset: -1px; border-radius: 9px; pointer-events: none;
+    border: 1px solid transparent; opacity: 0;
+  }
+  .dom-globe-pulse.pulse-purple { animation: domGlobePulseP 0.5s ease-out 1; }
+  .dom-globe-pulse.pulse-green  { animation: domGlobePulseG 0.6s ease-out 1; }
+  @keyframes domGlobePulseP {
+    0%   { opacity: 0.35; transform: scale(1);   border-color: rgba(139,77,255,0.5); }
+    100% { opacity: 0;    transform: scale(2.2); border-color: rgba(139,77,255,0); }
+  }
+  @keyframes domGlobePulseG {
+    0%   { opacity: 0.40; transform: scale(1);   border-color: rgba(34,197,94,0.5); }
+    100% { opacity: 0;    transform: scale(2.2); border-color: rgba(34,197,94,0); }
+  }
+
+  /* Domain name + sub */
+  .dom-name { min-height: 17px; }
+  .dom-name.in { opacity: 1; }
+  .dom-sub  { transition: opacity 0.28s ease, transform 0.28s ease; }
+  .dom-sub.in { opacity: 0.55; transform: none; }
+
+  /* Divider draw / retract (transform only — zero layout shift) */
+  .dom-divider {
+    height: 1px; width: 100%; margin: 0 0 4px;
+    background: rgba(26,32,64,0.9);
+    transform: scaleX(0); transform-origin: left center;
+    transition: transform 0.4s ease;
+  }
+  .dom-divider.draw { transform: scaleX(1); }
+
+  /* LIVE badge */
+  .dom-live-badge { transition: opacity 0.35s ease, transform 0.35s cubic-bezier(0.34,1.56,0.64,1); }
+  .dom-live-badge.in  { opacity: 1; transform: scale(1); }
+  .dom-live-badge.out { opacity: 0; transform: scale(0.6); transition: opacity 0.25s ease, transform 0.25s ease; }
+  .dom-live-txt { position: relative; z-index: 1; }
+  .dom-live-badge.live .dom-live-txt { animation: domBreathe 2.3s ease-in-out infinite; }
+  @keyframes domBreathe { 0%, 100% { opacity: 0.8; } 50% { opacity: 1; } }
+  .dom-live-svg { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; overflow: visible; }
+  .dom-live-svg rect { fill: none; stroke: rgba(34,197,94,0.65); stroke-width: 1; stroke-dasharray: 164; stroke-dashoffset: 164; }
+  .dom-live-badge.draw .dom-live-svg rect { animation: domBadgeDraw 0.3s ease forwards; }
+  @keyframes domBadgeDraw { to { stroke-dashoffset: 0; } }
+  .dom-live-ring {
+    position: absolute; inset: 0; border-radius: 5px; pointer-events: none;
+    border: 1px solid #4ADE80; opacity: 0;
+  }
+  .dom-live-badge.live .dom-live-ring { animation: domBroadcast 2s ease-out infinite; }
+  @keyframes domBroadcast { 0% { opacity: 0.5; transform: scale(1); } 100% { opacity: 0; transform: scale(1.8); } }
+  .dom-live-badge.boost .dom-live-ring { animation: domBroadcastBoost 0.8s ease-out 1; }
+  @keyframes domBroadcastBoost { 0% { opacity: 0.75; transform: scale(1); } 100% { opacity: 0; transform: scale(1.85); } }
+
+  /* Check rows */
+  .dom-check-row { position: relative; overflow: hidden; transition: opacity 0.32s ease, transform 0.32s ease; will-change: opacity, transform; }
+  .dom-check-row.in { opacity: 1; transform: none; }
+  .dom-check-row.flash { animation: domFlash 0.4s ease-out 1; }
+  @keyframes domFlash { 0% { background: rgba(34,197,94,0.06); } 100% { background: transparent; } }
+  .dom-resval-wrap { display: flex; flex-direction: column; align-items: flex-end; gap: 3px; }
+
+  /* Shimmer on completed rows */
+  .dom-shimmer {
+    position: absolute; inset: 0; pointer-events: none; opacity: 0;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.08), transparent);
+    transform: translateX(-100%);
+  }
+  .dom-check-row.done .dom-shimmer { animation: domShimmer 5s ease-in-out infinite; }
+  @keyframes domShimmer {
+    0% { transform: translateX(-100%); opacity: 0; }
+    6% { opacity: 1; }
+    14% { transform: translateX(100%); opacity: 0; }
+    100% { transform: translateX(100%); opacity: 0; }
+  }
+
+  /* Querying state: dots + latency + packets */
+  .dom-querying { display: inline-flex; align-items: center; gap: 8px; }
+  .dom-dots { display: inline-flex; gap: 5px; align-items: center; }
+  .dom-dots i { width: 4px; height: 4px; border-radius: 50%; background: var(--grow-purple); opacity: 0.3; display: block; }
+  .dom-dots i:nth-child(1) { animation: domDot 1.2s ease-in-out infinite 0s; }
+  .dom-dots i:nth-child(2) { animation: domDot 1.2s ease-in-out infinite 0.15s; }
+  .dom-dots i:nth-child(3) { animation: domDot 1.2s ease-in-out infinite 0.3s; }
+  @keyframes domDot { 0%, 100% { opacity: 0.3; transform: scale(1); } 30% { opacity: 1; transform: scale(1.15); } }
+  .dom-latency { font-family: 'Courier New', monospace; font-size: 11px; opacity: 0.35; color: var(--text-secondary); transition: opacity 0.2s ease; }
+  .dom-packets { position: absolute; left: 0; right: 0; top: 50%; height: 0; pointer-events: none; }
+  .dom-packets i { position: absolute; top: -1px; left: 0; width: 2px; height: 2px; border-radius: 50%; background: var(--grow-purple); opacity: 0; }
+  .dom-packets i:nth-child(1) { animation: domPacket 0.8s linear infinite 0s; }
+  .dom-packets i:nth-child(2) { animation: domPacket 0.8s linear infinite 0.4s; }
+  @keyframes domPacket { 0% { left: 0; opacity: 0; } 12% { opacity: 0.2; } 88% { opacity: 0.2; } 100% { left: 100%; opacity: 0; } }
+
+  /* Resolved result */
+  .dom-rescheck { width: 13px; height: 13px; flex-shrink: 0; }
+  .dom-rescheck path { fill: none; stroke: #4ADE80; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; stroke-dasharray: 20; stroke-dashoffset: 20; }
+  .dom-rescheck.drawn path { stroke-dashoffset: 0; transition: stroke-dashoffset 0.12s ease; }
+  .dom-restext { display: inline-block; }
+  .dom-mx-hosts {
+    font-family: 'Courier New', monospace; font-size: 9px; line-height: 11px; height: 11px;
+    color: var(--text-muted); white-space: nowrap; opacity: 0; transition: opacity 0.35s ease;
+  }
+  .dom-mx-hosts.in { opacity: 0.25; }
+
+  /* Completion: panel border flash */
+  #domPanel.complete { animation: domPanelDone 0.6s ease-out 1; }
+  @keyframes domPanelDone {
+    0%   { border-color: var(--bg-card-border); }
+    30%  { border-color: rgba(120,255,170,0.55); }
+    100% { border-color: var(--bg-card-border); }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .dom-globe-ic .lucide, .dom-live-ring, .dom-live-txt, .dom-dots i,
+    .dom-packets i, .dom-check-row.done .dom-shimmer { animation: none !important; }
+    .dom-divider { transition: none; }
+  }
+
+  /* ---- Spam Trap & Risk Detection (live threat interception) ---- */
+  .spam-alert {
+    position: relative;
+    background: rgba(30,20,40,1);
+    border: 1px solid rgba(120,90,140,0.20);
+    border-radius: 10px; padding: 14px; margin-bottom: 10px;
+    height: 150px; box-sizing: border-box;
+    transition: border-color 0.4s ease;
+    will-change: transform, opacity, background;
+  }
+  .spam-anim-on .spam-alert { opacity: 0; transform: translateY(12px); }
+  .spam-anim-on .spam-alert.in {
+    opacity: 1; transform: translateY(0);
+    transition: opacity 0.4s ease, transform 0.4s ease, border-color 0.4s ease;
+  }
+  .spam-ring {
+    position: absolute; inset: -1px; border-radius: 10px;
+    border: 1px solid rgba(239,68,68,0); pointer-events: none; opacity: 0;
+  }
+  .spam-ring.ping { animation: spamRingPing 0.4s ease-out; }
+  @keyframes spamRingPing {
+    0%   { opacity: 0.4; transform: scale(1);    border-color: rgba(239,68,68,0.6); }
+    100% { opacity: 0;   transform: scale(1.02); border-color: rgba(239,68,68,0); }
+  }
+  .spam-alert.maxflash { animation: spamMaxFlash 0.2s ease; }
+  @keyframes spamMaxFlash {
+    0%, 100% { border-color: var(--spam-bd, rgba(239,68,68,0.5)); }
+    50%      { border-color: rgba(248,113,113,0.95); }
+  }
+
+  .spam-alert-hd { display: flex; align-items: center; gap: 7px; font-size: 13.5px; font-weight: 700; margin-bottom: 8px; min-height: 18px; }
+  .spam-icons { display: inline-flex; align-items: center; gap: 3px; transform: scale(0); opacity: 0; transform-origin: center; }
+  .spam-icons.in { animation: spamIconPop 0.32s cubic-bezier(0.34,1.56,0.64,1) forwards; }
+  @keyframes spamIconPop {
+    0%   { transform: scale(0);   opacity: 0; }
+    60%  { transform: scale(1.2); opacity: 1; filter: brightness(1.9); }
+    100% { transform: scale(1);   opacity: 1; filter: brightness(1); }
+  }
+  .spam-icons.out { transform: scale(0); opacity: 0; transition: transform 0.2s ease, opacity 0.2s ease; }
+  .spam-icons .lucide { width: 15px; height: 15px; }
+  .spam-icons .lucide:first-child { color: #FBBF24; }
+  .spam-icons .lucide:last-child  { color: #F59E0B; }
+  .spam-title { font-size: 13.5px; font-weight: 700; color: var(--spam-title, #F97316); white-space: nowrap; }
+  .spam-title.out { opacity: 0; transition: opacity 0.2s ease; }
+
+  .spam-email-wrap { position: relative; display: inline-block; overflow: hidden; margin-bottom: 11px; min-height: 16px; }
+  .spam-email-addr { font-family: 'Courier New', monospace; font-size: 11.5px; color: rgba(255,255,255,0.6); transition: color 0.4s ease; white-space: nowrap; }
+  .spam-email-addr.flagged { color: rgba(239,68,68,0.7); }
+  .spam-email-domain { position: relative; }
+  .spam-email-domain.uline { border-bottom: 1px solid rgba(239,68,68,0.5); }
+  .spam-email-domain.uline.pulse { animation: spamUlinePulse 2s ease-in-out infinite; }
+  @keyframes spamUlinePulse { 0%, 100% { border-bottom-color: rgba(239,68,68,0.5); } 50% { border-bottom-color: rgba(239,68,68,0.18); } }
+  .spam-scan {
+    position: absolute; top: 0; bottom: 0; left: 0; width: 2px;
+    background: rgba(239,68,68,0.55);
+    box-shadow: 0 0 9px 2px rgba(239,68,68,0.30);
+    opacity: 0; transform: translateX(0);
+  }
+
+  .spam-tags { display: flex; flex-wrap: wrap; align-content: flex-start; gap: 8px; height: 52px; position: relative; }
+  .spam-tag {
+    position: relative;
+    font-size: 9.5px; font-weight: 700; letter-spacing: 0.04em;
+    border-radius: 5px; padding: 3px 9px;
+    background: var(--tag-bg, rgba(239,68,68,0.10));
+    color: var(--tag-color, #FCA5A5);
+    border: 1px solid transparent;
+    opacity: 0; transform: scale(0.85);
+    transform-origin: center;
+    will-change: transform, opacity;
+  }
+  .spam-tag-label { position: relative; z-index: 2; }
+  .spam-tag.land { animation: spamTagStamp 0.28s ease-out forwards; }
+  @keyframes spamTagStamp {
+    0%   { opacity: 0; transform: scale(0.82) translateY(-5px); }
+    55%  { opacity: 1; transform: scale(1.06) translateY(1px); background: rgba(255,255,255,0.22); }
+    100% { opacity: 1; transform: scale(1) translateY(0); }
+  }
+  .spam-tag.out { opacity: 0; transform: scale(0.8); transition: opacity 0.25s ease, transform 0.25s ease; }
+  .spam-tags.triplepulse .spam-tag { animation: spamTriplePulse 0.2s ease; }
+  @keyframes spamTriplePulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.04); } }
+  .spam-tags.idle .spam-tag { animation: spamTagIdle 2s ease-in-out infinite; }
+  .spam-tags.idle .spam-tag:nth-child(1) { animation-delay: 0s; }
+  .spam-tags.idle .spam-tag:nth-child(2) { animation-delay: 0.6s; }
+  .spam-tags.idle .spam-tag:nth-child(3) { animation-delay: 1.2s; }
+  @keyframes spamTagIdle { 0%, 100% { opacity: 1; } 15% { opacity: 0.65; } 30% { opacity: 1; } }
+
+  .spam-tag-border { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; pointer-events: none; z-index: 1; }
+  .spam-tag-border rect { fill: none; stroke: var(--tag-border, rgba(239,68,68,0.55)); stroke-width: 1; }
+  .spam-tag-ring {
+    position: absolute; inset: 0; border-radius: 5px;
+    border: 1px solid var(--tag-border, rgba(239,68,68,0.55));
+    pointer-events: none; opacity: 0;
+  }
+  .spam-tag-ring.go { animation: spamTagShock 0.35s ease-out; }
+  @keyframes spamTagShock { 0% { opacity: 0.3; transform: scale(1); } 100% { opacity: 0; transform: scale(2); } }
+
+  .spam-spark { position: absolute; width: 2px; height: 2px; border-radius: 50%; background: rgba(239,68,68,0.4); pointer-events: none; opacity: 0; z-index: 3; }
+  .spam-spark.go { animation: spamSpark 0.4s ease-out forwards; }
+  @keyframes spamSpark { 0% { opacity: 0.5; transform: translate(0,0) scale(1); } 100% { opacity: 0; transform: translate(var(--sx,0), var(--sy,0)) scale(0.4); } }
+
+  .spam-protected {
+    position: relative; overflow: hidden;
+    display: flex; align-items: center; gap: 8px;
+    background: rgba(34,197,94,0); border: 1px solid rgba(34,197,94,0.18);
+    border-radius: 8px; padding: 10px 13px; min-height: 40px;
+    font-size: 12px; font-weight: 500; color: #4ADE80;
+    will-change: transform, opacity, background;
+  }
+  .spam-anim-on .spam-protected { opacity: 0; transform: translateY(16px); }
+  .spam-anim-on .spam-protected.in {
+    opacity: 1; transform: translateY(0);
+    transition: opacity 0.42s cubic-bezier(0.22,1,0.36,1), transform 0.42s cubic-bezier(0.22,1,0.36,1);
+  }
+  .spam-anim-on .spam-protected.out {
+    opacity: 0; transform: translateY(8px);
+    transition: opacity 0.35s ease-in, transform 0.35s ease-in;
+  }
+  .spam-shield { position: relative; display: inline-flex; align-items: center; justify-content: center; transform: scale(0); opacity: 0; }
+  .spam-shield.in { animation: spamShieldPop 0.35s cubic-bezier(0.34,1.56,0.64,1) forwards; }
+  @keyframes spamShieldPop { 0% { transform: scale(0); opacity: 0; } 60% { transform: scale(1.2); opacity: 1; } 100% { transform: scale(1); opacity: 1; } }
+  .spam-shield.breathe .lucide { animation: spamShieldGlow 2.5s ease-in-out infinite; }
+  @keyframes spamShieldGlow { 0%, 100% { filter: drop-shadow(0 0 0 #22c55e); } 50% { filter: drop-shadow(0 0 6px #22c55e); } }
+  .spam-shield .lucide { width: 15px; height: 15px; flex-shrink: 0; color: #4ADE80; }
+  .spam-shield-pulse { position: absolute; inset: 0; border-radius: 50%; border: 1px solid rgba(34,197,94,0.4); opacity: 0; }
+  .spam-shield-pulse.go { animation: spamShieldPulse 0.5s ease-out; }
+  @keyframes spamShieldPulse { 0% { opacity: 0.4; transform: scale(1); } 100% { opacity: 0; transform: scale(2.2); } }
+  .spam-protected-txt { position: relative; z-index: 2; white-space: nowrap; }
+  .spam-bold { color: #86EFAC; font-weight: 700; display: inline-block; }
+  .spam-bold.emph { animation: spamBoldEmph 0.15s ease; }
+  @keyframes spamBoldEmph { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.05); } }
+  .spam-clear-sweep {
+    position: absolute; top: 0; bottom: 0; left: 0; width: 100%;
+    background: linear-gradient(90deg, transparent 0%, rgba(74,222,128,0.15) 50%, transparent 100%);
+    background-size: 40px 100%; background-repeat: no-repeat; background-position: -40px 0;
+    opacity: 0; pointer-events: none; z-index: 1;
+  }
+  .spam-clear-sweep.go { animation: spamClearSweep 0.4s ease-in-out; }
+  @keyframes spamClearSweep {
+    0%   { opacity: 1; background-position: -40px 0; }
+    100% { opacity: 1; background-position: calc(100% + 40px) 0; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .spam-alert, .spam-icons, .spam-tag, .spam-protected, .spam-shield,
+    .spam-shield .lucide, .spam-tags.idle .spam-tag, .spam-email-domain.uline.pulse {
+      animation: none !important; transition: none !important;
+      opacity: 1 !important; transform: none !important;
+    }
+  }
+
+  /* ---- Catch-All Resolution (competitive contrast animation) ---- */
+  /* fixed dimensions everywhere — the frame must never move while the animation plays */
+  .catch-panel { position: relative; height: 288px; }
+  .catch-box { border-radius: 10px; padding: 14px; position: relative; overflow: hidden; }
+  .catch-box.c-stop    { background: rgba(255,255,255,0.03); border: 1px solid var(--bg-card-border); height: 92px; }
+  .catch-box.c-resolve { background: rgba(34,197,94,0.07); border: 1px solid rgba(34,197,94,0.22); height: 94px; }
+  .catch-eyebrow { font-size: 9.5px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 7px; min-height: 12px; }
+  .catch-eyebrow.stop-lbl    { color: #F97316; }
+  .catch-eyebrow.resolve-lbl { color: #22C55E; }
+  .catch-email { font-family: 'Courier New', monospace; font-size: 12.5px; color: #cdd6ee; white-space: nowrap; overflow: hidden; text-overflow: clip; }
+  .catch-email-row { display: flex; align-items: center; gap: 9px; height: 16px; margin-bottom: 5px; }
+  .catch-status { font-family: 'Courier New', monospace; font-size: 12px; color: rgba(205,214,238,0.4); letter-spacing: 0.03em; height: 15px; white-space: nowrap; overflow: hidden; text-overflow: clip; }
+  .catch-status.unknown { color: rgba(205,214,238,0.45); letter-spacing: 0.05em; }
+  .catch-cursor { display: inline-block; width: 6px; height: 13px; background: #cdd6ee; margin-left: 2px; vertical-align: -2px; animation: catchBlink 0.4s steps(1) infinite; }
+  @keyframes catchBlink { 0%,50% { opacity: 1; } 51%,100% { opacity: 0; } }
+  /* processing dots */
+  .catch-dots { display: inline-flex; gap: 3px; opacity: 0; }
+  .catch-dots.show { opacity: 1; }
+  .catch-dots i { width: 4px; height: 4px; border-radius: 50%; background: rgba(205,214,238,0.65); display: inline-block; animation: catchDot 0.45s ease-in-out infinite; }
+  .catch-dots i:nth-child(2) { animation-delay: 0.15s; }
+  .catch-dots i:nth-child(3) { animation-delay: 0.3s; }
+  .catch-dots.slow i { animation-duration: 0.9s; }
+  .catch-dots.freeze i { animation: none; opacity: 1; }
+  @keyframes catchDot { 0%,100% { opacity: 0.2; } 50% { opacity: 1; } }
+  /* progress bar */
+  .catch-bar { position: absolute; left: 14px; right: 14px; bottom: 9px; height: 2px; background: rgba(255,255,255,0.06); border-radius: 2px; opacity: 0; transition: opacity 0.3s ease; }
+  .catch-bar.show { opacity: 1; }
+  .catch-bar span { display: block; height: 100%; width: 0; background: #F59E0B; border-radius: 2px; }
+  /* arrow */
+  .catch-arrow-row { text-align: center; padding: 10px 0; color: #7C3AED; }
   .catch-arrow-row .lucide { width: 20px; height: 20px; }
+  /* resolve readout (probe + result share one fixed slot) */
+  .catch-readout { position: relative; height: 18px; margin-top: 1px; }
+  .catch-probe { position: absolute; left: 0; right: 0; top: 0; font-family: 'Courier New', monospace; font-size: 12px; color: rgba(34,197,94,0.5); transition: opacity 0.2s ease; white-space: nowrap; overflow: hidden; text-overflow: clip; }
+  .c-resolve.amber .catch-probe { color: rgba(245,158,11,0.5); }
+  .catch-result { position: absolute; left: 0; right: 0; top: 0; display: flex; align-items: center; gap: 10px; font-size: 12px; font-weight: 600; opacity: 0; transition: opacity 0.2s ease; white-space: nowrap; }
+  .catch-result.show { opacity: 1; }
+  .catch-r-icon { display: inline-flex; align-items: center; justify-content: center; width: 14px; height: 14px; color: #22C55E; flex-shrink: 0; }
+  .catch-r-icon svg { width: 14px; height: 14px; }
+  .catch-r-icon svg path, .catch-r-icon svg polyline, .catch-r-icon svg line { stroke-dasharray: 26; stroke-dashoffset: 26; }
+  .catch-r-icon.draw svg path, .catch-r-icon.draw svg polyline, .catch-r-icon.draw svg line { transition: stroke-dashoffset 0.2s ease-out; stroke-dashoffset: 0; }
+  .catch-r-status { color: #22C55E; }
+  .catch-r-score { color: var(--text-muted); display: inline-flex; gap: 5px; opacity: 0; transition: opacity 0.25s ease; }
+  .catch-r-score.show { opacity: 1; }
+  .catch-r-num { display: inline-block; color: #fff; font-weight: 700; }
+  .catch-r-num.snap { animation: catchSnap 0.22s ease; }
+  @keyframes catchSnap { 0% { transform: scale(1); } 50% { transform: scale(1.1); } 100% { transform: scale(1); } }
+  .catch-r-num.glow { animation: catchScoreGlow 2.5s ease-in-out; }
+  @keyframes catchScoreGlow { 0%,100% { text-shadow: 0 0 0 rgba(var(--glow-rgb,124,58,237),0); } 50% { text-shadow: 0 0 10px rgba(var(--glow-rgb,124,58,237),0.5); } }
+  /* scan line sweep */
+  .catch-scan { position: absolute; inset: 0; background: linear-gradient(90deg, transparent, rgba(34,197,94,0.12), transparent); background-size: 55px 100%; background-repeat: no-repeat; background-position: -55px 0; opacity: 0; pointer-events: none; z-index: 1; }
+  .c-resolve.amber .catch-scan { background: linear-gradient(90deg, transparent, rgba(245,158,11,0.12), transparent); background-size: 55px 100%; background-repeat: no-repeat; }
+  .catch-scan.go { animation: catchScan 0.6s linear 3; }
+  @keyframes catchScan { 0% { opacity: 1; background-position: -55px 0; } 100% { opacity: 1; background-position: calc(100% + 55px) 0; } }
+  /* entrance / state transitions (only when animation engine is active) */
+  .catch-anim-on #catchStop { opacity: 0; transform: translateY(10px); will-change: transform, opacity; }
+  .catch-anim-on #catchStop.in { opacity: 1; transform: translateY(0); transition: opacity 0.38s ease, transform 0.38s ease; }
+  .catch-anim-on #catchStop.dim { opacity: 0.75; transition: opacity 0.3s ease; }
+  .catch-box.c-stop.flash { animation: catchStopFlash 0.2s ease; }
+  @keyframes catchStopFlash { 0%,100% { border-color: var(--bg-card-border); } 50% { border-color: rgba(245,158,11,0.2); } }
+  .catch-anim-on #catchArrow { opacity: 0; will-change: transform, opacity; }
+  .catch-anim-on #catchArrow.in { opacity: 1; }
+  .catch-anim-on #catchArrow.pop { animation: catchArrowIn 0.35s cubic-bezier(0.34,1.56,0.64,1); }
+  @keyframes catchArrowIn { 0% { transform: scale(0.5); } 60% { transform: scale(1.1); } 100% { transform: scale(1); } }
+  .catch-anim-on #catchArrow.bob { animation: catchArrowBob 1s ease-in-out 3; }
+  @keyframes catchArrowBob { 0%,100% { transform: translateY(0); } 50% { transform: translateY(4px); } }
+  .catch-anim-on #catchResolve { opacity: 0; transform: translateY(20px); will-change: transform, opacity; }
+  .catch-anim-on #catchResolve.in { opacity: 1; transform: translateY(0); transition: opacity 0.45s cubic-bezier(0.22,1,0.36,1), transform 0.45s cubic-bezier(0.22,1,0.36,1); }
+  .catch-anim-on #catchResolve.dn { opacity: 0; transform: translateY(12px); transition: opacity 0.3s ease, transform 0.3s ease; }
+  .catch-box.c-resolve.pulse { animation: catchResolvePulse 0.4s ease; }
+  @keyframes catchResolvePulse { 0% { border-color: rgba(34,197,94,0.6); } 100% { border-color: rgba(34,197,94,0.3); } }
+  .catch-box.c-resolve.amber.pulse { animation: catchResolvePulseA 0.4s ease; }
+  @keyframes catchResolvePulseA { 0% { border-color: rgba(245,158,11,0.6); } 100% { border-color: rgba(245,158,11,0.3); } }
+  .catch-anim-on #catchResolveEmail { opacity: 0; transition: opacity 0.2s ease; }
+  .catch-anim-on #catchResolveEmail.in { opacity: 1; }
+  #catchStopLbl.defeated { animation: catchDefeat 4s ease-in-out; }
+  @keyframes catchDefeat { 0%,100% { opacity: 1; } 50% { opacity: 0.6; } }
+  #catchResolveLbl.shimmer {
+    background: linear-gradient(90deg,#22C55E 0%,#22C55E 42%,#9bf6c0 50%,#22C55E 58%,#22C55E 100%);
+    background-size: 220% 100%; -webkit-background-clip: text; background-clip: text;
+    -webkit-text-fill-color: transparent; color: transparent;
+    animation: catchShimmer 1.4s ease-in-out;
+  }
+  @keyframes catchShimmer { 0% { background-position: 120% 0; } 100% { background-position: -120% 0; } }
+  @media (prefers-reduced-motion: reduce) {
+    .catch-anim-on #catchStop, .catch-anim-on #catchArrow, .catch-anim-on #catchResolve,
+    .catch-anim-on #catchResolveEmail { opacity: 1 !important; transform: none !important; }
+    .catch-dots, .catch-scan, .catch-bar { animation: none !important; }
+  }
 
   /* ---- Sender Reputation card ---- */
   .vr-rep-card {
@@ -1414,7 +1745,7 @@
                 <span class="mega-desc">Bulletproof sending infrastructure and one inbox for every reply</span>
               </span>
             </a>
-            <a class="mega-item" role="menuitem" href="index.html#platform">
+            <a class="mega-item" role="menuitem" href="warmrit.html">
               <span class="mega-ic"><i data-lucide="flame"></i></span>
               <span class="mega-text">
                 <span class="mega-title">Warmrit</span>
@@ -1450,7 +1781,7 @@
   <a class="mobile-sub" href="sendrit.html">Sendrit</a>
   <a class="mobile-sub" aria-current="page">Verifyrit</a>
   <a class="mobile-sub" href="snaarpmail.html">Snaarpmail</a>
-  <a class="mobile-sub" href="index.html#platform">Warmrit</a>
+  <a class="mobile-sub" href="warmrit.html">Warmrit</a>
   <a class="mobile-sub" href="index.html#platform">NeoBrain AI</a>
   <a href="index.html#testimonials">Case Studies</a>
   <a href="index.html#pricing">Pricing</a>
@@ -1537,31 +1868,46 @@
 
       <!-- 2 · Domain & MX — panel top, text bottom -->
       <div class="vr-bcard" data-reveal>
-        <div class="vr-bcard-panel">
+        <div class="vr-bcard-panel" id="domPanel">
           <div class="vr-panel-label">Domain Health</div>
-          <div class="dom-top-row">
-            <span class="dom-globe-ic"><i data-lucide="globe" aria-hidden="true"></i></span>
-            <span class="dom-info">
-              <span class="dom-name">vertex.io</span>
-              <span class="dom-sub">Domain registered · active</span>
+          <div class="dom-top-row" id="domTopRow">
+            <span class="dom-globe-ic" id="domGlobe">
+              <i data-lucide="globe" aria-hidden="true"></i>
+              <span class="dom-globe-pulse" id="domGlobePulse" aria-hidden="true"></span>
             </span>
-            <span class="dom-live-badge">Live</span>
+            <span class="dom-info">
+              <span class="dom-name" id="domName"></span>
+              <span class="dom-sub" id="domSub">Domain registered · active</span>
+            </span>
+            <span class="dom-live-badge" id="domLive">
+              <span class="dom-live-ring" aria-hidden="true"></span>
+              <svg class="dom-live-svg" viewBox="0 0 60 22" preserveAspectRatio="none" aria-hidden="true"><rect x="0.6" y="0.6" width="58.8" height="20.8" rx="5"/></svg>
+              <span class="dom-live-txt">LIVE</span>
+            </span>
           </div>
+          <div class="dom-divider" id="domDivider"></div>
           <div class="dom-checks">
-            <div class="dom-check-row">
+            <div class="dom-check-row" id="domRow1">
+              <span class="dom-shimmer" aria-hidden="true"></span>
               <span class="dom-check-lbl">MX Records</span>
-              <span class="dom-check-val ok"><i data-lucide="check" aria-hidden="true"></i> 2 records found</span>
+              <span class="dom-resval-wrap">
+                <span class="dom-check-val" id="domRes1"></span>
+                <span class="dom-mx-hosts" id="domMx"></span>
+              </span>
             </div>
-            <div class="dom-check-row">
+            <div class="dom-check-row" id="domRow2">
+              <span class="dom-shimmer" aria-hidden="true"></span>
               <span class="dom-check-lbl">Mail Server</span>
-              <span class="dom-check-val ok"><i data-lucide="check" aria-hidden="true"></i> Accepting mail</span>
+              <span class="dom-check-val" id="domRes2"></span>
             </div>
-            <div class="dom-check-row">
+            <div class="dom-check-row" id="domRow3">
+              <span class="dom-shimmer" aria-hidden="true"></span>
               <span class="dom-check-lbl">Last checked</span>
-              <span class="dom-check-val teal" id="domTimer">32 sec ago</span>
+              <span class="dom-check-val dom-livecount" id="domRes3"></span>
             </div>
           </div>
         </div>
+        <script>(function(){var p=document.getElementById('domPanel');if(p)p.classList.add('dom-diag-on');})();</script>
         <div class="vr-bcard-text">
           <h3>Domain &amp; MX Record Validation</h3>
           <p>Confirms the domain is real, active, and has a working mail server configured to receive, before attempting a single SMTP handshake.</p>
@@ -1574,45 +1920,62 @@
           <h3>Spam Trap &amp; Risk Detection</h3>
           <p>Known honeypots, role-based addresses, and blacklisted domains surface automatically, so every address is screened before it can damage your sender score.</p>
         </div>
-        <div class="vr-bcard-panel">
+        <div class="vr-bcard-panel" id="spamPanel">
           <div class="vr-panel-label">Risk Detection</div>
-          <div class="spam-alert">
+          <div class="spam-alert" id="spamAlert">
+            <div class="spam-ring" id="spamRing" aria-hidden="true"></div>
             <div class="spam-alert-hd">
-              <i data-lucide="zap" aria-hidden="true"></i>
-              &#9888; Spam Trap Detected
+              <span class="spam-icons" id="spamIcons">
+                <i data-lucide="zap" aria-hidden="true"></i>
+                <i data-lucide="alert-triangle" aria-hidden="true"></i>
+              </span>
+              <span class="spam-title" id="spamTitle"></span>
             </div>
-            <div class="spam-email-addr">noreply@spamtrap.net</div>
-            <div class="spam-tags">
-              <span class="spam-tag t-trap">Known spam trap</span>
-              <span class="spam-tag t-role">Role-based address</span>
-              <span class="spam-tag t-honey">Honeypot match</span>
+            <div class="spam-email-wrap" id="spamEmailWrap">
+              <span class="spam-email-addr" id="spamEmail"></span>
+              <span class="spam-scan" id="spamScan" aria-hidden="true"></span>
             </div>
+            <div class="spam-tags" id="spamTags"></div>
           </div>
-          <div class="spam-protected">
-            <i data-lucide="shield-check" aria-hidden="true"></i>
-            Domain reputation protected · blocked before send
+          <div class="spam-protected" id="spamProtected">
+            <span class="spam-shield" id="spamShield" aria-hidden="true">
+              <span class="spam-shield-pulse"></span>
+              <i data-lucide="shield-check" aria-hidden="true"></i>
+            </span>
+            <span class="spam-protected-txt" id="spamProtectedTxt"></span>
+            <span class="spam-clear-sweep" id="spamClearSweep" aria-hidden="true"></span>
           </div>
         </div>
+        <script>(function(){var p=document.getElementById('spamPanel');if(p)p.classList.add('spam-anim-on');})();</script>
       </div>
 
       <!-- 4 · Catch-All — panel top, text bottom -->
       <div class="vr-bcard" data-reveal>
-        <div class="vr-bcard-panel">
+        <div class="vr-bcard-panel catch-panel" id="catchPanel">
           <div class="vr-panel-label">Catch-All Resolution</div>
-          <div class="catch-box c-stop">
-            <div class="catch-eyebrow stop-lbl">Most Tools Stop Here</div>
-            <div class="catch-email">sarah@techcorp.io</div>
-            <div class="catch-unknown">Catch-All · Unknown</div>
+          <div class="catch-box c-stop" id="catchStop">
+            <div class="catch-eyebrow stop-lbl" id="catchStopLbl"></div>
+            <div class="catch-email-row">
+              <span class="catch-email" id="catchStopEmail"></span>
+              <span class="catch-dots" id="catchDots" aria-hidden="true"><i></i><i></i><i></i></span>
+            </div>
+            <div class="catch-status" id="catchStatus"></div>
+            <div class="catch-bar" id="catchBar" aria-hidden="true"><span id="catchBarFill"></span></div>
           </div>
-          <div class="catch-arrow-row">
+          <div class="catch-arrow-row" id="catchArrow">
             <i data-lucide="arrow-down" aria-hidden="true"></i>
           </div>
-          <div class="catch-box c-resolve">
-            <div class="catch-eyebrow resolve-lbl">Verifyrit Resolves It</div>
-            <div class="catch-email">sarah@techcorp.io</div>
-            <div class="catch-deliverable">
-              <span class="cd-ok"><i data-lucide="check" aria-hidden="true"></i> Deliverable</span>
-              <span class="cd-score">Score: 84</span>
+          <div class="catch-box c-resolve" id="catchResolve">
+            <div class="catch-scan" id="catchScan" aria-hidden="true"></div>
+            <div class="catch-eyebrow resolve-lbl" id="catchResolveLbl"></div>
+            <div class="catch-email" id="catchResolveEmail"></div>
+            <div class="catch-readout">
+              <div class="catch-probe" id="catchProbe"></div>
+              <div class="catch-result" id="catchResult">
+                <span class="catch-r-icon" id="catchRicon" aria-hidden="true"></span>
+                <span class="catch-r-status" id="catchRstatus"></span>
+                <span class="catch-r-score" id="catchRscore"><span class="catch-r-score-lbl">Score:</span> <span class="catch-r-num" id="catchRnum"></span></span>
+              </div>
             </div>
           </div>
         </div>
@@ -1620,6 +1983,7 @@
           <h3>Catch-All Resolution</h3>
           <p>Where other tools return &#8216;unknown&#8217;, Verifyrit probes deeper, giving you a real deliverability score instead of a guess that costs you a bounce.</p>
         </div>
+        <script>(function(){var p=document.getElementById('catchPanel');if(p)p.classList.add('catch-anim-on');})();</script>
       </div>
 
     </div><!-- /vr-bento -->
@@ -2279,15 +2643,266 @@
   cycle();
 })();
 
-/* Domain timer: live counter */
+/* Domain & MX Record Validation — live DNS diagnostic */
 (function () {
-  var el = document.getElementById('domTimer');
-  if (!el) return;
-  var secs = 32;
-  setInterval(function () {
-    secs = secs >= 90 ? 3 : secs + 1;
-    el.textContent = secs + ' sec ago';
-  }, 1000);
+  var panel = document.getElementById('domPanel');
+  if (!panel) return;
+
+  /* ---- data-driven cycles ---- */
+  var CYCLES = [
+    { domain: 'vertex.io',    mxResult: '2 records found', mxHosts: 'mail.vertex.io · alt.vertex.io',                 mailResult: 'Accepting mail', mxLatency: 847, mailLatency: 312 },
+    { domain: 'crestline.co', mxResult: '3 records found', mxHosts: 'mx1.crestline.co · mx2.crestline.co · mx3.crestline.co', mailResult: 'Accepting mail', mxLatency: 623, mailLatency: 288 },
+    { domain: 'stackr.dev',   mxResult: '1 record found',  mxHosts: 'aspmx.stackr.dev',                                mailResult: 'Accepting mail', mxLatency: 419, mailLatency: 194 }
+  ];
+
+  var CHECK_SVG = '<svg class="dom-rescheck" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 13l4 4L19 7"/></svg>';
+
+  var els = {
+    topRow:    document.getElementById('domTopRow'),
+    globe:     document.getElementById('domGlobe'),
+    globePulse:document.getElementById('domGlobePulse'),
+    name:      document.getElementById('domName'),
+    sub:       document.getElementById('domSub'),
+    badge:     document.getElementById('domLive'),
+    divider:   document.getElementById('domDivider'),
+    row1:      document.getElementById('domRow1'),
+    row2:      document.getElementById('domRow2'),
+    row3:      document.getElementById('domRow3'),
+    res1:      document.getElementById('domRes1'),
+    res2:      document.getElementById('domRes2'),
+    res3:      document.getElementById('domRes3'),
+    mx:        document.getElementById('domMx')
+  };
+
+  /* ---- run-token cancellation + timer tracking ---- */
+  var run = 0;
+  var timers = [];        // pending sleep timeouts
+  var latTimers = [];     // latency-counter intervals
+  var liveTimer = null;   // "last checked" interval
+  var STOP = {};
+
+  function guard(token) { if (token !== run) throw STOP; }
+  function sleep(ms, token) {
+    return new Promise(function (res, rej) {
+      var id = setTimeout(function () {
+        timers.splice(timers.indexOf(id), 1);
+        if (token !== run) { rej(STOP); return; }
+        res();
+      }, ms);
+      timers.push(id);
+    });
+  }
+  function clearTimers() {
+    timers.forEach(clearTimeout); timers = [];
+    latTimers.forEach(clearInterval); latTimers = [];
+    if (liveTimer) { clearInterval(liveTimer); liveTimer = null; }
+  }
+  function globeEl() { return els.globe.querySelector('.lucide'); }
+  function globeSpeed(dur) { var g = globeEl(); if (g) g.style.animationDuration = dur; }
+  function restart(node, cls) { node.classList.remove(cls); void node.offsetWidth; node.classList.add(cls); }
+  function globePulse(color) {
+    var p = els.globePulse;
+    p.classList.remove('pulse-purple', 'pulse-green'); void p.offsetWidth;
+    p.classList.add(color === 'green' ? 'pulse-green' : 'pulse-purple');
+  }
+
+  /* ---- text utilities ---- */
+  async function type(el, text, per, jitter, token) {
+    el.textContent = '';
+    for (var i = 0; i < text.length; i++) {
+      guard(token);
+      el.textContent += text.charAt(i);
+      await sleep(per + (jitter ? (Math.random() * 2 - 1) * jitter : 0), token);
+    }
+  }
+  async function untype(el, per, token) {
+    while (el.textContent.length) {
+      guard(token);
+      el.textContent = el.textContent.slice(0, -1);
+      await sleep(per, token);
+    }
+  }
+
+  /* ---- query / resolve mechanics ---- */
+  function startQuerying(resEl, rowEl, targetLatency) {
+    resEl.classList.remove('ok');
+    resEl.innerHTML = '<span class="dom-querying"><span class="dom-dots"><i></i><i></i><i></i></span>' +
+      (targetLatency != null ? '<span class="dom-latency">0ms</span>' : '') + '</span>';
+    var pk = document.createElement('span');
+    pk.className = 'dom-packets'; pk.innerHTML = '<i></i><i></i>';
+    rowEl.appendChild(pk);
+    if (targetLatency != null) {
+      var latEl = resEl.querySelector('.dom-latency');
+      var start = Date.now();
+      var iv = setInterval(function () {
+        var e = Math.round(Date.now() - start);
+        if (e >= targetLatency) { e = targetLatency; clearInterval(iv); }
+        if (latEl) latEl.textContent = e + 'ms';
+      }, 10);
+      latTimers.push(iv);
+    }
+  }
+  async function resolve(resEl, rowEl, text, token) {
+    var pk = rowEl.querySelector('.dom-packets'); if (pk) pk.parentNode.removeChild(pk);
+    restart(rowEl, 'flash');
+    resEl.classList.add('ok');
+    resEl.innerHTML = CHECK_SVG + '<span class="dom-restext"></span>';
+    var svg = resEl.querySelector('.dom-rescheck');
+    var txt = resEl.querySelector('.dom-restext');
+    await sleep(80, token); guard(token);
+    svg.classList.add('drawn');
+    await type(txt, text, 22, 0, token);
+  }
+  function startLiveCounter(token) {
+    if (liveTimer) clearInterval(liveTimer);
+    var start = Date.now();
+    function fmt() {
+      var s = Math.floor((Date.now() - start) / 1000);
+      if (s < 60) return s + ' sec ago';
+      return Math.floor(s / 60) + ' min ago';
+    }
+    els.res3.textContent = '0 sec ago';
+    liveTimer = setInterval(function () {
+      if (token !== run) { clearInterval(liveTimer); return; }
+      els.res3.textContent = fmt();
+    }, 1000);
+  }
+
+  /* ---- reset to blank pre-diagnostic state ---- */
+  function resetVisual() {
+    clearTimers();
+    els.topRow.classList.remove('in');
+    els.globe.classList.remove('in');
+    els.name.textContent = ''; els.name.classList.remove('in');
+    els.sub.classList.remove('in');
+    els.badge.classList.remove('in', 'live', 'draw', 'boost', 'out');
+    els.divider.classList.remove('draw'); els.divider.style.transformOrigin = 'left center';
+    [els.row1, els.row2, els.row3].forEach(function (r) {
+      r.classList.remove('in', 'done', 'flash');
+      var pk = r.querySelector('.dom-packets'); if (pk) pk.parentNode.removeChild(pk);
+    });
+    els.res1.innerHTML = ''; els.res1.classList.remove('ok');
+    els.res2.innerHTML = ''; els.res2.classList.remove('ok');
+    els.res3.style.opacity = ''; els.res3.style.transition = ''; els.res3.textContent = '';
+    els.mx.textContent = ''; els.mx.classList.remove('in');
+    globeSpeed('12s');
+  }
+
+  /* ---- one full diagnostic cycle ---- */
+  async function cycle(c, token) {
+    /* Phase 3 — domain identity loads */
+    els.topRow.classList.add('in');
+    els.globe.classList.add('in');
+    globePulse('purple');
+    await sleep(200, token);
+    els.name.classList.add('in');
+    await type(els.name, c.domain, 45, 6, token);
+    els.sub.classList.add('in');
+    els.divider.style.transformOrigin = 'left center';
+    els.divider.classList.add('draw');
+    await sleep(380, token);
+
+    /* Phase 4 — LIVE badge activates */
+    els.badge.classList.add('in', 'draw');
+    await sleep(300, token);
+    els.badge.classList.add('live');
+
+    /* Phase 5 — DNS queries fire (pending state) */
+    startQuerying(els.res1, els.row1, c.mxLatency);
+    els.row1.classList.add('in');
+    await sleep(100, token);
+    startQuerying(els.res2, els.row2, c.mailLatency);
+    els.row2.classList.add('in');
+    await sleep(100, token);
+    els.row3.classList.add('in');
+
+    /* Phase 6 — results resolve with irregular timing */
+    await sleep(900, token);
+    await resolve(els.res1, els.row1, c.mxResult, token);
+    els.row1.classList.add('done');
+    await sleep(350, token); guard(token);
+    els.mx.textContent = c.mxHosts;
+    els.mx.classList.add('in');
+
+    await sleep(250, token);
+    await resolve(els.res2, els.row2, c.mailResult, token);
+    els.row2.classList.add('done');
+
+    await sleep(500, token); guard(token);
+    startLiveCounter(token);
+    els.row3.classList.add('done');
+
+    /* Phase 7 — verification complete */
+    restart(panel, 'complete');
+    globePulse('green');
+    restart(els.badge, 'boost');
+
+    /* Phase 8 — live idle state */
+    await sleep(3000, token);
+
+    /* Phase 9 — domain swap transition */
+    if (liveTimer) { clearInterval(liveTimer); liveTimer = null; }
+    els.res3.style.transition = 'opacity 0.2s ease'; els.res3.style.opacity = '0';
+    els.row3.classList.remove('in', 'done');
+    await sleep(60, token);
+    els.row2.classList.remove('in', 'done');
+    await sleep(60, token);
+    els.row1.classList.remove('in', 'done');
+    els.mx.classList.remove('in');
+    els.divider.style.transformOrigin = 'right center';
+    els.divider.classList.remove('draw');
+    els.badge.classList.remove('live', 'in', 'draw'); els.badge.classList.add('out');
+    els.sub.classList.remove('in');
+    globeSpeed('2s');
+    await untype(els.name, 25, token);
+    await sleep(400, token); guard(token);
+
+    /* clean residue for the next run */
+    els.res1.innerHTML = ''; els.res1.classList.remove('ok');
+    els.res2.innerHTML = ''; els.res2.classList.remove('ok');
+    els.res3.style.opacity = ''; els.res3.style.transition = ''; els.res3.textContent = '';
+    els.row1.classList.remove('flash'); els.row2.classList.remove('flash');
+    els.badge.classList.remove('out', 'boost');
+    els.name.classList.remove('in');
+    globeSpeed('12s');
+    await sleep(60, token);
+  }
+
+  async function loop(token) {
+    try {
+      var i = 0;
+      while (token === run) {
+        await cycle(CYCLES[i % CYCLES.length], token);
+        i++;
+      }
+    } catch (e) { if (e !== STOP) throw e; }
+  }
+
+  function start() { run++; var token = run; resetVisual(); loop(token); }
+  function stop()  { run++; resetVisual(); }
+
+  /* reduced motion: show a complete static diagnostic, no animation */
+  var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (reduce) {
+    panel.classList.remove('dom-diag-on');
+    var c = CYCLES[0];
+    els.name.textContent = c.domain;
+    els.divider.style.transform = 'scaleX(1)';
+    els.res1.className = 'dom-check-val ok';
+    els.res1.innerHTML = CHECK_SVG.replace('dom-rescheck', 'dom-rescheck drawn') + '<span class="dom-restext">' + c.mxResult + '</span>';
+    els.mx.textContent = c.mxHosts; els.mx.classList.add('in');
+    els.res2.className = 'dom-check-val ok';
+    els.res2.innerHTML = CHECK_SVG.replace('dom-rescheck', 'dom-rescheck drawn') + '<span class="dom-restext">' + c.mailResult + '</span>';
+    els.res3.textContent = '32 sec ago';
+    return;
+  }
+
+  if ('IntersectionObserver' in window) {
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) { if (e.isIntersecting) start(); else stop(); });
+    }, { threshold: 0.3 });
+    io.observe(panel);
+  } else { start(); }
 })();
 
 /* Rep bars: animate on scroll */
@@ -2309,6 +2924,678 @@
     }, { threshold: 0.25 });
     io.observe(card);
   } else { go(); }
+})();
+
+/* Spam Trap & Risk Detection — live threat detection & interception */
+(function () {
+  var panel = document.getElementById('spamPanel');
+  if (!panel) return;
+
+  /* ---- data-driven threat cycles ---- */
+  var CYCLES = [
+    {
+      id: 'A', email: 'noreply@spamtrap.net', title: 'Spam Trap Detected',
+      tags: ['Known spam trap', 'Role-based address', 'Honeypot match'],
+      severity: 'max', rgb: '185,28,28', alpha: 0.20,
+      borderColor: 'rgba(239,68,68,0.5)', titleColor: '#F97316',
+      tagBg: 'rgba(239,68,68,0.10)', tagBorder: 'rgba(239,68,68,0.55)', tagColor: '#FCA5A5'
+    },
+    {
+      id: 'B', email: 'contact@blacklisted-domain.com', title: 'Blacklisted Domain',
+      tags: ['Domain blacklisted', 'Abuse reported', 'MX flagged'],
+      severity: 'high', rgb: '220,38,38', alpha: 0.18,
+      borderColor: 'rgba(220,38,38,0.5)', titleColor: '#EF4444',
+      tagBg: 'rgba(220,38,38,0.10)', tagBorder: 'rgba(220,38,38,0.55)', tagColor: '#FCA5A5'
+    },
+    {
+      id: 'C', email: 'admin@info-generic.io', title: 'Role-Based Address',
+      tags: ['Generic role inbox', 'Low deliverability', 'No personal owner'],
+      severity: 'medium', rgb: '245,158,11', alpha: 0.15,
+      borderColor: 'rgba(245,158,11,0.5)', titleColor: '#F59E0B',
+      tagBg: 'rgba(245,158,11,0.10)', tagBorder: 'rgba(245,158,11,0.5)', tagColor: '#FCD34D'
+    }
+  ];
+
+  function gid(id) { return document.getElementById(id); }
+  var els = {
+    alert: gid('spamAlert'), ring: gid('spamRing'), icons: gid('spamIcons'),
+    title: gid('spamTitle'), emailWrap: gid('spamEmailWrap'), email: gid('spamEmail'),
+    scan: gid('spamScan'), tags: gid('spamTags'), protected: gid('spamProtected'),
+    shield: gid('spamShield'), ptxt: gid('spamProtectedTxt'), clearSweep: gid('spamClearSweep')
+  };
+  els.shieldPulse = els.shield.querySelector('.spam-shield-pulse');
+
+  /* ---- run-token cancellation + timer tracking ---- */
+  var run = 0, timers = [], STOP = {};
+  var alertState = { rgb: '185,28,28', alpha: 0.20, flood: 0, cx: 50 };
+  var greenFlood = 0, idleActive = false;
+
+  function guard(token) { if (token !== run) throw STOP; }
+  function sleep(ms, token) {
+    return new Promise(function (res, rej) {
+      var id = setTimeout(function () {
+        timers.splice(timers.indexOf(id), 1);
+        if (token !== run) { rej(STOP); return; }
+        res();
+      }, ms);
+      timers.push(id);
+    });
+  }
+  function clearTimers() { timers.forEach(clearTimeout); timers = []; }
+  function restart(node, cls) { node.classList.remove(cls); void node.offsetWidth; node.classList.add(cls); }
+  function now() { return (window.performance && performance.now) ? performance.now() : Date.now(); }
+
+  /* ---- radial flood (alert background) via rAF-driven custom value ---- */
+  function paintAlert() {
+    var a = alertState;
+    var inner = 'rgba(' + a.rgb + ',' + (a.alpha * a.flood).toFixed(3) + ')';
+    var outer = 'rgba(' + a.rgb + ',0)';
+    els.alert.style.background = 'radial-gradient(ellipse at ' + a.cx.toFixed(2) + '% 50%, ' + inner + ', ' + outer + ' 72%), rgba(30,20,40,1)';
+  }
+  function animateFlood(to, dur, token) {
+    return new Promise(function (resolve) {
+      var from = alertState.flood, t0 = now();
+      (function frame(t) {
+        if (token !== run) { resolve(); return; }
+        var p = Math.min(1, (t - t0) / dur);
+        alertState.flood = from + (to - from) * p;
+        paintAlert();
+        if (p < 1) requestAnimationFrame(frame); else resolve();
+      })(t0);
+    });
+  }
+  function animateGreenFlood(to, dur, token) {
+    return new Promise(function (resolve) {
+      var from = greenFlood, t0 = now();
+      (function frame(t) {
+        if (token !== run) { resolve(); return; }
+        var p = Math.min(1, (t - t0) / dur);
+        greenFlood = from + (to - from) * p;
+        els.protected.style.background = 'radial-gradient(ellipse at 50% 50%, rgba(34,197,94,' + (0.08 * greenFlood).toFixed(3) + '), rgba(34,197,94,0) 72%), rgba(34,197,94,0)';
+        if (p < 1) requestAnimationFrame(frame); else resolve();
+      })(t0);
+    });
+  }
+  function startDrift(token) {
+    idleActive = true;
+    var t0 = now();
+    (function frame(t) {
+      if (token !== run || !idleActive) return;
+      alertState.cx = 50 + Math.sin((t - t0) / 3000 * Math.PI * 2) * 1.2;
+      paintAlert();
+      requestAnimationFrame(frame);
+    })(t0);
+  }
+
+  /* ---- text utilities ---- */
+  async function typeText(el, text, per, jitter, token) {
+    for (var i = 0; i < text.length; i++) {
+      guard(token);
+      el.textContent += text.charAt(i);
+      await sleep(per + (jitter ? (Math.random() * 2 - 1) * jitter : 0), token);
+    }
+  }
+  async function typeEmail(c, token) {
+    var at = c.email.indexOf('@');
+    var local = c.email.slice(0, at), domain = c.email.slice(at);
+    var lEl = document.createElement('span'); lEl.className = 'spam-email-local';
+    var dEl = document.createElement('span'); dEl.className = 'spam-email-domain';
+    els.email.appendChild(lEl); els.email.appendChild(dEl);
+    for (var i = 0; i < local.length; i++) { guard(token); lEl.textContent += local.charAt(i); await sleep(38 + (Math.random() * 2 - 1) * 8, token); }
+    for (var j = 0; j < domain.length; j++) { guard(token); dEl.textContent += domain.charAt(j); await sleep(50 + (Math.random() * 2 - 1) * 8, token); }
+    return dEl;
+  }
+  async function untypeEmail(token) {
+    var dEl = els.email.querySelector('.spam-email-domain');
+    var lEl = els.email.querySelector('.spam-email-local');
+    while (dEl && dEl.textContent.length) { guard(token); dEl.textContent = dEl.textContent.slice(0, -1); await sleep(22, token); }
+    while (lEl && lEl.textContent.length) { guard(token); lEl.textContent = lEl.textContent.slice(0, -1); await sleep(22, token); }
+  }
+  async function typeProtected(token) {
+    var s1 = document.createElement('span'); els.ptxt.appendChild(s1);
+    await typeText(s1, 'Domain reputation protected · ', 22, 0, token);
+    var sb = document.createElement('span'); sb.className = 'spam-bold'; els.ptxt.appendChild(sb);
+    await typeText(sb, 'blocked', 22, 0, token);
+    restart(sb, 'emph');
+    var s2 = document.createElement('span'); els.ptxt.appendChild(s2);
+    await typeText(s2, ' before send', 22, 0, token);
+  }
+
+  /* ---- tag construction (data-driven, SVG perimeter border + shockwave) ---- */
+  function buildTag(label, idx, c) {
+    var tag = document.createElement('span');
+    tag.className = 'spam-tag';
+    tag.style.setProperty('--tag-bg', c.tagBg);
+    tag.style.setProperty('--tag-color', c.tagColor);
+    tag.style.setProperty('--tag-border', c.tagBorder);
+    var ring = document.createElement('span'); ring.className = 'spam-tag-ring';
+    var lbl = document.createElement('span'); lbl.className = 'spam-tag-label'; lbl.textContent = label;
+    tag.appendChild(ring); tag.appendChild(lbl);
+    return { tag: tag, ring: ring };
+  }
+  function drawTagBorder(tag, clockwise) {
+    var w = tag.offsetWidth, h = tag.offsetHeight;
+    if (!w || !h) return;
+    var ns = 'http://www.w3.org/2000/svg';
+    var svg = document.createElementNS(ns, 'svg');
+    svg.setAttribute('class', 'spam-tag-border');
+    svg.setAttribute('viewBox', '0 0 ' + w + ' ' + h);
+    var rect = document.createElementNS(ns, 'rect');
+    rect.setAttribute('x', '0.5'); rect.setAttribute('y', '0.5');
+    rect.setAttribute('width', (w - 1)); rect.setAttribute('height', (h - 1));
+    rect.setAttribute('rx', '4.5');
+    var per = 2 * ((w - 1) + (h - 1));
+    rect.style.strokeDasharray = per;
+    rect.style.strokeDashoffset = (clockwise ? per : -per);
+    svg.appendChild(rect);
+    tag.insertBefore(svg, tag.firstChild);
+    void rect.getBoundingClientRect();
+    rect.style.transition = 'stroke-dashoffset 0.34s ease-out';
+    rect.style.strokeDashoffset = '0';
+  }
+  function emitSparks() {
+    for (var i = 0; i < 5; i++) {
+      var s = document.createElement('span'); s.className = 'spam-spark';
+      var ang = (Math.PI * 2) * (i / 5) + Math.random();
+      var dist = 8 + Math.random() * 4;
+      s.style.setProperty('--sx', (Math.cos(ang) * dist).toFixed(1) + 'px');
+      s.style.setProperty('--sy', (Math.sin(ang) * dist).toFixed(1) + 'px');
+      s.style.left = (40 + Math.random() * 50) + '%';
+      s.style.top = '50%';
+      els.tags.appendChild(s);
+      (function (sp) {
+        void sp.offsetWidth; sp.classList.add('go');
+        var id = setTimeout(function () { timers.splice(timers.indexOf(id), 1); if (sp.parentNode) sp.parentNode.removeChild(sp); }, 450);
+        timers.push(id);
+      })(s);
+    }
+  }
+
+  /* ---- reset to blank pre-detection state ---- */
+  function resetVisual() {
+    clearTimers();
+    idleActive = false;
+    alertState.flood = 0; alertState.cx = 50;
+    els.alert.classList.remove('in', 'maxflash');
+    els.alert.style.background = 'rgba(30,20,40,1)';
+    els.alert.style.borderColor = 'rgba(120,90,140,0.20)';
+    els.ring.classList.remove('ping');
+    els.icons.classList.remove('in', 'out');
+    els.title.textContent = ''; els.title.classList.remove('out');
+    els.email.innerHTML = ''; els.email.classList.remove('flagged');
+    els.scan.style.transition = 'none'; els.scan.style.transform = 'translateX(0)'; els.scan.style.opacity = '0';
+    els.tags.innerHTML = ''; els.tags.classList.remove('idle', 'triplepulse');
+    els.protected.classList.remove('in', 'out');
+    els.protected.style.background = 'rgba(34,197,94,0)'; greenFlood = 0;
+    els.shield.classList.remove('in', 'breathe');
+    els.shieldPulse.classList.remove('go');
+    els.ptxt.innerHTML = '';
+    els.clearSweep.classList.remove('go');
+  }
+
+  /* ---- one full detection + interception cycle (~9s) ---- */
+  async function cycle(c, token) {
+    els.alert.style.setProperty('--spam-bd', c.borderColor);
+    els.title.style.color = c.titleColor;
+
+    /* Phase 3 — alert box appears in neutral state, address types in unscreened */
+    els.alert.classList.add('in');
+    await sleep(320, token);
+    var dEl = await typeEmail(c, token);
+    await sleep(220, token);
+
+    /* Phase 4 — system scan beam sweeps, slows on the domain, trips the trap */
+    var localW = els.email.querySelector('.spam-email-local').offsetWidth;
+    var totalW = els.email.offsetWidth;
+    els.scan.style.transition = 'none';
+    els.scan.style.transform = 'translateX(0)';
+    void els.scan.offsetWidth;
+    els.scan.style.opacity = '1';
+    els.scan.style.transition = 'transform 0.38s ease-in-out';
+    els.scan.style.transform = 'translateX(' + localW + 'px)';
+    await sleep(380, token);
+    dEl.classList.add('uline');
+    restart(els.ring, 'ping');
+    await sleep(200, token);
+    els.scan.style.transition = 'transform 0.32s ease-in-out';
+    els.scan.style.transform = 'translateX(' + totalW + 'px)';
+    await sleep(320, token);
+    els.scan.style.opacity = '0';
+
+    /* Phase 5 — threat confirmed: flood, border, icons, title, flag the address */
+    alertState.rgb = c.rgb; alertState.alpha = c.alpha;
+    els.alert.style.borderColor = c.borderColor;
+    els.icons.classList.add('in');
+    els.email.classList.add('flagged');
+    await Promise.all([
+      animateFlood(1, 600, token),
+      typeText(els.title, c.title, 20, 0, token)
+    ]);
+
+    /* Phase 6 — risk tags surface one by one as evidence */
+    await sleep(200, token);
+    for (var i = 0; i < 3; i++) {
+      var built = buildTag(c.tags[i], i, c);
+      els.tags.appendChild(built.tag);
+      drawTagBorder(built.tag, i !== 1);   /* tag1 cw, tag2 ccw, tag3 cw */
+      await sleep(60, token);
+      built.tag.classList.add('land');
+      restart(built.ring, 'go');
+      if (i < 2) await sleep(340, token);
+    }
+    await sleep(120, token);
+    restart(els.tags, 'triplepulse');
+    restart(els.alert, 'maxflash');
+    emitSparks();
+    await sleep(220, token);
+    els.tags.classList.remove('triplepulse');
+
+    /* Phase 7 — shield interception drops in */
+    await sleep(180, token);
+    els.protected.classList.add('in');
+    els.shield.classList.add('in');
+    restart(els.shieldPulse, 'go');
+    var gp = animateGreenFlood(1, 500, token);
+    await sleep(220, token);
+    await typeProtected(token);
+    await gp;
+    restart(els.clearSweep, 'go');
+    await sleep(400, token);
+
+    /* Phase 8 — idle hold: re-examination pulses, heat shimmer, shield breathe */
+    els.tags.classList.add('idle');
+    els.shield.classList.add('breathe');
+    dEl.classList.add('pulse');
+    startDrift(token);
+    await sleep(2000, token);
+
+    /* Phase 9 — loop reset: clear evidence in reverse, de-flood, untype */
+    idleActive = false;
+    els.tags.classList.remove('idle');
+    els.shield.classList.remove('breathe');
+    dEl.classList.remove('pulse');
+    els.protected.classList.remove('in'); els.protected.classList.add('out');
+    els.shield.classList.remove('in');
+    var tagEls = els.tags.querySelectorAll('.spam-tag');
+    for (var k = tagEls.length - 1; k >= 0; k--) {
+      tagEls[k].classList.remove('land'); tagEls[k].classList.add('out');
+      await sleep(60, token);
+    }
+    els.title.classList.add('out');
+    var df = animateFlood(0, 400, token);
+    await untypeEmail(token);
+    await df;
+    els.icons.classList.remove('in'); els.icons.classList.add('out');
+    await sleep(220, token);
+
+    /* clean residue for the next threat (alert box stays present) */
+    els.alert.classList.remove('maxflash');
+    els.alert.style.background = 'rgba(30,20,40,1)';
+    els.alert.style.borderColor = 'rgba(120,90,140,0.20)';
+    els.email.classList.remove('flagged'); els.email.innerHTML = '';
+    els.title.classList.remove('out'); els.title.textContent = '';
+    els.tags.innerHTML = '';
+    els.protected.classList.remove('out'); els.protected.style.background = 'rgba(34,197,94,0)'; greenFlood = 0;
+    els.shieldPulse.classList.remove('go');
+    els.ptxt.innerHTML = '';
+    els.clearSweep.classList.remove('go');
+    els.icons.classList.remove('out');
+    await sleep(300, token);
+  }
+
+  async function loop(token) {
+    try {
+      var i = 0;
+      while (token === run) { await cycle(CYCLES[i % CYCLES.length], token); i++; }
+    } catch (e) { if (e !== STOP) throw e; }
+  }
+  function start() { run++; var token = run; resetVisual(); loop(token); }
+  function stop() { run++; resetVisual(); }
+
+  /* reduced motion: render a complete static detected state, no animation */
+  var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (reduce) {
+    panel.classList.remove('spam-anim-on');
+    var c = CYCLES[0];
+    alertState.rgb = c.rgb; alertState.alpha = c.alpha; alertState.flood = 1; paintAlert();
+    els.alert.style.borderColor = c.borderColor; els.alert.style.setProperty('--spam-bd', c.borderColor);
+    els.icons.classList.add('in');
+    els.title.style.color = c.titleColor; els.title.textContent = c.title;
+    var at = c.email.indexOf('@');
+    var lEl = document.createElement('span'); lEl.className = 'spam-email-local'; lEl.textContent = c.email.slice(0, at);
+    var dEl2 = document.createElement('span'); dEl2.className = 'spam-email-domain uline'; dEl2.textContent = c.email.slice(at);
+    els.email.appendChild(lEl); els.email.appendChild(dEl2); els.email.classList.add('flagged');
+    for (var t = 0; t < 3; t++) { var b = buildTag(c.tags[t], t, c); els.tags.appendChild(b.tag); b.tag.classList.add('land'); }
+    els.protected.style.background = 'radial-gradient(ellipse at 50% 50%, rgba(34,197,94,0.08), rgba(34,197,94,0) 72%), rgba(34,197,94,0)';
+    els.shield.classList.add('in');
+    els.ptxt.innerHTML = 'Domain reputation protected · <span class="spam-bold">blocked</span> before send';
+    return;
+  }
+
+  if ('IntersectionObserver' in window) {
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) { if (e.isIntersecting) start(); else stop(); });
+    }, { threshold: 0.3 });
+    io.observe(panel);
+  } else { start(); }
+})();
+
+/* Catch-All Resolution — competitive contrast storytelling ("they stop here, we don't") */
+(function () {
+  var panel = document.getElementById('catchPanel');
+  if (!panel) return;
+
+  /* ---- data-driven cycles (Cycle C's amber treatment is entirely config) ---- */
+  var CYCLES = [
+    { email: 'sarah@techcorp.io',    score: 84, statusText: 'Deliverable',
+      statusColor: '#22C55E', rgb: '34,197,94',  scoreRGB: [124,58,237], glowRGB: '124,58,237',
+      border: 'rgba(34,197,94,0.3)',  amber: false, deliverIcon: 'check' },
+    { email: 'm.chen@growthlab.co',  score: 91, statusText: 'Deliverable',
+      statusColor: '#22C55E', rgb: '34,197,94',  scoreRGB: [124,58,237], glowRGB: '124,58,237',
+      border: 'rgba(34,197,94,0.3)',  amber: false, deliverIcon: 'check' },
+    { email: 'hello@ventures.dev',   score: 67, statusText: 'Risky — send with caution',
+      statusColor: '#F59E0B', rgb: '245,158,11', scoreRGB: [245,158,11], glowRGB: '245,158,11',
+      border: 'rgba(245,158,11,0.3)', amber: true,  deliverIcon: 'warn' }
+  ];
+
+  var ICON_CHECK = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>';
+  var ICON_WARN  = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>';
+
+  function gid(id) { return document.getElementById(id); }
+  var els = {
+    stop: gid('catchStop'), stopLbl: gid('catchStopLbl'), stopEmail: gid('catchStopEmail'),
+    dots: gid('catchDots'), status: gid('catchStatus'), bar: gid('catchBar'), barFill: gid('catchBarFill'),
+    arrow: gid('catchArrow'), resolve: gid('catchResolve'), scan: gid('catchScan'),
+    resolveLbl: gid('catchResolveLbl'), resolveEmail: gid('catchResolveEmail'),
+    probe: gid('catchProbe'), result: gid('catchResult'), ricon: gid('catchRicon'),
+    rstatus: gid('catchRstatus'), rscore: gid('catchRscore'), rnum: gid('catchRnum')
+  };
+
+  /* ---- run-token cancellation + timer tracking (mirrors the other panels) ---- */
+  var run = 0, timers = [], STOP = {}, floodVal = 0;
+  function now() { return (window.performance && performance.now) ? performance.now() : Date.now(); }
+  function clearTimers() { timers.forEach(clearTimeout); timers = []; }
+  function sleep(ms, token) {
+    return new Promise(function (res, rej) {
+      var id = setTimeout(function () {
+        timers.splice(timers.indexOf(id), 1);
+        if (token !== run) { rej(STOP); return; }
+        res();
+      }, ms);
+      timers.push(id);
+    });
+  }
+  function schedule(fn, ms, token) {
+    var id = setTimeout(function () {
+      timers.splice(timers.indexOf(id), 1);
+      if (token === run) fn();
+    }, ms);
+    timers.push(id);
+  }
+  function raf2() { return new Promise(function (r) { requestAnimationFrame(function () { requestAnimationFrame(r); }); }); }
+
+  /* ---- self-contained typewriter utilities ---- */
+  function typeIn(el, text, per, jitter, token) {
+    return new Promise(function (res, rej) {
+      el.textContent = ''; var i = 0;
+      (function step() {
+        if (token !== run) { rej(STOP); return; }
+        if (i >= text.length) { res(); return; }
+        el.textContent += text.charAt(i); i++;
+        var d = per + (jitter ? (Math.random() * 2 * jitter - jitter) : 0);
+        var id = setTimeout(function () { timers.splice(timers.indexOf(id), 1); step(); }, Math.max(8, d));
+        timers.push(id);
+      })();
+    });
+  }
+  function deleteText(el, per, token) {
+    return new Promise(function (res, rej) {
+      (function step() {
+        if (token !== run) { rej(STOP); return; }
+        var t = el.textContent;
+        if (t.length === 0) { res(); return; }
+        el.textContent = t.slice(0, -1);
+        var id = setTimeout(function () { timers.splice(timers.indexOf(id), 1); step(); }, per);
+        timers.push(id);
+      })();
+    });
+  }
+  /* types a final word, then wraps its last character so the idle glitch can flicker it */
+  function typeWordWrapLast(el, word, per, token) {
+    return new Promise(function (res, rej) {
+      var i = 0;
+      (function step() {
+        if (token !== run) { rej(STOP); return; }
+        if (i >= word.length) {
+          var txt = el.textContent;
+          el.textContent = txt.slice(0, -1);
+          var sp = document.createElement('span'); sp.id = 'catchUnknownLast'; sp.textContent = txt.slice(-1);
+          el.appendChild(sp); res(); return;
+        }
+        el.textContent += word.charAt(i); i++;
+        var id = setTimeout(function () { timers.splice(timers.indexOf(id), 1); step(); }, per);
+        timers.push(id);
+      })();
+    });
+  }
+  /* shared probe sequence — types each string, holds, fades, advances */
+  async function probeSequence(steps, el, token) {
+    for (var i = 0; i < steps.length; i++) {
+      el.style.opacity = '1';
+      await typeIn(el, steps[i], 16, 0, token);
+      await sleep(140, token);
+      el.style.opacity = '0';
+      await sleep(170, token);
+    }
+    el.textContent = ''; el.style.opacity = '1';
+  }
+
+  /* ---- score counter: rAF, easeOutCubic, white->target lerp, accel burst past 65% ---- */
+  function countScore(numEl, target, endRGB, token) {
+    return new Promise(function (res) {
+      var t0 = now(), dur = 700, start = [255, 255, 255];
+      (function frame() {
+        if (token !== run) { res(); return; }
+        var p = Math.min(1, (now() - t0) / dur);
+        var e = 1 - Math.pow(1 - p, 3);
+        if (p > 0.65 && p < 0.75) e = Math.min(1, e * 1.3); /* blow past where others stopped */
+        var val = Math.round(target * e);
+        var r = Math.round(start[0] + (endRGB[0] - start[0]) * p);
+        var g = Math.round(start[1] + (endRGB[1] - start[1]) * p);
+        var b = Math.round(start[2] + (endRGB[2] - start[2]) * p);
+        numEl.textContent = val; numEl.style.color = 'rgb(' + r + ',' + g + ',' + b + ')';
+        if (p < 1) requestAnimationFrame(frame);
+        else { numEl.textContent = target; numEl.style.color = 'rgb(' + endRGB[0] + ',' + endRGB[1] + ',' + endRGB[2] + ')'; res(); }
+      })();
+    });
+  }
+
+  /* ---- radial flood for the bottom box (green / amber), rAF-driven ---- */
+  function animateFlood(rgb, to, dur, token) {
+    return new Promise(function (res) {
+      var from = floodVal, t0 = now();
+      (function frame() {
+        if (token !== run) { res(); return; }
+        var p = Math.min(1, (now() - t0) / dur);
+        floodVal = from + (to - from) * p;
+        var a = (0.08 * floodVal).toFixed(3);
+        els.resolve.style.background = 'radial-gradient(ellipse at center, rgba(' + rgb + ',' + a + '), rgba(' + rgb + ',0) 70%), rgba(255,255,255,0.03)';
+        if (p < 1) requestAnimationFrame(frame); else res();
+      })();
+    });
+  }
+
+  function resetVisual() {
+    els.stop.classList.remove('in', 'dim', 'flash');
+    els.arrow.classList.remove('in', 'pop', 'bob');
+    els.resolve.classList.remove('in', 'dn', 'pulse', 'amber');
+    els.resolveEmail.classList.remove('in'); els.resolveEmail.textContent = '';
+    els.dots.classList.remove('show', 'slow', 'freeze');
+    els.bar.classList.remove('show'); els.barFill.style.transition = 'none'; els.barFill.style.width = '0';
+    els.scan.classList.remove('go');
+    els.result.classList.remove('show');
+    els.rscore.classList.remove('show');
+    els.ricon.classList.remove('draw'); els.ricon.innerHTML = '';
+    els.rnum.classList.remove('snap', 'glow'); els.rnum.textContent = ''; els.rnum.style.color = '';
+    els.rstatus.textContent = ''; els.rstatus.style.color = '';
+    els.stopLbl.textContent = ''; els.stopLbl.classList.remove('defeated');
+    els.resolveLbl.textContent = ''; els.resolveLbl.classList.remove('shimmer');
+    els.stopEmail.textContent = '';
+    els.status.textContent = ''; els.status.classList.remove('unknown');
+    els.probe.textContent = ''; els.probe.style.opacity = '1';
+    floodVal = 0; els.resolve.style.background = ''; els.resolve.style.borderColor = '';
+  }
+
+  /* ---- one full cycle (~10s): they stop here, we don't ---- */
+  async function cycle(c, token) {
+    /* PHASE 3 — the other tools' attempt begins */
+    els.stop.classList.add('in');
+    await sleep(380, token);
+    els.stopLbl.textContent = 'Most Tools Stop Here';
+    await typeIn(els.stopEmail, c.email, 38, 8, token);
+    var cur = document.createElement('span'); cur.className = 'catch-cursor';
+    els.stopEmail.appendChild(cur);
+    schedule(function () { if (cur.parentNode) cur.parentNode.removeChild(cur); }, 1150, token);
+
+    /* PHASE 4 — other tools try, stall, and give up */
+    await sleep(150, token);
+    els.dots.classList.add('show');
+    await typeIn(els.status, 'Querying MX...', 25, 0, token);
+    await sleep(700, token);
+    await typeIn(els.status, 'Resolving domain...', 25, 0, token);
+    await sleep(350, token);
+    /* the stall */
+    els.dots.classList.add('slow');
+    await typeIn(els.status, 'Catch-All detected...', 35, 0, token);
+    els.bar.classList.add('show');
+    els.barFill.style.transition = 'width 0.6s ease-out';
+    await raf2(); els.barFill.style.width = '65%';
+    await sleep(650, token);
+    /* frozen at 65% — one micro-pulse, a last gasp */
+    els.barFill.style.transition = 'width 0.1s ease';
+    els.barFill.style.width = '66%'; await sleep(110, token);
+    els.barFill.style.width = '65%'; await sleep(150, token);
+    /* the give-up */
+    els.barFill.style.transition = 'width 0.3s ease';
+    els.barFill.style.width = '72%'; await sleep(300, token);
+    els.bar.classList.remove('show');
+    els.dots.classList.add('freeze'); await sleep(200, token);
+    els.dots.classList.remove('show'); await sleep(250, token);
+    els.status.classList.add('unknown');
+    await typeIn(els.status, 'Catch-All · ', 30, 0, token);
+    await typeWordWrapLast(els.status, 'Unknown', 50, token);
+    els.stop.classList.add('flash');
+    schedule(function () { els.stop.classList.remove('flash'); }, 220, token);
+
+    /* PHASE 5 — the handoff: Verifyrit takes over */
+    await sleep(250, token);
+    els.arrow.classList.add('in', 'pop');
+    await sleep(360, token);
+    els.arrow.classList.remove('pop'); els.arrow.classList.add('bob');
+    await sleep(900, token);
+    els.arrow.classList.remove('bob');
+
+    /* PHASE 6 — bottom box rises with different energy */
+    els.resolve.classList.toggle('amber', !!c.amber);
+    els.resolve.style.background = 'radial-gradient(ellipse at center, rgba(' + c.rgb + ',0), rgba(' + c.rgb + ',0) 70%), rgba(255,255,255,0.03)';
+    els.resolve.classList.add('in');
+    animateFlood(c.rgb, 1, 600, token);
+    els.resolve.style.borderColor = c.border;
+    await sleep(150, token);
+    await typeIn(els.resolveLbl, 'Verifyrit Resolves It', 18, 0, token);
+
+    /* PHASE 7 — deep probe: Verifyrit does what others couldn't */
+    els.resolveEmail.textContent = c.email;
+    els.resolveEmail.classList.add('in');
+    els.scan.classList.remove('go'); void els.scan.offsetWidth; els.scan.classList.add('go');
+    await probeSequence(['Probing SMTP handshake...', 'Sampling inbox response...', 'Analyzing delivery patterns...'], els.probe, token);
+
+    /* PHASE 8 — the score resolves: the payoff */
+    els.probe.style.opacity = '0';
+    els.result.classList.add('show');
+    els.ricon.innerHTML = (c.deliverIcon === 'warn') ? ICON_WARN : ICON_CHECK;
+    els.ricon.style.color = c.statusColor;
+    await raf2(); els.ricon.classList.add('draw');
+    await sleep(200, token);
+    els.rstatus.style.color = c.statusColor;
+    await typeIn(els.rstatus, c.statusText, 22, 0, token);
+    await sleep(300, token); /* a beat */
+    els.rscore.classList.add('show');
+    els.rnum.style.setProperty('--glow-rgb', c.glowRGB);
+    await countScore(els.rnum, c.score, c.scoreRGB, token);
+    els.rnum.classList.add('snap');
+    schedule(function () { els.rnum.classList.remove('snap'); }, 240, token);
+    els.resolve.classList.add('pulse');
+    schedule(function () { els.resolve.classList.remove('pulse'); }, 420, token);
+
+    /* PHASE 9 — side-by-side contrast: the money shot */
+    await sleep(200, token);
+    els.stop.classList.add('dim');
+    await animateFlood(c.rgb, 1.75, 300, token);
+    await animateFlood(c.rgb, 1, 300, token);
+
+    /* PHASE 10 — idle hold: the result stays alive, the failure stays defeated */
+    els.rnum.classList.add('glow');
+    els.stopLbl.classList.add('defeated');
+    els.resolveLbl.classList.add('shimmer');
+    schedule(function () {
+      var sp = gid('catchUnknownLast');
+      if (sp) { sp.style.opacity = '0'; schedule(function () { if (sp) sp.style.opacity = '1'; }, 80, token); }
+    }, 750, token);
+    await sleep(1400, token);
+    els.rnum.classList.remove('glow');
+    els.stopLbl.classList.remove('defeated');
+    els.resolveLbl.classList.remove('shimmer');
+
+    /* PHASE 11 — clean reset for the next email */
+    els.result.classList.remove('show');
+    els.rscore.classList.remove('show');
+    animateFlood(c.rgb, 0, 400, token);
+    els.arrow.classList.remove('in');
+    els.resolve.classList.add('dn');
+    els.status.textContent = '';
+    await deleteText(els.stopEmail, 20, token);
+    els.stopLbl.textContent = '';
+    await sleep(320, token);
+    resetVisual();
+    await sleep(300, token);
+  }
+
+  async function loop(token) {
+    try {
+      var i = 0;
+      while (token === run) { await cycle(CYCLES[i % CYCLES.length], token); i++; }
+    } catch (e) { if (e !== STOP) throw e; }
+  }
+  function start() { run++; var token = run; clearTimers(); resetVisual(); loop(token); }
+  function stop() { run++; clearTimers(); resetVisual(); }
+
+  /* reduced motion: render a complete static state of cycle A — no animation */
+  var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (reduce) {
+    panel.classList.remove('catch-anim-on');
+    var c = CYCLES[0];
+    els.stopLbl.textContent = 'Most Tools Stop Here';
+    els.stopEmail.textContent = c.email;
+    els.status.classList.add('unknown'); els.status.textContent = 'Catch-All · Unknown';
+    els.resolveLbl.textContent = 'Verifyrit Resolves It';
+    els.resolveEmail.textContent = c.email;
+    els.resolve.style.background = 'radial-gradient(ellipse at center, rgba(' + c.rgb + ',0.08), rgba(' + c.rgb + ',0) 70%), rgba(255,255,255,0.03)';
+    els.resolve.style.borderColor = c.border;
+    els.result.classList.add('show');
+    els.ricon.innerHTML = ICON_CHECK; els.ricon.style.color = c.statusColor;
+    els.rstatus.style.color = c.statusColor; els.rstatus.textContent = c.statusText;
+    els.rscore.classList.add('show');
+    els.rnum.textContent = c.score; els.rnum.style.color = 'rgb(' + c.scoreRGB.join(',') + ')';
+    return;
+  }
+
+  if ('IntersectionObserver' in window) {
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) { if (e.isIntersecting) start(); else stop(); });
+    }, { threshold: 0.3 });
+    io.observe(panel);
+  } else { start(); }
 })();
 </script>
 

@@ -1,0 +1,1717 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Warmrit | Email Warmup by NeoLeads</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap');
+
+  :root {
+    --bg-primary: #02071A;
+    --bg-alt: #04081F;
+    --bg-card: #080D1F;
+    --bg-card-border: #1A2040;
+    --brand: #6C2BDF;
+    --brand-light: #8B4DFF;
+    --grow-purple: #A576F8;
+    --brand-glow: rgba(108, 43, 223, 0.3);
+    --text-primary: #FFFFFF;
+    --text-secondary: #8B9CC8;
+    --text-muted: #4A5578;
+    --green-accent: #22C55E;
+    --nav-bg: rgba(2, 7, 26, 0.95);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--bg-primary);
+    color: var(--text-primary);
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    font-size: 15px;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
+  a { text-decoration: none; color: inherit; }
+  img { max-width: 100%; }
+  ul { list-style: none; }
+  :focus-visible { outline: 2px solid var(--brand); outline-offset: 2px; border-radius: 4px; }
+  :focus:not(:focus-visible) { outline: none; }
+
+  /* ===== Lucide defaults ===== */
+  .lucide { width: 20px; height: 20px; stroke-width: 2; flex-shrink: 0; }
+  .nav-links .caret .lucide { width: 14px; height: 14px; }
+  .social-row a .lucide { width: 16px; height: 16px; }
+  .btn-primary .lucide, .btn-ghost .lucide { width: 16px; height: 16px; }
+  .nav-toggle .lucide { width: 24px; height: 24px; }
+  .hero-badge .lucide { width: 15px; height: 15px; color: var(--brand-light); }
+
+  /* ===== Container ===== */
+  .container { max-width: 1160px; margin: 0 auto; padding: 0 24px; }
+
+  /* ===== Buttons ===== */
+  .btn-primary {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: var(--brand); color: #fff; border: none;
+    border-radius: 8px; padding: 11px 22px;
+    font-family: inherit; font-size: 14px; font-weight: 600;
+    cursor: pointer; transition: background 0.2s ease, transform 0.12s ease;
+  }
+  .btn-primary:hover { background: var(--brand-light); }
+  .btn-primary:active { transform: scale(0.97); }
+  .btn-ghost {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: transparent; color: #fff;
+    border: 1px solid var(--bg-card-border);
+    border-radius: 8px; padding: 11px 22px;
+    font-family: inherit; font-size: 14px; font-weight: 600;
+    cursor: pointer; transition: border-color 0.2s ease, transform 0.12s ease;
+  }
+  .btn-ghost:hover { border-color: var(--brand); }
+  .btn-ghost:active { transform: scale(0.97); }
+
+  /* =========================================================
+     NAVBAR
+  ========================================================= */
+  .navbar {
+    position: sticky; top: 0; z-index: 100; height: 72px;
+    background: var(--nav-bg);
+    -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(26, 32, 64, 0.6);
+  }
+  .navbar .container { height: 100%; display: flex; align-items: center; justify-content: space-between; gap: 24px; }
+  .logo { display: flex; align-items: center; gap: 9px; font-family: 'Outfit', sans-serif; font-weight: 700; font-size: 23px; letter-spacing: -0.01em; color: #fff; }
+  .nav-links { display: flex; align-items: center; gap: 30px; }
+  .nav-links a { display: inline-flex; align-items: center; gap: 5px; color: #C7CEE2; font-size: 15px; font-weight: 500; transition: color 0.2s ease; }
+  .nav-links a:hover { color: #fff; }
+  .nav-links .caret { font-size: 10px; color: #6B79A8; }
+  .nav-right { display: flex; align-items: center; gap: 22px; }
+  .nav-right .login { color: #fff; font-size: 15px; font-weight: 500; transition: opacity 0.2s ease; }
+  .nav-right .login:hover { opacity: 0.75; }
+  .nav-right .nav-cta { padding: 10px 22px; font-size: 15px; border-radius: 8px; }
+  .nav-toggle { display: none; background: none; border: none; color: #fff; cursor: pointer; padding: 4px; }
+
+  /* Products mega-menu */
+  .nav-item { position: relative; display: inline-flex; align-items: center; }
+  .nav-trigger {
+    display: inline-flex; align-items: center; gap: 5px;
+    font-family: inherit; font-size: 15px; font-weight: 500;
+    color: #C7CEE2; background: none; border: none; cursor: pointer; padding: 0;
+    transition: color 0.2s ease;
+  }
+  .nav-trigger:hover, .nav-item.open .nav-trigger { color: #fff; }
+  .nav-trigger .caret { display: inline-flex; color: #6B79A8; transition: transform 0.25s ease, color 0.2s ease; }
+  .nav-item.open .nav-trigger .caret { transform: rotate(180deg); color: var(--brand-light); }
+  .mega-menu {
+    position: absolute; top: calc(100% + 18px); left: -22px;
+    width: 540px; padding: 14px;
+    background: #080D20; border: 1px solid #1E2647;
+    border-radius: 16px; box-shadow: 0 28px 64px rgba(0,0,0,0.55);
+    z-index: 200; opacity: 0; visibility: hidden; transform: translateY(-8px);
+    transition: opacity 0.2s ease, transform 0.24s cubic-bezier(0.22,1,0.36,1), visibility 0.2s;
+  }
+  .nav-item.open .mega-menu { opacity: 1; visibility: visible; transform: translateY(0); }
+  .mega-menu::before {
+    content: ""; position: absolute; top: -7px; left: 40px;
+    width: 13px; height: 13px; background: #080D20;
+    border-left: 1px solid #1E2647; border-top: 1px solid #1E2647;
+    transform: rotate(45deg);
+  }
+  .mega-grid { position: relative; display: grid; grid-template-columns: 1fr 1fr; gap: 4px; }
+  .mega-item { display: flex; align-items: flex-start; gap: 12px; padding: 12px 14px; border-radius: 12px; transition: background 0.18s ease; }
+  .mega-item:hover { background: rgba(139,77,255,0.08); }
+  .mega-item[aria-current="page"], .mobile-sub[aria-current="page"] { pointer-events: none; cursor: default; opacity: 0.45; }
+  .mega-ic {
+    width: 38px; height: 38px; border-radius: 10px; flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center; align-self: flex-start;
+    background: rgba(139,77,255,0.12); border: 1px solid rgba(139,77,255,0.2);
+    color: var(--grow-purple); transition: background 0.18s ease, border-color 0.18s ease;
+  }
+  .mega-ic .lucide { width: 18px; height: 18px; }
+  .mega-item.is-primary .mega-ic {
+    background: linear-gradient(135deg, var(--brand), var(--brand-light));
+    border-color: transparent; color: #fff;
+    box-shadow: 0 4px 16px rgba(108,43,223,0.45);
+  }
+  .mega-text { display: flex; flex-direction: column; gap: 3px; min-width: 0; align-self: flex-start; }
+  .mega-title { font-size: 14px; font-weight: 700; color: #fff; letter-spacing: -0.01em; line-height: 1.2; }
+  .mega-desc { font-size: 12px; line-height: 1.45; color: var(--text-secondary); }
+
+  /* =========================================================
+     WARMRIT HERO
+  ========================================================= */
+  .wm-hero {
+    position: relative; text-align: center;
+    padding: 84px 0 90px; overflow: hidden;
+  }
+  .wm-hero::before {
+    content: ""; position: absolute; inset: 0;
+    background:
+      radial-gradient(ellipse at 30% 0%, rgba(108,43,223,0.20) 0%, transparent 55%),
+      radial-gradient(ellipse at 70% 0%, rgba(139,77,255,0.14) 0%, transparent 50%),
+      radial-gradient(ellipse at 50% 100%, rgba(108,43,223,0.06) 0%, transparent 60%);
+    z-index: 0;
+  }
+  .wm-hero .container { position: relative; z-index: 2; }
+
+  .hero-badge {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(108,43,223,0.45);
+    color: #D7DCEC; font-size: 13px; font-weight: 600;
+    border-radius: 30px; padding: 8px 18px; margin-bottom: 30px;
+  }
+
+  .wm-hero h1 {
+    font-family: 'Outfit', sans-serif;
+    font-size: 60px; font-weight: 800;
+    line-height: 1.08; letter-spacing: -0.02em;
+    margin: 0 auto 26px; max-width: 880px;
+  }
+  .wm-hero h1 .line-two {
+    display: block;
+    background: linear-gradient(135deg, #8B4DFF, #C084FC);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .wm-hero .hero-sub {
+    color: #9AA7C7; font-size: 17px; line-height: 1.7;
+    max-width: 680px; margin: 0 auto 38px;
+  }
+
+  .wm-ctas { display: flex; gap: 16px; justify-content: center; margin-bottom: 30px; }
+  .wm-ctas .btn-primary { padding: 14px 28px; font-size: 15px; }
+  .wm-ctas .btn-ghost { padding: 14px 28px; font-size: 15px; }
+
+  .wm-trust {
+    display: flex; flex-wrap: wrap; justify-content: center;
+    gap: 30px; margin-bottom: 60px;
+  }
+  .wm-trust .item {
+    display: flex; align-items: center; gap: 9px;
+    color: #C7CEE2; font-size: 14px; font-weight: 500;
+  }
+  .wm-trust .item .check-ic {
+    width: 18px; height: 18px; border-radius: 50%;
+    background: rgba(34,197,94,0.12); border: 1px solid rgba(34,197,94,0.3);
+    display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+    color: var(--green-accent);
+  }
+  .wm-trust .item .check-ic svg { width: 10px; height: 10px; stroke-width: 2.5; }
+
+  /* Dashboard frame */
+  .wm-dash {
+    position: relative; max-width: 1040px; margin: 0 auto;
+  }
+  .wm-dash-frame {
+    background: #080D20;
+    border: 1px solid rgba(26,32,64,0.9);
+    border-radius: 18px;
+    overflow: hidden;
+    box-shadow:
+      0 0 0 1px rgba(108,43,223,0.15),
+      0 40px 120px rgba(0,0,0,0.6),
+      0 0 80px rgba(108,43,223,0.08);
+  }
+  .wm-dash img {
+    display: block; width: 100%; height: auto;
+  }
+
+  /* =========================================================
+     SHARED SECTION STYLES (Customer Stories / Compliance / Final CTA)
+  ========================================================= */
+  .section { padding: 100px 0; }
+  .section.alt { background: var(--bg-alt); }
+  .section-head { text-align: center; max-width: 640px; margin: 0 auto 56px; }
+  .section-head h2 { font-family: 'Outfit', sans-serif; font-size: 36px; font-weight: 700; line-height: 1.2; letter-spacing: -0.02em; margin-bottom: 16px; }
+  .section-head p { color: var(--text-secondary); font-size: 15px; max-width: 560px; margin: 0 auto; }
+  .section-label {
+    display: inline-block;
+    background: rgba(108,43,223,0.12); border: 1px solid rgba(108,43,223,0.35);
+    color: var(--brand-light); font-size: 11px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase;
+    border-radius: 20px; padding: 5px 14px; margin-bottom: 20px;
+  }
+  .card { background: var(--bg-card); border: 1px solid var(--bg-card-border); border-radius: 12px; padding: 24px; }
+  .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+  .testi-card { display: flex; flex-direction: column; }
+  .stars { color: #F5C542; font-size: 15px; letter-spacing: 2px; margin-bottom: 14px; }
+  .stars .lucide { width: 15px; height: 15px; fill: currentColor; }
+  .testi-card .quote { color: #fff; font-size: 15px; line-height: 1.6; margin-bottom: 20px; flex: 1; }
+  .testi-author { display: flex; align-items: center; gap: 12px; }
+  .testi-author .av { width: 38px; height: 38px; border-radius: 50%; background: linear-gradient(135deg,#2A3155,#3A4468); flex-shrink: 0; object-fit: cover; display: block; }
+  .testi-author .name { font-size: 13px; font-weight: 700; color: #fff; }
+  .testi-author .role { font-size: 12px; color: var(--text-secondary); }
+
+  .security-pill {
+    display: inline-flex; align-items: center; gap: 7px;
+    background: #F3F1FB; color: #2A2342; font-size: 14px; font-weight: 600;
+    padding: 8px 16px; border-radius: 999px; margin-bottom: 24px;
+  }
+  .security-pill .lucide { width: 15px; height: 15px; color: #6C2BDF; }
+  .badges-row { display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 40px; }
+  .comp-badge { width: 92px; height: 92px; flex-shrink: 0; transition: transform 0.25s ease; }
+  .comp-badge img { width: 100%; height: 100%; object-fit: contain; display: block; }
+  .comp-badge:hover { transform: translateY(-4px) scale(1.04); }
+
+  .final-cta { position: relative; text-align: center; padding: 100px 0; overflow: hidden; }
+  .final-cta::before {
+    content: ""; position: absolute; inset: 0;
+    background: radial-gradient(ellipse at 50% 50%, rgba(108,43,223,0.10) 0%, rgba(139,77,255,0.06) 40%, transparent 70%);
+    z-index: -1;
+  }
+  .final-cta h2 { font-family: 'Outfit', sans-serif; font-size: 40px; font-weight: 700; letter-spacing: -0.02em; margin-bottom: 16px; }
+  .final-cta > .container > p { color: var(--text-secondary); font-size: 16px; margin-bottom: 30px; }
+  .final-buttons { display: flex; gap: 14px; justify-content: center; margin-bottom: 30px; }
+  .final-buttons .btn-primary { padding: 14px 32px; }
+  .final-buttons .btn-ghost { padding: 14px 32px; }
+  .final-trust { display: flex; flex-wrap: wrap; justify-content: center; gap: 32px; color: var(--text-muted); font-size: 13px; }
+  .final-trust .item { display: flex; align-items: center; gap: 7px; }
+  .final-trust .item .lucide { width: 15px; height: 15px; }
+
+  /* =========================================================
+     FOOTER
+  ========================================================= */
+  .footer {
+    position: relative; overflow: hidden; border-top: none; padding: 76px 0 38px;
+    background:
+      radial-gradient(620px 420px at 12% -12%, rgba(138,104,255,0.55) 0%, transparent 62%),
+      linear-gradient(135deg, #3A1D8A 0%, #2C1568 55%, #25115C 100%);
+  }
+  .footer::before {
+    content: ""; position: absolute; inset: 0;
+    background-image:
+      radial-gradient(rgba(255,255,255,0.85) 1px, transparent 1.6px),
+      radial-gradient(rgba(255,255,255,0.6) 1px, transparent 1.6px);
+    background-size: 92px 92px, 134px 134px; background-position: 0 0, 46px 64px;
+    opacity: 0.10; pointer-events: none;
+  }
+  .footer .container { position: relative; z-index: 1; }
+  .footer-top { display: grid; grid-template-columns: 1.7fr 1fr 1fr 1fr 1.4fr; gap: 32px; margin-bottom: 56px; }
+  .footer-logo { font-size: 34px; font-weight: 800; color: #fff; letter-spacing: -0.01em; display: inline-block; margin-bottom: 20px; }
+  .footer-brand .tagline { color: #C9BEEC; font-size: 15px; line-height: 1.6; max-width: 320px; margin-bottom: 30px; }
+  .social-row { display: flex; gap: 18px; }
+  .social-row a { color: #EFEAFE; display: inline-flex; align-items: center; justify-content: center; transition: color 0.2s ease, transform 0.2s ease; }
+  .social-row a svg { width: 18px; height: 18px; fill: currentColor; }
+  .social-row a:hover { color: #fff; transform: translateY(-2px); }
+  .footer-col h4 { font-size: 16px; font-weight: 700; color: #fff; text-transform: none; letter-spacing: 0; margin-bottom: 20px; }
+  .footer-col ul { display: flex; flex-direction: column; gap: 14px; }
+  .footer-col a { color: #BCAEE4; font-size: 14px; transition: color 0.2s ease; }
+  .footer-col a:hover { color: #fff; }
+  .footer-contact .c-group { margin-bottom: 18px; }
+  .footer-contact .c-label { display: block; color: #fff; font-size: 14px; font-weight: 700; margin-bottom: 6px; }
+  .footer-contact .c-val { color: #BCAEE4; font-size: 13px; line-height: 1.5; }
+  .footer-bottom { border-top: 1px solid rgba(255,255,255,0.16); padding-top: 26px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px; }
+  .footer-bottom .copy, .footer-bottom .since { color: #C4B8E8; font-size: 13px; letter-spacing: 0.03em; }
+
+  /* =========================================================
+     FEATURES — HOW WARMRIT WORKS
+  ========================================================= */
+  .feat-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+  }
+  .feat-card {
+    background: var(--bg-card);
+    border: 1px solid var(--bg-card-border);
+    border-radius: 16px;
+    padding: 28px;
+    display: flex;
+    flex-direction: column;
+    gap: 22px;
+  }
+  .feat-text h3 {
+    font-family: 'Outfit', sans-serif;
+    font-size: 20px; font-weight: 700;
+    color: #fff; margin-bottom: 10px; letter-spacing: -0.01em;
+  }
+  .feat-text p { color: var(--text-secondary); font-size: 14px; line-height: 1.7; }
+
+  /* Chat mock */
+  .chat-mock {
+    background: #0C1128; border: 1px solid rgba(30,38,71,0.9);
+    border-radius: 12px; padding: 14px;
+    display: flex; flex-direction: column; gap: 10px;
+  }
+  .chat-item {
+    background: #111A36; border: 1px solid rgba(30,40,80,0.7);
+    border-radius: 10px; padding: 12px 14px;
+  }
+  .chat-item-header { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; }
+  .chat-avatar {
+    width: 26px; height: 26px; border-radius: 6px;
+    background: linear-gradient(135deg, #2A3A6B, #3B4E90);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 10px; font-weight: 700; color: #C7CEE2; flex-shrink: 0;
+  }
+  .chat-subject {
+    font-size: 12px; font-weight: 600; color: #fff;
+    flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  }
+  .ai-badge {
+    font-size: 9px; font-weight: 700; letter-spacing: 0.06em;
+    text-transform: uppercase; color: var(--brand-light);
+    background: rgba(139,77,255,0.12); border: 1px solid rgba(139,77,255,0.25);
+    border-radius: 4px; padding: 2px 6px; white-space: nowrap; flex-shrink: 0;
+  }
+  .chat-quote { font-size: 12px; color: var(--text-secondary); line-height: 1.55; }
+
+  /* Bar chart */
+  .bar-chart-wrap {
+    background: #0C1128; border: 1px solid rgba(30,38,71,0.9);
+    border-radius: 12px; padding: 16px;
+  }
+  .bar-chart-header {
+    display: flex; align-items: center;
+    justify-content: space-between; margin-bottom: 14px;
+  }
+  .bar-chart-label {
+    font-size: 10px; font-weight: 600; letter-spacing: 0.08em;
+    text-transform: uppercase; color: var(--text-muted);
+  }
+  .bar-chart-metric { font-size: 11px; font-weight: 700; color: var(--brand-light); }
+  .bar-chart-body {
+    display: grid; grid-template-columns: repeat(12, 1fr);
+    gap: 5px; align-items: flex-end; height: 80px; margin-bottom: 10px;
+  }
+  .bar { border-radius: 3px 3px 0 0; background: linear-gradient(to top, #6C2BDF, #A576F8); }
+  .bar-chart-weeks {
+    display: grid; grid-template-columns: repeat(4, 1fr);
+    border-top: 1px solid rgba(30,38,71,0.7); padding-top: 8px;
+  }
+  .bar-week-label { font-size: 10px; color: var(--text-muted); text-align: center; }
+
+  /* Spam rescue */
+  .spam-rescue-wrap {
+    background: #0C1128; border: 1px solid rgba(30,38,71,0.9);
+    border-radius: 12px; padding: 16px;
+  }
+  .spam-rescue-label {
+    font-size: 10px; font-weight: 700; letter-spacing: 0.1em;
+    text-transform: uppercase; color: var(--brand-light); margin-bottom: 16px;
+  }
+  .spam-rescue-flow {
+    display: flex; align-items: center; justify-content: center;
+    gap: 16px; margin-bottom: 14px;
+  }
+  .rescue-box {
+    width: 90px; height: 78px; border-radius: 12px;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center; gap: 7px;
+  }
+  .rescue-box.spam { background: rgba(239,68,68,0.08); border: 1px solid rgba(239,68,68,0.22); }
+  .rescue-box.spam .rescue-icon { color: #EF4444; }
+  .rescue-box.spam .rescue-label-text { color: #EF4444; }
+  .rescue-box.primary { background: rgba(34,197,94,0.08); border: 1px solid rgba(34,197,94,0.22); }
+  .rescue-box.primary .rescue-icon { color: #22C55E; }
+  .rescue-box.primary .rescue-label-text { color: #22C55E; }
+  .rescue-icon svg { width: 22px; height: 22px; display: block; }
+  .rescue-label-text {
+    font-size: 12px; font-weight: 700;
+    display: flex; align-items: center; gap: 3px;
+  }
+  .rescue-label-text svg { width: 10px; height: 10px; }
+  .rescue-arrow { display: flex; flex-direction: column; align-items: center; gap: 5px; }
+  .rescue-arrow-label { font-size: 10px; font-weight: 600; color: var(--text-muted); }
+  .rescue-arrow svg { width: 16px; height: 16px; color: var(--text-muted); }
+  .rescue-status {
+    display: flex; align-items: center; gap: 8px;
+    background: rgba(34,197,94,0.06); border: 1px solid rgba(34,197,94,0.15);
+    border-radius: 8px; padding: 9px 14px;
+    font-size: 12px; color: #22C55E; font-weight: 500;
+  }
+  .rescue-status .s-dot { width: 7px; height: 7px; border-radius: 50%; background: #22C55E; flex-shrink: 0; }
+
+  /* Readiness score */
+  .readiness-visual {
+    display: flex; align-items: center; gap: 20px;
+    background: #0C1128; border: 1px solid rgba(30,38,71,0.9);
+    border-radius: 12px; padding: 20px;
+  }
+  .score-ring { position: relative; width: 88px; height: 88px; flex-shrink: 0; }
+  .score-ring > svg { width: 88px; height: 88px; transform: rotate(-90deg); display: block; }
+  .score-ring .track { fill: none; stroke: rgba(108,43,223,0.18); stroke-width: 7; }
+  .score-ring .fill {
+    fill: none; stroke: url(#wmScoreGrad);
+    stroke-width: 7; stroke-linecap: round;
+    stroke-dasharray: 232.47; stroke-dashoffset: 13.95;
+  }
+  .score-inner {
+    position: absolute; inset: 0;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+  }
+  .score-number { font-family: 'Outfit', sans-serif; font-size: 26px; font-weight: 800; color: #fff; line-height: 1; }
+  .score-sublabel { font-size: 8px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-muted); margin-top: 2px; }
+  .readiness-pills { display: flex; flex-direction: column; gap: 8px; }
+  .readiness-pill {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 8px 14px; border-radius: 8px;
+    font-size: 12px; font-weight: 600; white-space: nowrap;
+  }
+  .readiness-pill.green { background: rgba(34,197,94,0.08); border: 1px solid rgba(34,197,94,0.25); color: #22C55E; }
+  .readiness-pill.green .r-dot { width: 7px; height: 7px; border-radius: 50%; background: #22C55E; flex-shrink: 0; }
+  .readiness-pill.purple { background: rgba(108,43,223,0.15); border: 1px solid rgba(108,43,223,0.3); color: #C084FC; }
+  .readiness-pill.purple svg { width: 12px; height: 12px; flex-shrink: 0; }
+
+  /* =========================================================
+     CONTINUOUS PROTECTION — SPLIT SECTION
+  ========================================================= */
+  .protection-split {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 72px;
+    align-items: center;
+  }
+  .protection-text .section-label { margin-bottom: 20px; }
+  .protection-text h2 {
+    font-family: 'Outfit', sans-serif;
+    font-size: 40px; font-weight: 800;
+    line-height: 1.1; letter-spacing: -0.02em;
+    margin-bottom: 20px;
+  }
+  .protection-text > p {
+    color: var(--text-secondary);
+    font-size: 15px; line-height: 1.75; margin-bottom: 36px;
+  }
+  .protection-bullets { display: flex; flex-direction: column; gap: 22px; }
+  .protection-bullet { display: flex; align-items: flex-start; gap: 16px; }
+  .pb-icon {
+    width: 40px; height: 40px; border-radius: 10px; flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+    background: rgba(139,77,255,0.12); border: 1px solid rgba(139,77,255,0.2);
+    color: var(--grow-purple);
+  }
+  .pb-icon .lucide { width: 18px; height: 18px; }
+  .pb-body h4 { font-size: 14px; font-weight: 700; color: #fff; margin-bottom: 5px; }
+  .pb-body p { font-size: 13px; color: var(--text-secondary); line-height: 1.65; }
+
+  /* Domain health card */
+  .domain-card {
+    background: #080D20;
+    border: 1px solid var(--bg-card-border);
+    border-radius: 16px; overflow: hidden;
+    box-shadow: 0 24px 64px rgba(0,0,0,0.45), 0 0 0 1px rgba(108,43,223,0.1);
+  }
+  .dc-header {
+    display: flex; align-items: center; gap: 10px;
+    padding: 16px 22px;
+    border-bottom: 1px solid var(--bg-card-border);
+  }
+  .dc-dot {
+    width: 8px; height: 8px; border-radius: 50%;
+    background: var(--green-accent); flex-shrink: 0;
+    box-shadow: 0 0 7px rgba(34,197,94,0.55);
+  }
+  .dc-title { font-size: 14px; font-weight: 700; color: #fff; }
+  .dc-domain { font-size: 12px; color: var(--text-muted); margin-left: auto; }
+  .dc-rows { padding: 4px 0; }
+  .dc-row {
+    display: flex; align-items: center;
+    justify-content: space-between; gap: 12px;
+    padding: 14px 22px;
+    border-bottom: 1px solid rgba(26,32,64,0.5);
+  }
+  .dc-row:last-child { border-bottom: none; }
+  .dc-row-left { display: flex; align-items: center; gap: 10px; min-width: 0; }
+  .dc-icon {
+    width: 28px; height: 28px; border-radius: 8px; flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+    background: rgba(108,43,223,0.1); color: var(--brand-light);
+  }
+  .dc-icon .lucide { width: 14px; height: 14px; }
+  .dc-icon.green { background: rgba(34,197,94,0.10); color: var(--green-accent); }
+  .dc-icon.amber { background: rgba(251,191,36,0.10); color: #FBBF24; }
+  .dc-icon.dim   { background: rgba(74,85,120,0.12); color: var(--text-muted); }
+  .dc-label { font-size: 13px; color: var(--text-secondary); font-weight: 500; }
+  .dc-val { font-size: 13px; font-weight: 600; flex-shrink: 0; }
+  .dc-val.active { color: var(--green-accent); }
+  .dc-val.trend  { color: var(--green-accent); }
+  .dc-val.muted  { color: var(--text-muted); font-weight: 400; font-size: 12px; }
+  .dc-footer {
+    display: flex; align-items: center; gap: 10px;
+    padding: 14px 22px;
+    background: rgba(34,197,94,0.07);
+    border-top: 1px solid rgba(34,197,94,0.14);
+    color: var(--green-accent); font-size: 13px; font-weight: 600;
+  }
+  .dc-footer-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--green-accent); flex-shrink: 0; }
+
+  /* =========================================================
+     SECTION BADGE (icon + label pill, used across sections)
+  ========================================================= */
+  .section-badge {
+    display: inline-flex; align-items: center; gap: 7px;
+    background: rgba(108,43,223,0.12); border: 1px solid rgba(108,43,223,0.35);
+    color: var(--brand-light); font-size: 11px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase;
+    border-radius: 20px; padding: 6px 16px; margin-bottom: 20px;
+  }
+  .section-badge .lucide { width: 13px; height: 13px; }
+
+  /* =========================================================
+     DELIVERABILITY INTELLIGENCE — 3-CARD GRID
+  ========================================================= */
+  .deliv-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+  }
+  .deliv-card {
+    background: var(--bg-card);
+    border: 1px solid var(--bg-card-border);
+    border-radius: 16px;
+    padding: 28px;
+    display: flex;
+    flex-direction: column;
+    gap: 22px;
+  }
+  .deliv-card h3 {
+    font-family: 'Outfit', sans-serif;
+    font-size: 18px; font-weight: 700;
+    color: #fff; margin-bottom: 10px; letter-spacing: -0.01em;
+  }
+  .deliv-desc { color: var(--text-secondary); font-size: 13px; line-height: 1.7; }
+
+  /* Provider placement bars */
+  .provider-bars-wrap {
+    background: #0C1128;
+    border: 1px solid rgba(30,38,71,0.9);
+    border-radius: 12px; padding: 14px 16px;
+  }
+  .provider-bars-label {
+    font-size: 10px; font-weight: 700; letter-spacing: 0.08em;
+    text-transform: uppercase; color: var(--text-muted); margin-bottom: 14px;
+  }
+  .provider-bar-row {
+    display: grid;
+    grid-template-columns: 54px 1fr auto;
+    gap: 10px;
+    align-items: center;
+    margin-bottom: 10px;
+  }
+  .provider-bar-row:last-child { margin-bottom: 0; }
+  .provider-name { font-size: 12px; font-weight: 600; color: var(--text-secondary); }
+  .provider-track {
+    height: 4px; background: rgba(30,38,71,0.9); border-radius: 3px; overflow: hidden;
+  }
+  .provider-fill {
+    height: 100%; border-radius: 3px;
+    background: linear-gradient(to right, #6C2BDF, #A576F8);
+  }
+  .provider-pct { font-size: 11px; font-weight: 700; color: var(--brand-light); white-space: nowrap; }
+
+  /* Blacklist visual */
+  .blacklist-visual {
+    background: #0C1128;
+    border: 1px solid rgba(30,38,71,0.9);
+    border-radius: 12px; padding: 22px 16px;
+    display: flex; flex-direction: column; align-items: center;
+  }
+  .bl-icon-wrap {
+    width: 56px; height: 56px; border-radius: 50%;
+    background: rgba(34,197,94,0.1); border: 1px solid rgba(34,197,94,0.3);
+    display: flex; align-items: center; justify-content: center;
+    margin-bottom: 12px; color: var(--green-accent);
+  }
+  .bl-icon-wrap .lucide { width: 26px; height: 26px; }
+  .bl-status { font-family: 'Outfit', sans-serif; font-size: 20px; font-weight: 800; color: var(--green-accent); margin-bottom: 4px; }
+  .bl-checked { font-size: 11px; color: var(--text-muted); margin-bottom: 18px; }
+  .bl-stats-row { display: flex; gap: 0; width: 100%; }
+  .bl-stat { flex: 1; text-align: center; }
+  .bl-stat-num { font-family: 'Outfit', sans-serif; font-size: 22px; font-weight: 800; color: #fff; line-height: 1; margin-bottom: 4px; }
+  .bl-stat-label { font-size: 9px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-muted); }
+  .bl-stat-divider { width: 1px; background: rgba(30,38,71,0.9); flex-shrink: 0; margin: 0 8px; }
+
+  /* Forecast timeline */
+  .forecast-visual {
+    background: #0C1128;
+    border: 1px solid rgba(30,38,71,0.9);
+    border-radius: 12px; padding: 16px;
+  }
+  .forecast-top-label {
+    font-size: 10px; font-weight: 700; letter-spacing: 0.07em;
+    text-transform: uppercase; color: var(--text-muted); margin-bottom: 18px;
+  }
+  .forecast-timeline { position: relative; margin-bottom: 16px; }
+  .forecast-track {
+    position: absolute; top: 6px; left: 7px; right: 7px;
+    height: 2px; background: rgba(30,38,71,0.9); border-radius: 1px;
+  }
+  .forecast-track-fill {
+    height: 100%; width: 50%;
+    background: linear-gradient(to right, #6C2BDF, #A576F8);
+    border-radius: 1px;
+  }
+  .forecast-dots-row {
+    display: flex; justify-content: space-between;
+    position: relative; z-index: 1; margin-bottom: 8px;
+  }
+  .forecast-dot {
+    width: 14px; height: 14px; border-radius: 50%; flex-shrink: 0;
+  }
+  .forecast-dot.done { background: #6C2BDF; }
+  .forecast-dot.current { background: #A576F8; box-shadow: 0 0 8px rgba(165,118,248,0.65); }
+  .forecast-dot.future {
+    background: #0C1128; border: 2px solid var(--green-accent);
+    box-shadow: 0 0 8px rgba(34,197,94,0.4);
+    display: flex; align-items: center; justify-content: center;
+  }
+  .forecast-dot.future svg { width: 8px; height: 8px; stroke: var(--green-accent); }
+  .forecast-labels-row { display: flex; justify-content: space-between; }
+  .forecast-point-label { text-align: center; }
+  .forecast-day { font-size: 11px; font-weight: 700; color: #fff; line-height: 1.2; }
+  .forecast-sub { font-size: 10px; color: var(--text-muted); }
+  .forecast-sub.ready { color: var(--green-accent); }
+  .forecast-ready-banner {
+    display: flex; align-items: center; gap: 8px;
+    background: rgba(245,158,11,0.07); border: 1px solid rgba(245,158,11,0.2);
+    border-radius: 8px; padding: 9px 12px;
+    font-size: 12px; color: #E5E7EB; font-weight: 500; line-height: 1.4;
+    margin-top: 4px;
+  }
+  .forecast-ready-banner .f-dot { width: 7px; height: 7px; border-radius: 50%; background: #F59E0B; flex-shrink: 0; }
+  .forecast-ready-banner strong { color: #F59E0B; font-weight: 700; }
+
+  /* =========================================================
+     READINESS DASHBOARD — SPLIT (visual left, copy right)
+  ========================================================= */
+  .readiness-split {
+    display: grid;
+    grid-template-columns: 1.1fr 0.9fr;
+    gap: 72px;
+    align-items: center;
+  }
+  .readiness-copy .section-label { margin-bottom: 20px; }
+  .readiness-copy h2 {
+    font-family: 'Outfit', sans-serif;
+    font-size: 40px; font-weight: 800;
+    line-height: 1.1; letter-spacing: -0.02em;
+    margin-bottom: 20px;
+  }
+  .readiness-copy > p {
+    color: var(--text-secondary);
+    font-size: 15px; line-height: 1.75; margin-bottom: 36px;
+  }
+  .readiness-features { display: flex; flex-direction: column; gap: 22px; }
+
+  /* Domain readiness table card */
+  .domain-table-card {
+    background: #080D20;
+    border: 1px solid var(--bg-card-border);
+    border-radius: 16px; overflow: hidden;
+    box-shadow: 0 24px 64px rgba(0,0,0,0.45), 0 0 0 1px rgba(108,43,223,0.1);
+  }
+  .dt-head {
+    display: grid;
+    grid-template-columns: 1fr 42px 56px 86px 96px;
+    gap: 8px;
+    padding: 10px 18px;
+    border-bottom: 1px solid var(--bg-card-border);
+  }
+  .dt-col-label {
+    font-size: 10px; font-weight: 700; letter-spacing: 0.08em;
+    text-transform: uppercase; color: var(--text-muted);
+  }
+  .dt-col-label.center { text-align: center; }
+  .dt-rows { padding: 2px 0; }
+  .dt-row {
+    display: grid;
+    grid-template-columns: 1fr 42px 56px 86px 96px;
+    gap: 8px;
+    align-items: center;
+    padding: 12px 18px;
+    border-bottom: 1px solid rgba(26,32,64,0.5);
+  }
+  .dt-row:last-child { border-bottom: none; }
+  .dt-domain-name { font-size: 13px; font-weight: 700; color: #fff; line-height: 1.2; }
+  .dt-primary-pct { font-size: 10px; font-weight: 600; color: var(--brand-light); margin-top: 2px; }
+  .dt-day { font-size: 13px; font-weight: 600; color: var(--text-secondary); text-align: center; }
+  .dt-score { font-size: 17px; font-weight: 800; text-align: center; line-height: 1; }
+  .dt-score.green { color: var(--green-accent); }
+  .dt-score.amber { color: #F59E0B; }
+  .dt-score.red   { color: #EF4444; }
+  .dt-status { display: flex; align-items: center; gap: 6px; }
+  .dt-status-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
+  .dt-status-dot.green { background: var(--green-accent); box-shadow: 0 0 5px rgba(34,197,94,0.5); }
+  .dt-status-dot.amber { background: #F59E0B; box-shadow: 0 0 5px rgba(245,158,11,0.4); }
+  .dt-status-dot.red   { background: #EF4444; box-shadow: 0 0 5px rgba(239,68,68,0.4); }
+  .dt-status-text { font-size: 12px; font-weight: 600; }
+  .dt-status-text.green { color: var(--green-accent); }
+  .dt-status-text.amber { color: #F59E0B; }
+  .dt-status-text.red   { color: #EF4444; }
+  .dt-sendrit-btn {
+    display: inline-flex; align-items: center;
+    background: rgba(108,43,223,0.15); border: 1px solid rgba(108,43,223,0.35);
+    color: var(--brand-light); border-radius: 6px; padding: 4px 10px;
+    font-size: 11px; font-weight: 700; white-space: nowrap; line-height: 1.4;
+  }
+  .dt-sendrit-wait { font-size: 12px; font-weight: 500; color: var(--text-muted); }
+  .dt-sendrit-no   { font-size: 12px; font-weight: 500; color: #EF4444; opacity: 0.65; }
+  .dt-footer {
+    display: flex; align-items: center; flex-wrap: wrap; gap: 0;
+    padding: 11px 18px;
+    border-top: 1px solid var(--bg-card-border);
+    background: rgba(8,13,32,0.5);
+  }
+  .dt-footer-stat {
+    display: flex; align-items: center; gap: 6px;
+    font-size: 10px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase;
+    padding-right: 18px;
+  }
+  .dt-footer-stat:last-child { padding-right: 0; }
+  .dt-footer-stat .fdot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
+  .dt-footer-stat.cleared { color: var(--brand-light); }
+  .dt-footer-stat.cleared .fdot { background: var(--brand-light); }
+  .dt-footer-stat.warning { color: #F59E0B; }
+  .dt-footer-stat.warning .fdot { background: #F59E0B; }
+  .dt-footer-stat.starting { color: var(--text-muted); }
+  .dt-footer-stat.starting .fdot { background: var(--text-muted); }
+
+  /* =========================================================
+     SCROLL REVEAL
+  ========================================================= */
+  .reveal { opacity: 0; transform: translateY(24px); transition: opacity 0.6s ease, transform 0.6s ease; }
+  .reveal.visible { opacity: 1; transform: translateY(0); }
+  [data-reveal] { opacity: 0; transform: translateY(24px); }
+  [data-reveal].reveal-animating { transition: opacity 0.6s ease, transform 0.6s ease; will-change: opacity, transform; }
+  [data-reveal].is-revealed { opacity: 1; transform: translateY(0); }
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    .reveal { opacity: 1; transform: none; transition: none; }
+    [data-reveal] { opacity: 1 !important; transform: none !important; }
+    * { transition: none !important; }
+  }
+
+  /* =========================================================
+     MOBILE MENU
+  ========================================================= */
+  .mobile-menu {
+    display: none; flex-direction: column; gap: 4px;
+    padding: 12px 24px 20px; background: var(--nav-bg);
+    -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--bg-card-border);
+    position: sticky; top: 72px; z-index: 99;
+  }
+  .mobile-menu.open { display: flex; }
+  .mobile-menu a { color: var(--text-secondary); font-size: 14px; padding: 10px 0; }
+  .mobile-menu a:hover { color: #fff; }
+  .mobile-group-label { color: var(--text-muted); font-size: 11px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; padding: 8px 0 2px; }
+  .mobile-menu a.mobile-sub { padding: 8px 0 8px 14px; font-weight: 500; color: #C7CEE2; }
+
+  /* =========================================================
+     RESPONSIVE — MOBILE
+  ========================================================= */
+  @media (max-width: 980px) {
+    .footer-top { grid-template-columns: 1fr 1fr 1fr; }
+    .footer-brand { grid-column: 1 / -1; }
+  }
+  @media (max-width: 768px) {
+    .nav-links { display: none; }
+    .nav-toggle { display: block; }
+    .nav-right .login { display: none; }
+    .nav-right .btn-primary { padding: 7px 14px; }
+    .wm-hero { padding: 56px 0 64px; }
+    .wm-hero h1 { font-size: 38px; }
+    .wm-hero .hero-sub { font-size: 15px; }
+    .wm-ctas { flex-wrap: wrap; }
+    .footer-top { grid-template-columns: 1fr 1fr; }
+    .footer-bottom { flex-direction: row; }
+    .grid-3 { grid-template-columns: 1fr; }
+    .deliv-grid { grid-template-columns: 1fr; }
+    .feat-grid { grid-template-columns: 1fr; }
+    .protection-split { grid-template-columns: 1fr; gap: 40px; }
+    .protection-text h2 { font-size: 30px; }
+    .readiness-split { grid-template-columns: 1fr; gap: 40px; }
+    .readiness-copy h2 { font-size: 30px; }
+    .section { padding: 64px 0; }
+    .section-head h2 { font-size: 28px; }
+    .final-cta h2 { font-size: 30px; }
+    .final-buttons { flex-wrap: wrap; }
+  }
+  @media (max-width: 480px) {
+    .wm-hero h1 { font-size: 30px; }
+    .footer-top { grid-template-columns: 1fr; }
+    .footer-bottom { flex-direction: column; align-items: flex-start; }
+  }
+
+  /* =========================================================
+     LARGE SCREENS  >=1280px & >=1440px & >=1600px
+  ========================================================= */
+  @media (min-width: 1280px) {
+    .container { max-width: 1260px; }
+    .wm-hero h1 { font-size: 66px; }
+    .wm-hero .hero-sub { font-size: 18px; }
+    .section-head { max-width: 680px; }
+    .section-head h2 { font-size: 38px; }
+    .feat-grid { gap: 24px; }
+    .feat-card { padding: 32px; }
+    .feat-text h3 { font-size: 22px; }
+    .protection-split { gap: 80px; }
+    .protection-text h2 { font-size: 44px; }
+    .readiness-split { gap: 80px; }
+    .readiness-copy h2 { font-size: 44px; }
+    .deliv-grid { gap: 24px; }
+    .deliv-card { padding: 32px; }
+    .deliv-card h3 { font-size: 20px; }
+  }
+  @media (min-width: 1440px) {
+    .container { max-width: 1460px; }
+    .wm-hero { padding: 100px 0 110px; }
+    .wm-hero h1 { font-size: 74px; max-width: 980px; }
+    .wm-hero .hero-sub { font-size: 19px; max-width: 640px; }
+    .wm-ctas .btn-primary { padding: 16px 34px; font-size: 16px; }
+    .wm-ctas .btn-ghost   { padding: 16px 34px; font-size: 16px; }
+    .wm-dash { max-width: 1160px; }
+    .section { padding: 110px 0; }
+    .section-head { max-width: 720px; margin-bottom: 64px; }
+    .section-head h2 { font-size: 42px; }
+    .section-head p { font-size: 16px; max-width: 620px; }
+    .feat-grid { gap: 28px; }
+    .feat-card { padding: 36px; }
+    .feat-text h3 { font-size: 24px; }
+    .feat-text p { font-size: 15px; }
+    .protection-split { gap: 96px; }
+    .protection-text h2 { font-size: 48px; }
+    .protection-text > p { font-size: 16px; }
+    .pb-body h4 { font-size: 15px; }
+    .pb-body p { font-size: 14px; }
+    .readiness-split { gap: 96px; }
+    .readiness-copy h2 { font-size: 48px; }
+    .readiness-copy > p { font-size: 16px; }
+    .deliv-grid { gap: 28px; }
+    .deliv-card { padding: 36px; }
+    .deliv-card h3 { font-size: 22px; }
+    .deliv-desc { font-size: 14px; }
+  }
+  @media (min-width: 1600px) {
+    .container { max-width: 1560px; }
+    .wm-hero h1 { font-size: 80px; max-width: 1060px; }
+    .wm-hero .hero-sub { font-size: 20px; max-width: 680px; }
+    .wm-ctas .btn-primary { padding: 18px 38px; font-size: 17px; }
+    .wm-ctas .btn-ghost   { padding: 18px 38px; font-size: 17px; }
+    .wm-dash { max-width: 1260px; }
+    .section { padding: 120px 0; }
+    .section-head { max-width: 760px; }
+    .section-head h2 { font-size: 46px; }
+    .section-head p { font-size: 17px; max-width: 660px; }
+    .feat-card { padding: 40px; }
+    .feat-text h3 { font-size: 26px; }
+    .feat-text p { font-size: 16px; }
+    .bar-chart-body { height: 100px; }
+    .protection-split { gap: 110px; }
+    .protection-text h2 { font-size: 52px; }
+    .readiness-split { gap: 110px; }
+    .readiness-copy h2 { font-size: 52px; }
+    .deliv-card { padding: 40px; }
+    .deliv-card h3 { font-size: 24px; }
+    .deliv-desc { font-size: 15px; }
+  }
+
+</style>
+</head>
+<body>
+
+<!-- ===================== NAVBAR ===================== -->
+<header class="navbar">
+  <nav class="container" aria-label="Primary">
+    <a class="logo" href="index.html">NeoLeads</a>
+    <div class="nav-links">
+      <div class="nav-item" id="productsNav">
+        <button class="nav-trigger" type="button" aria-haspopup="true" aria-expanded="false" aria-controls="productsMenu">
+          Products <span class="caret" aria-hidden="true"><i data-lucide="chevron-down"></i></span>
+        </button>
+        <div class="mega-menu" id="productsMenu" role="menu" aria-label="Products">
+          <div class="mega-grid">
+            <a class="mega-item" role="menuitem" href="zeus-prospecting.html">
+              <span class="mega-ic"><i data-lucide="search"></i></span>
+              <span class="mega-text">
+                <span class="mega-title">Zeus</span>
+                <span class="mega-desc">Find verified decision-makers before your competitors do</span>
+              </span>
+            </a>
+            <a class="mega-item" role="menuitem" href="sendrit.html">
+              <span class="mega-ic"><i data-lucide="send"></i></span>
+              <span class="mega-text">
+                <span class="mega-title">Sendrit</span>
+                <span class="mega-desc">AI-written, multichannel sequences that actually get replies</span>
+              </span>
+            </a>
+            <a class="mega-item" role="menuitem" href="verifyrit.html">
+              <span class="mega-ic"><i data-lucide="badge-check"></i></span>
+              <span class="mega-text">
+                <span class="mega-title">Verifyrit</span>
+                <span class="mega-desc">Clean every email address before it costs you a bounce</span>
+              </span>
+            </a>
+            <a class="mega-item" role="menuitem" href="snaarpmail.html">
+              <span class="mega-ic"><i data-lucide="inbox"></i></span>
+              <span class="mega-text">
+                <span class="mega-title">Snaarpmail</span>
+                <span class="mega-desc">Bulletproof sending infrastructure and one inbox for every reply</span>
+              </span>
+            </a>
+            <a class="mega-item is-primary" role="menuitem" aria-current="page">
+              <span class="mega-ic"><i data-lucide="flame"></i></span>
+              <span class="mega-text">
+                <span class="mega-title">Warmrit</span>
+                <span class="mega-desc">Build sender reputation so your emails land, not spam</span>
+              </span>
+            </a>
+            <a class="mega-item" role="menuitem" href="index.html#platform">
+              <span class="mega-ic"><i data-lucide="brain-circuit"></i></span>
+              <span class="mega-text">
+                <span class="mega-title">NeoBrain AI</span>
+                <span class="mega-desc">The AI layer that qualifies leads and scores every conversation</span>
+              </span>
+            </a>
+          </div>
+        </div>
+      </div>
+      <a href="index.html#testimonials">Case Studies <span class="caret" aria-hidden="true"><i data-lucide="chevron-down"></i></span></a>
+      <a href="index.html#pricing">Pricing</a>
+      <a href="index.html#integrations">Integration</a>
+      <a href="index.html#features">Resources <span class="caret" aria-hidden="true"><i data-lucide="chevron-down"></i></span></a>
+      <a href="index.html#features">Tools <span class="caret" aria-hidden="true"><i data-lucide="chevron-down"></i></span></a>
+    </div>
+    <div class="nav-right">
+      <a class="login" href="#">Log In</a>
+      <button class="btn-primary nav-cta">Get Started</button>
+      <button class="nav-toggle" aria-label="Toggle menu" aria-expanded="false" id="navToggle"><i data-lucide="menu"></i></button>
+    </div>
+  </nav>
+</header>
+<div class="mobile-menu" id="mobileMenu">
+  <span class="mobile-group-label">Products</span>
+  <a class="mobile-sub" href="zeus-prospecting.html">Zeus</a>
+  <a class="mobile-sub" href="sendrit.html">Sendrit</a>
+  <a class="mobile-sub" href="verifyrit.html">Verifyrit</a>
+  <a class="mobile-sub" href="snaarpmail.html">Snaarpmail</a>
+  <a class="mobile-sub" aria-current="page">Warmrit</a>
+  <a class="mobile-sub" href="index.html#platform">NeoBrain AI</a>
+  <a href="index.html#testimonials">Case Studies</a>
+  <a href="index.html#pricing">Pricing</a>
+  <a href="index.html#integrations">Integration</a>
+  <a href="index.html#features">Resources</a>
+  <a href="index.html#features">Tools</a>
+  <a href="#">Log In</a>
+</div>
+
+<main>
+
+<!-- ===================== HERO ===================== -->
+<section class="wm-hero">
+  <div class="container" data-reveal-stagger="100" data-reveal-onload>
+
+    <span class="hero-badge" data-reveal>
+      <i data-lucide="flame" aria-hidden="true"></i>
+      Warmrit | Email Warmup by NeoLeads
+    </span>
+
+    <h1 data-reveal>
+      Don't Send Until Warmrit<br />
+      <span class="line-two">Approves.</span>
+    </h1>
+
+    <p class="hero-sub" data-reveal>
+      Warmrit builds your sender reputation the right way, gradually, continuously, and with
+      AI-generated warmup conversations that look exactly like the emails your inbox should
+      be sending. When the readiness score hits green, Sendrit is cleared to launch.
+    </p>
+
+    <div class="wm-ctas" data-reveal>
+      <button class="btn-primary">Start Warming Free <i data-lucide="arrow-right"></i></button>
+      <button class="btn-ghost">See Warmrit in Action</button>
+    </div>
+
+    <div class="wm-trust" data-reveal>
+      <span class="item">
+        <span class="check-ic">
+          <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="2 6 5 9 10 3"/></svg>
+        </span>
+        AI-driven warmup network
+      </span>
+      <span class="item">
+        <span class="check-ic">
+          <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="2 6 5 9 10 3"/></svg>
+        </span>
+        Continuous protection
+      </span>
+      <span class="item">
+        <span class="check-ic">
+          <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="2 6 5 9 10 3"/></svg>
+        </span>
+        Readiness scoring
+      </span>
+    </div>
+
+    <div class="wm-dash" data-reveal>
+      <div class="wm-dash-frame">
+        <img src="Hero%20Image%20Box%20(4)%202.png" alt="Warmrit dashboard: warmup status, inbox readiness scores, and sender reputation at a glance" />
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ===================== FEATURES — HOW WARMRIT WORKS ===================== -->
+<section class="section" id="how-it-works">
+  <div class="container">
+    <div class="section-head" data-reveal-stagger="100">
+      <span class="section-label" data-reveal>WARMRIT THAT ACTUALLY WORKS</span>
+      <h2 data-reveal>Reputation Isn't Built in a Week.<br>Warmrit Builds It Properly.</h2>
+      <p data-reveal>Most warmup tools do one thing — send generic emails on a fixed schedule and hope for the best. Warmrit runs four coordinated systems to make sure your inboxes are genuinely trusted before any campaign starts.</p>
+    </div>
+
+    <div class="feat-grid" data-reveal-stagger="140">
+
+      <!-- Card 1: AI Warmup Network -->
+      <article class="feat-card" data-reveal>
+        <div class="feat-text">
+          <h3>AI Warmup Network</h3>
+          <p>Warmrit's network exchanges realistic, industry-matched conversations with your inbox — not generic lorem ipsum that spam filters pattern-match in milliseconds.</p>
+        </div>
+        <div class="chat-mock">
+          <div class="chat-item">
+            <div class="chat-item-header">
+              <div class="chat-avatar">JL</div>
+              <span class="chat-subject">Re: following up on Q3 goals</span>
+              <span class="ai-badge">AI Generated</span>
+            </div>
+            <p class="chat-quote">"Thanks for the update the numbers look strong. Let's sync next week to lock the plan..."</p>
+          </div>
+          <div class="chat-item">
+            <div class="chat-item-header">
+              <div class="chat-avatar" style="background:linear-gradient(135deg,#1E3A5F,#2A5080)">MH</div>
+              <span class="chat-subject">Quick question on the proposal</span>
+            </div>
+            <p class="chat-quote">"Got it, appreciate the quick turnaround. One thing on pricing tiers — mind a 15-min call?"</p>
+          </div>
+        </div>
+      </article>
+
+      <!-- Card 2: Gradual Ramp Scheduling -->
+      <article class="feat-card" data-reveal>
+        <div class="bar-chart-wrap">
+          <div class="bar-chart-header">
+            <span class="bar-chart-label">Daily Warmup Volume</span>
+            <span class="bar-chart-metric">5 &rarr; 40 / Day</span>
+          </div>
+          <div class="bar-chart-body">
+            <div class="bar" style="height:12%"></div>
+            <div class="bar" style="height:18%"></div>
+            <div class="bar" style="height:25%"></div>
+            <div class="bar" style="height:34%"></div>
+            <div class="bar" style="height:43%"></div>
+            <div class="bar" style="height:51%"></div>
+            <div class="bar" style="height:61%"></div>
+            <div class="bar" style="height:70%"></div>
+            <div class="bar" style="height:78%"></div>
+            <div class="bar" style="height:86%"></div>
+            <div class="bar" style="height:93%"></div>
+            <div class="bar" style="height:100%"></div>
+          </div>
+          <div class="bar-chart-weeks">
+            <span class="bar-week-label">Week 1</span>
+            <span class="bar-week-label">Week 2</span>
+            <span class="bar-week-label">Week 3</span>
+            <span class="bar-week-label">Week 4</span>
+          </div>
+        </div>
+        <div class="feat-text">
+          <h3>Gradual Ramp Scheduling</h3>
+          <p>Sending volume increases on an adaptive schedule calibrated to your domain age and reputation — never a sudden spike that looks suspicious, always a natural growth curve.</p>
+        </div>
+      </article>
+
+      <!-- Card 3: Spam Folder Rescue -->
+      <article class="feat-card" data-reveal>
+        <div class="feat-text">
+          <h3>Spam Folder Rescue</h3>
+          <p>Warmrit monitors every warmup email's placement and automatically rescues any that land in spam — marking them important and moving them to primary to build positive engagement signals.</p>
+        </div>
+        <div class="spam-rescue-wrap">
+          <p class="spam-rescue-label">Automatic Spam Rescue</p>
+          <div class="spam-rescue-flow">
+            <div class="rescue-box spam">
+              <span class="rescue-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>
+              </span>
+              <span class="rescue-label-text">Spam</span>
+            </div>
+            <div class="rescue-arrow">
+              <span class="rescue-arrow-label">Rescued</span>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+            </div>
+            <div class="rescue-box primary">
+              <span class="rescue-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22 6 12 13 2 6"/></svg>
+              </span>
+              <span class="rescue-label-text">
+                <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                Primary
+              </span>
+            </div>
+          </div>
+          <div class="rescue-status">
+            <span class="s-dot"></span>
+            Marked important &middot; positive signal logged
+          </div>
+        </div>
+      </article>
+
+      <!-- Card 4: Readiness Score -->
+      <article class="feat-card" data-reveal>
+        <div class="readiness-visual">
+          <div class="score-ring">
+            <svg viewBox="0 0 88 88" aria-hidden="true">
+              <defs>
+                <linearGradient id="wmScoreGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                  <stop offset="0%" stop-color="#6C2BDF"/>
+                  <stop offset="100%" stop-color="#A576F8"/>
+                </linearGradient>
+              </defs>
+              <circle class="track" cx="44" cy="44" r="37"/>
+              <circle class="fill"  cx="44" cy="44" r="37"/>
+            </svg>
+            <div class="score-inner">
+              <span class="score-number">94</span>
+              <span class="score-sublabel">Readiness</span>
+            </div>
+          </div>
+          <div class="readiness-pills">
+            <div class="readiness-pill green">
+              <span class="r-dot"></span>
+              Inbox Ready
+            </div>
+            <div class="readiness-pill purple">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+              Sendrit: Cleared
+            </div>
+          </div>
+        </div>
+        <div class="feat-text">
+          <h3>Readiness Score</h3>
+          <p>Every inbox gets a live 0–100 readiness score updated daily. Only inboxes that hit the threshold are cleared for Sendrit so no campaign ever launches from an under-warmed domain.</p>
+        </div>
+      </article>
+
+    </div>
+  </div>
+</section>
+
+<!-- ===================== CONTINUOUS PROTECTION ===================== -->
+<section class="section alt" id="continuous-protection">
+  <div class="container">
+    <div class="protection-split" data-reveal-stagger="140">
+
+      <!-- LEFT: copy -->
+      <div class="protection-text">
+        <span class="section-label" data-reveal>CONTINUOUS PROTECTION</span>
+        <h2 data-reveal>Warming Doesn't Stop When the Campaign Starts.</h2>
+        <p data-reveal>Warmup isn't a pre-launch step — it's an ongoing commitment. The moment campaigns go live, your domain is under pressure. Warmrit stays active before, during, and between every campaign to keep your reputation intact.</p>
+        <div class="protection-bullets" data-reveal>
+          <div class="protection-bullet">
+            <div class="pb-icon"><i data-lucide="refresh-cw"></i></div>
+            <div class="pb-body">
+              <h4>Campaign-Synced Warmup</h4>
+              <p>Warmrit automatically adjusts warmup volume when Sendrit campaigns are active maintaining the right warmup-to-campaign rate to keep provider trust signals strong throughout.</p>
+            </div>
+          </div>
+          <div class="protection-bullet">
+            <div class="pb-icon"><i data-lucide="shield-alert"></i></div>
+            <div class="pb-body">
+              <h4>Reputation Recovery Mode</h4>
+              <p>If a domain takes a hit — a bad list batch, a complaint spike, or an IP flag — Warmrit detects the drop and activates an intensive recovery schedule to rebuild placement before the next campaign window.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- RIGHT: Domain Health card -->
+      <div class="domain-card" data-reveal>
+        <div class="dc-header">
+          <span class="dc-dot"></span>
+          <span class="dc-title">Domain Health</span>
+          <span class="dc-domain">outreach-mkt.io</span>
+        </div>
+        <div class="dc-rows">
+          <div class="dc-row">
+            <div class="dc-row-left">
+              <span class="dc-icon amber"><i data-lucide="triangle-alert"></i></span>
+              <span class="dc-label">Campaign Status</span>
+            </div>
+            <span class="dc-val active">Sendrit Active</span>
+          </div>
+          <div class="dc-row">
+            <div class="dc-row-left">
+              <span class="dc-icon"><i data-lucide="flame"></i></span>
+              <span class="dc-label">Warmup</span>
+            </div>
+            <span class="dc-val active">Running &middot; 18/day</span>
+          </div>
+          <div class="dc-row">
+            <div class="dc-row-left">
+              <span class="dc-icon green"><i data-lucide="trending-up"></i></span>
+              <span class="dc-label">Reputation Trend</span>
+            </div>
+            <span class="dc-val trend">&#9650; +6 pts this week</span>
+          </div>
+          <div class="dc-row">
+            <div class="dc-row-left">
+              <span class="dc-icon dim"><i data-lucide="shield"></i></span>
+              <span class="dc-label">Reputation Recovery Mode</span>
+            </div>
+            <span class="dc-val muted">Inactive &mdash; domain is healthy</span>
+          </div>
+        </div>
+        <div class="dc-footer">
+          <span class="dc-footer-dot"></span>
+          Last spam complaint: 0 in past 30 days
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ===================== READINESS DASHBOARD ===================== -->
+<section class="section" id="readiness-dashboard">
+  <div class="container">
+    <div class="readiness-split">
+
+      <!-- LEFT: Domain readiness table -->
+      <div class="domain-table-card" data-reveal>
+        <div class="dt-head">
+          <span class="dt-col-label">Domain</span>
+          <span class="dt-col-label center">Day</span>
+          <span class="dt-col-label center">Score</span>
+          <span class="dt-col-label">Status</span>
+          <span class="dt-col-label">Sendrit</span>
+        </div>
+        <div class="dt-rows">
+          <div class="dt-row">
+            <div><div class="dt-domain-name">outreach-nl.io</div><div class="dt-primary-pct">98% Primary</div></div>
+            <span class="dt-day">28</span>
+            <span class="dt-score green">97</span>
+            <span class="dt-status"><span class="dt-status-dot green"></span><span class="dt-status-text green">Ready</span></span>
+            <span><span class="dt-sendrit-btn">Cleared &#8250;</span></span>
+          </div>
+          <div class="dt-row">
+            <div><div class="dt-domain-name">getneoleads.io</div><div class="dt-primary-pct">91% Primary</div></div>
+            <span class="dt-day">21</span>
+            <span class="dt-score green">88</span>
+            <span class="dt-status"><span class="dt-status-dot green"></span><span class="dt-status-text green">Ready</span></span>
+            <span><span class="dt-sendrit-btn">Cleared &#8250;</span></span>
+          </div>
+          <div class="dt-row">
+            <div><div class="dt-domain-name">neoleads-hq.com</div><div class="dt-primary-pct">84% Primary</div></div>
+            <span class="dt-day">14</span>
+            <span class="dt-score amber">72</span>
+            <span class="dt-status"><span class="dt-status-dot amber"></span><span class="dt-status-text amber">Warning</span></span>
+            <span class="dt-sendrit-wait">Waiting</span>
+          </div>
+          <div class="dt-row">
+            <div><div class="dt-domain-name">reach-nl.io</div><div class="dt-primary-pct">71% Primary</div></div>
+            <span class="dt-day">7</span>
+            <span class="dt-score amber">41</span>
+            <span class="dt-status"><span class="dt-status-dot amber"></span><span class="dt-status-text amber">Warning</span></span>
+            <span class="dt-sendrit-wait">Waiting</span>
+          </div>
+          <div class="dt-row">
+            <div><div class="dt-domain-name">nl-outbound.io</div></div>
+            <span class="dt-day">1</span>
+            <span class="dt-score red">12</span>
+            <span class="dt-status"><span class="dt-status-dot red"></span><span class="dt-status-text red">Starting</span></span>
+            <span class="dt-sendrit-no">Not ready</span>
+          </div>
+        </div>
+        <div class="dt-footer">
+          <span class="dt-footer-stat cleared"><span class="fdot"></span>2 Cleared for Sendrit</span>
+          <span class="dt-footer-stat warning"><span class="fdot"></span>2 Warning</span>
+          <span class="dt-footer-stat starting"><span class="fdot"></span>1 Starting</span>
+        </div>
+      </div>
+
+      <!-- RIGHT: copy -->
+      <div class="readiness-copy" data-reveal-stagger="120">
+        <span class="section-label" data-reveal>READINESS DASHBOARD</span>
+        <h2 data-reveal>Know Exactly Which Inboxes Are Ready and Which Still Need Time.</h2>
+        <p data-reveal>Every inbox under Warmrit's management has a live readiness score visible in one place so your team knows at a glance what's cleared, what's still warming, and what's just been added to the rotation.</p>
+        <div class="readiness-features" data-reveal>
+          <div class="protection-bullet">
+            <div class="pb-icon"><i data-lucide="bar-chart-2"></i></div>
+            <div class="pb-body">
+              <h4>Per-Inbox Score Breakdown</h4>
+              <p>Drill into any inbox's score to see which signals are strong and which are dragging the number down: inbox placement, spam rate, reply engagement, and domain age, all broken out.</p>
+            </div>
+          </div>
+          <div class="protection-bullet">
+            <div class="pb-icon"><i data-lucide="lock"></i></div>
+            <div class="pb-body">
+              <h4>Automatic Sendrit Gating</h4>
+              <p>When an inbox's score crosses the threshold, Warmrit automatically signals Snaarpmail and Sendrit that it's cleared &mdash; no manual check, no missed &ldquo;is it ready yet&rdquo; moment.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ===================== DELIVERABILITY INTELLIGENCE ===================== -->
+<section class="section alt" id="deliverability">
+  <div class="container">
+    <div class="section-head" data-reveal-stagger="100">
+      <span class="section-badge" data-reveal><i data-lucide="zap" aria-hidden="true"></i> Deliverability Intelligence</span>
+      <h2 data-reveal>A Full Picture of Every Domain's Health, All in One View</h2>
+      <p data-reveal>Warmrit doesn't just run warmup in the background &mdash; it surfaces a live, actionable picture of every sending domain's deliverability health so you always know what's working, what's at risk, and what needs attention.</p>
+    </div>
+
+    <div class="deliv-grid" data-reveal-stagger="130">
+
+      <!-- Card 1: Inbox Placement Tracking -->
+      <article class="deliv-card" data-reveal>
+        <div>
+          <h3>Inbox Placement Tracking</h3>
+          <p class="deliv-desc">See exactly what percentage of warmup emails land in primary versus promotions or spam, broken down by provider so you know not just &ldquo;is it warming&rdquo; but &ldquo;is it warming with the right providers.&rdquo;</p>
+        </div>
+        <div class="provider-bars-wrap">
+          <p class="provider-bars-label">Placement by Provider</p>
+          <div class="provider-bar-row">
+            <span class="provider-name">Gmail</span>
+            <div class="provider-track"><div class="provider-fill" style="width:94%"></div></div>
+            <span class="provider-pct">94% Primary</span>
+          </div>
+          <div class="provider-bar-row">
+            <span class="provider-name">Outlook</span>
+            <div class="provider-track"><div class="provider-fill" style="width:91%"></div></div>
+            <span class="provider-pct">91% Primary</span>
+          </div>
+          <div class="provider-bar-row">
+            <span class="provider-name">Yahoo</span>
+            <div class="provider-track"><div class="provider-fill" style="width:88%"></div></div>
+            <span class="provider-pct">88% Primary</span>
+          </div>
+        </div>
+      </article>
+
+      <!-- Card 2: Blacklist Monitoring -->
+      <article class="deliv-card" data-reveal>
+        <div>
+          <h3>Blacklist Monitoring</h3>
+          <p class="deliv-desc">Warmrit checks every sending domain against major blacklists daily and alerts your team immediately if a domain appears before a live Sendrit campaign takes a hit from a flagged IP or domain.</p>
+        </div>
+        <div class="blacklist-visual">
+          <div class="bl-icon-wrap"><i data-lucide="shield-check"></i></div>
+          <p class="bl-status">Blacklist: Clear</p>
+          <p class="bl-checked">Last checked: 2 hrs ago</p>
+          <div class="bl-stats-row">
+            <div class="bl-stat">
+              <div class="bl-stat-num">80</div>
+              <div class="bl-stat-label">Lists Scanned</div>
+            </div>
+            <div class="bl-stat-divider"></div>
+            <div class="bl-stat">
+              <div class="bl-stat-num">0</div>
+              <div class="bl-stat-label">Flags Found</div>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <!-- Card 3: Warmup Timeline & Forecast -->
+      <article class="deliv-card" data-reveal>
+        <div>
+          <h3>Warmup Timeline &amp; Forecast</h3>
+          <p class="deliv-desc">A projected timeline per inbox showing when it's expected to hit campaign-ready based on current trajectory so you can plan launch dates around actual readiness, not a guess.</p>
+        </div>
+        <div class="forecast-visual">
+          <p class="forecast-top-label">Warmup Forecast &mdash; reach-nl.io</p>
+          <div class="forecast-timeline">
+            <div class="forecast-track"><div class="forecast-track-fill"></div></div>
+            <div class="forecast-dots-row">
+              <span class="forecast-dot done"></span>
+              <span class="forecast-dot current"></span>
+              <span class="forecast-dot future">
+                <svg viewBox="0 0 12 12" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="2 6 5 9 10 3"/></svg>
+              </span>
+            </div>
+            <div class="forecast-labels-row">
+              <div class="forecast-point-label">
+                <div class="forecast-day">Day 1</div>
+                <div class="forecast-sub">Started</div>
+              </div>
+              <div class="forecast-point-label">
+                <div class="forecast-day">Day 14</div>
+                <div class="forecast-sub">Now &middot; 72</div>
+              </div>
+              <div class="forecast-point-label">
+                <div class="forecast-day">Day 21</div>
+                <div class="forecast-sub ready">Ready</div>
+              </div>
+            </div>
+          </div>
+          <div class="forecast-ready-banner">
+            <span class="f-dot"></span>
+            Projected campaign-ready in <strong>&nbsp;7 days</strong>
+          </div>
+        </div>
+      </article>
+
+    </div>
+  </div>
+</section>
+
+<!-- ===================== CUSTOMER STORIES ===================== -->
+<section class="section" id="testimonials">
+  <div class="container">
+    <div class="section-head" data-reveal-stagger="100">
+      <span class="section-label" data-reveal>CUSTOMER STORIES</span>
+      <h2 data-reveal>Don't just take our word for it.</h2>
+    </div>
+    <div class="grid-3" data-reveal-stagger="120">
+      <article class="card testi-card" data-reveal>
+        <div class="stars" aria-label="5 out of 5 stars"><i data-lucide="star"></i><i data-lucide="star"></i><i data-lucide="star"></i><i data-lucide="star"></i><i data-lucide="star"></i></div>
+        <p class="quote">"NeoLeads completely changed our outbound workflow. We went from 5% reply rate to over 23% in 3 weeks."</p>
+        <div class="testi-author"><img class="av" src="avatars/Container.png" alt="James T." /><div><div class="name">James T.</div><div class="role">VP Sales, TechCorp</div></div></div>
+      </article>
+      <article class="card testi-card" data-reveal>
+        <div class="stars" aria-label="5 out of 5 stars"><i data-lucide="star"></i><i data-lucide="star"></i><i data-lucide="star"></i><i data-lucide="star"></i><i data-lucide="star"></i></div>
+        <p class="quote">"The pay-per-conversation model is genius. We only pay for actual results, not wasted software subscriptions."</p>
+        <div class="testi-author"><img class="av" src="avatars/Container-2.png" alt="Maria K." /><div><div class="name">Maria K.</div><div class="role">Founder, GrowthLab</div></div></div>
+      </article>
+      <article class="card testi-card" data-reveal>
+        <div class="stars" aria-label="5 out of 5 stars"><i data-lucide="star"></i><i data-lucide="star"></i><i data-lucide="star"></i><i data-lucide="star"></i><i data-lucide="star"></i></div>
+        <p class="quote">"NeoBrain AI is scary good. It replies to leads like a human, qualifies them and books meetings on autopilot."</p>
+        <div class="testi-author"><img class="av" src="avatars/Container-1.png" alt="Derek W." /><div><div class="name">Derek W.</div><div class="role">Head of Growth, ScaleUp</div></div></div>
+      </article>
+      <article class="card testi-card" data-reveal>
+        <div class="stars" aria-label="5 out of 5 stars"><i data-lucide="star"></i><i data-lucide="star"></i><i data-lucide="star"></i><i data-lucide="star"></i><i data-lucide="star"></i></div>
+        <p class="quote">"Setup was fast and the results came quickly. This is the future of outbound sales."</p>
+        <div class="testi-author"><img class="av" src="avatars/Container-6.png" alt="Priya S." /><div><div class="name">Priya S.</div><div class="role">Marketing Director, FintechHub</div></div></div>
+      </article>
+      <article class="card testi-card" data-reveal>
+        <div class="stars" aria-label="5 out of 5 stars"><i data-lucide="star"></i><i data-lucide="star"></i><i data-lucide="star"></i><i data-lucide="star"></i><i data-lucide="star"></i></div>
+        <p class="quote">"Best investment we made this year. Our pipeline has never been healthier."</p>
+        <div class="testi-author"><img class="av" src="avatars/Container-3.png" alt="Carlos M." /><div><div class="name">Carlos M.</div><div class="role">CEO, LaunchPad</div></div></div>
+      </article>
+      <article class="card testi-card" data-reveal>
+        <div class="stars" aria-label="5 out of 5 stars"><i data-lucide="star"></i><i data-lucide="star"></i><i data-lucide="star"></i><i data-lucide="star"></i><i data-lucide="star"></i></div>
+        <p class="quote">"The unified inbox alone is worth it. Managing 10 mailboxes from one place is a game changer."</p>
+        <div class="testi-author"><img class="av" src="avatars/Container-7.png" alt="Sophie L." /><div><div class="name">Sophie L.</div><div class="role">Sales Lead, Nexvio</div></div></div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== COMPLIANCE ===================== -->
+<section class="section alt" id="security">
+  <div class="container">
+    <div class="section-head" data-reveal-stagger="100">
+      <span class="security-pill" data-reveal><i data-lucide="shield-check"></i> Compliant</span>
+      <h2 data-reveal>Keep your organization secure<br />and compliant.</h2>
+    </div>
+    <div class="badges-row" data-reveal-stagger="80">
+      <span class="comp-badge" title="AICPA SOC" data-reveal><img src="logos/compliance-1.png" alt="AICPA SOC 2 certified" /></span>
+      <span class="comp-badge" title="PCI DSS" data-reveal><img src="logos/compliance-2.png" alt="PCI DSS compliant" /></span>
+      <span class="comp-badge" title="GDPR" data-reveal><img src="logos/compliance-3.png" alt="GDPR compliant" /></span>
+      <span class="comp-badge" title="Privacy" data-reveal><img src="logos/compliance-4.png" alt="Data privacy" /></span>
+      <span class="comp-badge" title="CSA STAR Level One" data-reveal><img src="logos/compliance-5.png" alt="CSA STAR Level One" /></span>
+      <span class="comp-badge" title="ISO/IEC 27001" data-reveal><img src="logos/compliance-6.png" alt="ISO/IEC 27001 certified" /></span>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== FINAL CTA — GET STARTED ===================== -->
+<section class="final-cta">
+  <div class="container" data-reveal-stagger="100">
+    <span class="section-label" data-reveal>GET STARTED</span>
+    <h2 data-reveal>Ready to Warm Up<br />Your Sender Reputation?</h2>
+    <p data-reveal>Start building inbox trust today, gradually, continuously, and automatically, so every campaign lands where it belongs.</p>
+    <div class="final-buttons" data-reveal>
+      <button class="btn-primary">Start Warming Free <i data-lucide="arrow-right"></i></button>
+      <button class="btn-ghost">Book a Demo</button>
+    </div>
+    <div class="final-trust" data-reveal>
+      <span class="item"><i data-lucide="shield-check"></i> SOC 2 Certified</span>
+      <span class="item"><i data-lucide="check"></i> No credit card</span>
+      <span class="item"><i data-lucide="check"></i> Cancel anytime</span>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<!-- ===================== FOOTER ===================== -->
+<footer class="footer">
+  <div class="container">
+    <div class="footer-top" data-reveal-stagger="100">
+      <div class="footer-brand" data-reveal>
+        <a class="footer-logo" href="index.html">Neoleads</a>
+        <p class="tagline">Every tool your business needs to find, reach, verify and close, in one connected stack.</p>
+        <div class="social-row">
+          <a href="#" aria-label="X"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231 5.45-6.231zm-1.161 17.52h1.833L7.084 4.126H5.117l11.966 15.644z"/></svg></a>
+          <a href="#" aria-label="Facebook"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M24 12.073C24 5.405 18.627 0 12 0S0 5.405 0 12.073c0 6.02 4.388 11.01 10.125 11.927v-8.437H7.078v-3.49h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.49h-2.796v8.437C19.612 23.083 24 18.093 24 12.073z"/></svg></a>
+          <a href="#" aria-label="Instagram"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg></a>
+          <a href="#" aria-label="LinkedIn"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.225 0z"/></svg></a>
+        </div>
+      </div>
+      <div class="footer-col" data-reveal>
+        <h4>Solutions</h4>
+        <ul>
+          <li><a href="#">For sales teams</a></li>
+          <li><a href="#">For marketing</a></li>
+          <li><a href="#">For founders</a></li>
+          <li><a href="#">For agencies</a></li>
+          <li><a href="#">For enterprise</a></li>
+        </ul>
+      </div>
+      <div class="footer-col" data-reveal>
+        <h4>Company</h4>
+        <ul>
+          <li><a href="#">About</a></li>
+          <li><a href="#">Resources</a></li>
+          <li><a href="#">API docs</a></li>
+          <li><a href="#">Privacy policy</a></li>
+          <li><a href="#">Terms of service</a></li>
+        </ul>
+      </div>
+      <div class="footer-col" data-reveal>
+        <h4>Product</h4>
+        <ul>
+          <li><a href="#">Kalender</a></li>
+          <li><a href="zeus-prospecting.html">Zeus</a></li>
+          <li><a href="#">Snaarplock</a></li>
+          <li><a href="snaarpmail.html">Snaarpmail</a></li>
+          <li><a href="verifyrit.html">Verifyrit</a></li>
+          <li><a href="sendrit.html">Sendrit</a></li>
+        </ul>
+      </div>
+      <div class="footer-col footer-contact" data-reveal>
+        <h4>Contact Information</h4>
+        <div class="c-group">
+          <span class="c-label">Email</span>
+          <span class="c-val">support@snaarp.com</span>
+        </div>
+        <div class="c-group">
+          <span class="c-label">Phone</span>
+          <span class="c-val">+1 (800) 123-4567</span>
+        </div>
+        <div class="c-group">
+          <span class="c-label">Office Address</span>
+          <span class="c-val">Neoleads<br />1234 Sales Street, Suite 500<br />San Francisco, CA 94105, USA</span>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom" data-reveal data-reveal-delay="150">
+      <span class="since">SINCE. 2026</span>
+      <span class="copy">&copy;Neoleads. All rights reserved.</span>
+    </div>
+  </div>
+</footer>
+
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+<script>
+  if (window.lucide) { lucide.createIcons(); }
+
+  // Mobile menu
+  (function () {
+    var toggle = document.getElementById('navToggle');
+    var menu = document.getElementById('mobileMenu');
+    if (!toggle || !menu) return;
+    toggle.addEventListener('click', function () {
+      var open = menu.classList.toggle('open');
+      toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+    });
+    menu.querySelectorAll('a').forEach(function (a) {
+      a.addEventListener('click', function () {
+        menu.classList.remove('open');
+        toggle.setAttribute('aria-expanded', 'false');
+      });
+    });
+  })();
+
+  // Products mega-menu
+  (function () {
+    var nav = document.getElementById('productsNav');
+    if (!nav) return;
+    var trigger = nav.querySelector('.nav-trigger');
+    function close() { nav.classList.remove('open'); trigger.setAttribute('aria-expanded', 'false'); }
+    trigger.addEventListener('click', function (e) {
+      e.stopPropagation();
+      var open = nav.classList.toggle('open');
+      trigger.setAttribute('aria-expanded', open ? 'true' : 'false');
+    });
+    document.addEventListener('click', function (e) { if (!nav.contains(e.target)) close(); });
+    document.addEventListener('keydown', function (e) { if (e.key === 'Escape') close(); });
+    nav.querySelectorAll('.mega-item').forEach(function (item) { item.addEventListener('click', close); });
+  })();
+
+  // Scroll reveal engine
+  (function () {
+    var prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    var hasIO = 'IntersectionObserver' in window;
+    var slice = Array.prototype.slice;
+
+    slice.call(document.querySelectorAll('[data-reveal-stagger]')).forEach(function (group) {
+      var step = parseInt(group.getAttribute('data-reveal-stagger'), 10) || 120;
+      var base = parseInt(group.getAttribute('data-reveal-base'), 10) || 0;
+      var onload = group.hasAttribute('data-reveal-onload');
+      var kids = group.querySelectorAll(':scope > [data-reveal]');
+      slice.call(kids).forEach(function (kid, i) {
+        if (kid.getAttribute('data-reveal-delay') === null) kid.setAttribute('data-reveal-delay', base + i * step);
+        if (onload) kid.setAttribute('data-reveal-onload', '');
+      });
+    });
+
+    var legacy = slice.call(document.querySelectorAll('.reveal'));
+    var items = slice.call(document.querySelectorAll('[data-reveal]'));
+
+    if (prefersReduced || !hasIO) {
+      legacy.forEach(function (el) { el.classList.add('visible'); });
+      items.forEach(function (el) { el.classList.add('is-revealed'); el.removeAttribute('data-reveal'); });
+      return;
+    }
+
+    var legacyObs = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (entry.isIntersecting) { entry.target.classList.add('visible'); legacyObs.unobserve(entry.target); }
+      });
+    }, { threshold: 0.12 });
+    legacy.forEach(function (el) { legacyObs.observe(el); });
+
+    function settle(el) { el.classList.remove('reveal-animating'); el.style.transitionDelay = ''; el.removeAttribute('data-reveal'); }
+    function reveal(el, animate) {
+      if (!animate) { el.classList.add('is-revealed'); settle(el); return; }
+      var delay = parseInt(el.getAttribute('data-reveal-delay'), 10) || 0;
+      if (delay) el.style.transitionDelay = delay + 'ms';
+      el.classList.add('reveal-animating');
+      requestAnimationFrame(function () { requestAnimationFrame(function () { el.classList.add('is-revealed'); }); });
+      window.setTimeout(function () { settle(el); }, 700 + delay);
+    }
+
+    var obs = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (entry.isIntersecting) { reveal(entry.target, true); obs.unobserve(entry.target); }
+      });
+    }, { threshold: 0.1, rootMargin: '0px 0px -5% 0px' });
+
+    var vh = window.innerHeight || document.documentElement.clientHeight;
+    items.forEach(function (el) {
+      var r = el.getBoundingClientRect();
+      var aboveFold = r.top < vh * 0.9 && r.bottom > 0;
+      if (aboveFold) reveal(el, el.hasAttribute('data-reveal-onload'));
+      else obs.observe(el);
+    });
+  })();
+</script>
+
+</body>
+</html>
