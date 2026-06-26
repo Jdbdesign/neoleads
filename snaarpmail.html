@@ -142,6 +142,9 @@
   .mega-text { display: flex; flex-direction: column; gap: 3px; min-width: 0; align-self: flex-start; }
   .mega-title { font-size: 14px; font-weight: 700; color: #fff; letter-spacing: -0.01em; line-height: 1.2; }
   .mega-desc { font-size: 12px; line-height: 1.45; color: var(--text-secondary); }
+  .mega-menu.mega-wide { width: 720px; left: -40px; }
+  .mega-menu.mega-wide::before { left: 58px; }
+  .mega-menu.mega-wide .mega-grid { grid-template-columns: repeat(3, 1fr); }
 
   /* =========================================================
      SNAARPMAIL HERO
@@ -924,48 +927,69 @@
         <button class="nav-trigger" type="button" aria-haspopup="true" aria-expanded="false" aria-controls="solutionsMenu">
           Solutions <span class="caret" aria-hidden="true"><i data-lucide="chevron-down"></i></span>
         </button>
-        <div class="mega-menu" id="solutionsMenu" role="menu" aria-label="Solutions">
+        <div class="mega-menu mega-wide" id="solutionsMenu" role="menu" aria-label="Solutions">
           <div class="mega-grid">
             <a class="mega-item" role="menuitem" href="#">
-              <span class="mega-ic"><i data-lucide="trending-up"></i></span>
+              <span class="mega-ic"><i data-lucide="message-circle-off"></i></span>
               <span class="mega-text">
-                <span class="mega-title">For Sales Teams</span>
-                <span class="mega-desc">Book more meetings with AI-scored, ready-to-buy pipeline</span>
+                <span class="mega-title">Low Reply Rates</span>
+                <span class="mega-desc">Turn cold outreach into conversations that actually start</span>
               </span>
             </a>
             <a class="mega-item" role="menuitem" href="#">
-              <span class="mega-ic"><i data-lucide="megaphone"></i></span>
+              <span class="mega-ic"><i data-lucide="table-2"></i></span>
               <span class="mega-text">
-                <span class="mega-title">For Marketing</span>
-                <span class="mega-desc">Turn campaigns into qualified pipeline your reps trust</span>
+                <span class="mega-title">Manual Prospecting</span>
+                <span class="mega-desc">Find verified buyers in seconds, not spreadsheet hours</span>
               </span>
             </a>
             <a class="mega-item" role="menuitem" href="#">
-              <span class="mega-ic"><i data-lucide="rocket"></i></span>
+              <span class="mega-ic"><i data-lucide="bell-off"></i></span>
               <span class="mega-text">
-                <span class="mega-title">For Founders</span>
-                <span class="mega-desc">Build outbound that works before your first SDR hire</span>
+                <span class="mega-title">Missed Hot Replies</span>
+                <span class="mega-desc">Never lose a warm reply in a flood of unread inboxes</span>
               </span>
             </a>
             <a class="mega-item" role="menuitem" href="#">
-              <span class="mega-ic"><i data-lucide="users"></i></span>
+              <span class="mega-ic"><i data-lucide="database"></i></span>
               <span class="mega-text">
-                <span class="mega-title">For Agencies</span>
-                <span class="mega-desc">Run outbound for every client from one workspace</span>
+                <span class="mega-title">Stale Contact Data</span>
+                <span class="mega-desc">Stop wasting time on leads who left six months ago</span>
               </span>
             </a>
             <a class="mega-item" role="menuitem" href="#">
-              <span class="mega-ic"><i data-lucide="building-2"></i></span>
+              <span class="mega-ic"><i data-lucide="copy-x"></i></span>
               <span class="mega-text">
-                <span class="mega-title">For Enterprise</span>
-                <span class="mega-desc">Scale compliant outreach across teams and regions</span>
+                <span class="mega-title">Generic Outreach</span>
+                <span class="mega-desc">Replace copy-paste templates with AI-researched messages</span>
               </span>
             </a>
             <a class="mega-item" role="menuitem" href="#">
-              <span class="mega-ic"><i data-lucide="workflow"></i></span>
+              <span class="mega-ic"><i data-lucide="bar-chart-3"></i></span>
               <span class="mega-text">
-                <span class="mega-title">For RevOps</span>
-                <span class="mega-desc">One source of truth for scoring, signals, and intent</span>
+                <span class="mega-title">No Pipeline Visibility</span>
+                <span class="mega-desc">See every deal, signal, and conversation in one place</span>
+              </span>
+            </a>
+            <a class="mega-item" role="menuitem" href="#">
+              <span class="mega-ic"><i data-lucide="shield-x"></i></span>
+              <span class="mega-text">
+                <span class="mega-title">Emails Landing in Spam</span>
+                <span class="mega-desc">Fix deliverability before it kills your sender reputation</span>
+              </span>
+            </a>
+            <a class="mega-item" role="menuitem" href="#">
+              <span class="mega-ic"><i data-lucide="mail-x"></i></span>
+              <span class="mega-text">
+                <span class="mega-title">High Bounce Rates</span>
+                <span class="mega-desc">Clean every list before a single email leaves your domain</span>
+              </span>
+            </a>
+            <a class="mega-item" role="menuitem" href="#">
+              <span class="mega-ic"><i data-lucide="list-x"></i></span>
+              <span class="mega-text">
+                <span class="mega-title">Unqualified Lead Lists</span>
+                <span class="mega-desc">Score and rank leads by who's actually ready to buy</span>
               </span>
             </a>
           </div>
@@ -993,12 +1017,15 @@
   <a class="mobile-sub" href="warmrit.html">Warmrit</a>
   <a class="mobile-sub" href="neobrain-ai.html">NeoBrain AI</a>
   <span class="mobile-group-label">Solutions</span>
-  <a class="mobile-sub" href="#">For Sales Teams</a>
-  <a class="mobile-sub" href="#">For Marketing</a>
-  <a class="mobile-sub" href="#">For Founders</a>
-  <a class="mobile-sub" href="#">For Agencies</a>
-  <a class="mobile-sub" href="#">For Enterprise</a>
-  <a class="mobile-sub" href="#">For RevOps</a>
+  <a class="mobile-sub" href="#">Low Reply Rates</a>
+  <a class="mobile-sub" href="#">Manual Prospecting</a>
+  <a class="mobile-sub" href="#">Missed Hot Replies</a>
+  <a class="mobile-sub" href="#">Stale Contact Data</a>
+  <a class="mobile-sub" href="#">Generic Outreach</a>
+  <a class="mobile-sub" href="#">No Pipeline Visibility</a>
+  <a class="mobile-sub" href="#">Emails Landing in Spam</a>
+  <a class="mobile-sub" href="#">High Bounce Rates</a>
+  <a class="mobile-sub" href="#">Unqualified Lead Lists</a>
   <a href="index.html#testimonials">Case Studies</a>
   <a href="index.html#pricing">Pricing</a>
   <a href="index.html#integrations">Integration</a>
