@@ -973,6 +973,57 @@
           </div>
         </div>
       </div>
+      <div class="nav-item" id="solutionsNav">
+        <button class="nav-trigger" type="button" aria-haspopup="true" aria-expanded="false" aria-controls="solutionsMenu">
+          Solutions <span class="caret" aria-hidden="true"><i data-lucide="chevron-down"></i></span>
+        </button>
+        <div class="mega-menu" id="solutionsMenu" role="menu" aria-label="Solutions">
+          <div class="mega-grid">
+            <a class="mega-item" role="menuitem" href="#">
+              <span class="mega-ic"><i data-lucide="trending-up"></i></span>
+              <span class="mega-text">
+                <span class="mega-title">For Sales Teams</span>
+                <span class="mega-desc">Book more meetings with AI-scored, ready-to-buy pipeline</span>
+              </span>
+            </a>
+            <a class="mega-item" role="menuitem" href="#">
+              <span class="mega-ic"><i data-lucide="megaphone"></i></span>
+              <span class="mega-text">
+                <span class="mega-title">For Marketing</span>
+                <span class="mega-desc">Turn campaigns into qualified pipeline your reps trust</span>
+              </span>
+            </a>
+            <a class="mega-item" role="menuitem" href="#">
+              <span class="mega-ic"><i data-lucide="rocket"></i></span>
+              <span class="mega-text">
+                <span class="mega-title">For Founders</span>
+                <span class="mega-desc">Build outbound that works before your first SDR hire</span>
+              </span>
+            </a>
+            <a class="mega-item" role="menuitem" href="#">
+              <span class="mega-ic"><i data-lucide="users"></i></span>
+              <span class="mega-text">
+                <span class="mega-title">For Agencies</span>
+                <span class="mega-desc">Run outbound for every client from one workspace</span>
+              </span>
+            </a>
+            <a class="mega-item" role="menuitem" href="#">
+              <span class="mega-ic"><i data-lucide="building-2"></i></span>
+              <span class="mega-text">
+                <span class="mega-title">For Enterprise</span>
+                <span class="mega-desc">Scale compliant outreach across teams and regions</span>
+              </span>
+            </a>
+            <a class="mega-item" role="menuitem" href="#">
+              <span class="mega-ic"><i data-lucide="workflow"></i></span>
+              <span class="mega-text">
+                <span class="mega-title">For RevOps</span>
+                <span class="mega-desc">One source of truth for scoring, signals, and intent</span>
+              </span>
+            </a>
+          </div>
+        </div>
+      </div>
       <a href="index.html#testimonials">Case Studies <span class="caret" aria-hidden="true"><i data-lucide="chevron-down"></i></span></a>
       <a href="index.html#pricing">Pricing</a>
       <a href="index.html#integrations">Integration</a>
@@ -994,6 +1045,13 @@
   <a class="mobile-sub" href="snaarpmail.html">Snaarpmail</a>
   <a class="mobile-sub" aria-current="page">Warmrit</a>
   <a class="mobile-sub" href="neobrain-ai.html">NeoBrain AI</a>
+  <span class="mobile-group-label">Solutions</span>
+  <a class="mobile-sub" href="#">For Sales Teams</a>
+  <a class="mobile-sub" href="#">For Marketing</a>
+  <a class="mobile-sub" href="#">For Founders</a>
+  <a class="mobile-sub" href="#">For Agencies</a>
+  <a class="mobile-sub" href="#">For Enterprise</a>
+  <a class="mobile-sub" href="#">For RevOps</a>
   <a href="index.html#testimonials">Case Studies</a>
   <a href="index.html#pricing">Pricing</a>
   <a href="index.html#integrations">Integration</a>
@@ -1640,18 +1698,35 @@
 
   // Products mega-menu
   (function () {
-    var nav = document.getElementById('productsNav');
-    if (!nav) return;
-    var trigger = nav.querySelector('.nav-trigger');
-    function close() { nav.classList.remove('open'); trigger.setAttribute('aria-expanded', 'false'); }
-    trigger.addEventListener('click', function (e) {
-      e.stopPropagation();
-      var open = nav.classList.toggle('open');
-      trigger.setAttribute('aria-expanded', open ? 'true' : 'false');
+    var navs = Array.prototype.slice.call(document.querySelectorAll('.nav-item'));
+    if (!navs.length) return;
+    function closeAll(except) {
+      navs.forEach(function (nav) {
+        if (nav === except) return;
+        nav.classList.remove('open');
+        var t = nav.querySelector('.nav-trigger');
+        if (t) t.setAttribute('aria-expanded', 'false');
+      });
+    }
+    navs.forEach(function (nav) {
+      var trigger = nav.querySelector('.nav-trigger');
+      if (!trigger) return;
+      trigger.addEventListener('click', function (e) {
+        e.stopPropagation();
+        var willOpen = !nav.classList.contains('open');
+        closeAll(nav);
+        nav.classList.toggle('open', willOpen);
+        trigger.setAttribute('aria-expanded', willOpen ? 'true' : 'false');
+      });
+      nav.querySelectorAll('.mega-item').forEach(function (item) {
+        item.addEventListener('click', function () { closeAll(null); });
+      });
     });
-    document.addEventListener('click', function (e) { if (!nav.contains(e.target)) close(); });
-    document.addEventListener('keydown', function (e) { if (e.key === 'Escape') close(); });
-    nav.querySelectorAll('.mega-item').forEach(function (item) { item.addEventListener('click', close); });
+    document.addEventListener('click', function (e) {
+      var inside = navs.some(function (nav) { return nav.contains(e.target); });
+      if (!inside) closeAll(null);
+    });
+    document.addEventListener('keydown', function (e) { if (e.key === 'Escape') closeAll(null); });
   })();
 
   // Scroll reveal engine
