@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Zeus is Suiting Up | NeoLeads</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --bg: #02071A;
+    --brand: #7C3AED;
+    --brand-text: #9D6FFF;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html, body { height: 100%; }
+
+  body {
+    background: var(--bg);
+    color: #fff;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+  }
+
+  .zeus-stage {
+    width: 100%;
+    max-width: 560px;
+    padding: 24px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  /* ===== Eye illustration ===== */
+  .eye-wrap {
+    position: relative;
+    width: 260px;
+    height: 150px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 34px;
+    /* entrance */
+    opacity: 0;
+    transform: scale(0.4);
+  }
+  .eye-wrap.enter {
+    animation: eyeIn 500ms cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+  }
+  @keyframes eyeIn {
+    0%   { opacity: 0; transform: scale(0.4); }
+    70%  { opacity: 1; transform: scale(1.05); }
+    100% { opacity: 1; transform: scale(1); }
+  }
+
+  /* ambient radial glow behind the eye */
+  .eye-glow {
+    position: absolute;
+    width: 280px;
+    height: 150px;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    background: radial-gradient(ellipse at center, rgba(124,58,237,0.18) 0%, rgba(124,58,237,0) 70%);
+    opacity: 0.08;
+    pointer-events: none;
+    animation: glowPulse 4s ease-in-out infinite;
+  }
+  @keyframes glowPulse {
+    0%, 100% { opacity: 0.08; }
+    50%      { opacity: 0.14; }
+  }
+
+  .eye-svg { position: relative; display: block; }
+
+  /* ===== Pill ===== */
+  .zeus-pill {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(124,58,237,0.15);
+    border: 1px solid rgba(124,58,237,0.4);
+    border-radius: 100px;
+    padding: 7px 16px;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    color: var(--brand-text);
+    overflow: hidden;
+    margin-bottom: 22px;
+    /* entrance */
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  .zeus-pill .lucide { width: 13px; height: 13px; stroke-width: 2.5; }
+  /* slow shimmer sweep */
+  .zeus-pill::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 60%;
+    height: 100%;
+    background: linear-gradient(100deg, transparent, rgba(255,255,255,0.18), transparent);
+    transform: translateX(-180%);
+    opacity: 0;
+  }
+  .zeus-pill.idle::after {
+    animation: pillShimmer 6s ease-in-out infinite;
+  }
+  @keyframes pillShimmer {
+    0%   { transform: translateX(-180%); opacity: 0.3; }
+    10%  { transform: translateX(280%);  opacity: 0.3; }
+    11%, 100% { opacity: 0; }
+  }
+
+  /* ===== Typography ===== */
+  .zeus-headline {
+    font-family: 'Outfit', sans-serif;
+    font-size: 42px;
+    font-weight: 800;
+    line-height: 1.1;
+    color: #fff;
+    margin-bottom: 18px;
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  .zeus-sub {
+    font-size: 16px;
+    line-height: 1.7;
+    color: #fff;
+    opacity: 0;
+    max-width: 440px;
+    margin: 0 auto 30px;
+    transform: translateY(8px);
+  }
+  .zeus-sub-inner { opacity: 0.55; }
+
+  /* ===== Back button ===== */
+  .zeus-back {
+    display: inline-block;
+    background: none;
+    border: none;
+    font-family: inherit;
+    font-size: 13px;
+    color: rgba(255,255,255,0.4);
+    cursor: pointer;
+    text-decoration: none;
+    opacity: 0;
+    transition: color 0.15s ease, transform 0.15s ease;
+  }
+  .zeus-back:hover {
+    color: rgba(255,255,255,0.8);
+    transform: translateX(-2px);
+  }
+
+  /* ===== Entrance trigger states ===== */
+  .enter.pill   { animation: fadeUp8 350ms ease-out 300ms forwards; }
+  .enter.head   { animation: fadeUp12 420ms ease-out 450ms forwards; }
+  .enter.sub    { animation: fadeUp8 350ms ease-out 580ms forwards; }
+  .enter.back   { animation: fadeIn 300ms ease-out 720ms forwards; }
+
+  @keyframes fadeIn   { to { opacity: 1; } }
+  @keyframes fadeUp8  { to { opacity: 1; transform: translateY(0); } }
+  @keyframes fadeUp12 { to { opacity: 1; transform: translateY(0); } }
+
+  /* ===== Responsive ===== */
+  @media (max-width: 640px) {
+    .zeus-headline { font-size: 28px; }
+    .eye-wrap { transform: scale(0.4); }
+    .eye-wrap.enter { animation: eyeInMobile 500ms cubic-bezier(0.34, 1.56, 0.64, 1) forwards; }
+    @keyframes eyeInMobile {
+      0%   { opacity: 0; transform: scale(0.32); }
+      70%  { opacity: 1; transform: scale(0.86); }
+      100% { opacity: 1; transform: scale(0.8); }
+    }
+  }
+</style>
+</head>
+<body>
+  <main class="zeus-stage">
+    <!-- Eye -->
+    <div class="eye-wrap" id="eyeWrap">
+      <div class="eye-glow"></div>
+      <svg class="eye-svg" id="eyeSvg" width="204" height="119" viewBox="0 0 240 140" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <defs>
+          <clipPath id="leftClip"><ellipse cx="62" cy="70" rx="46" ry="62" /></clipPath>
+          <clipPath id="rightClip"><ellipse cx="178" cy="70" rx="46" ry="62" /></clipPath>
+        </defs>
+
+        <!-- ===== LEFT EYE ===== -->
+        <g clip-path="url(#leftClip)">
+          <!-- moving pupil -->
+          <g class="pupil">
+            <ellipse cx="56" cy="84" rx="25" ry="34" fill="#7C3AED" />
+            <circle cx="48" cy="64" r="6.5" fill="#fff" opacity="0.92" />
+          </g>
+          <!-- upper eyelid swoosh (sits over the pupil for depth) -->
+          <path d="M18 74 C18 38, 38 11, 66 10 C45 23, 27 46, 18 74 Z" fill="#7C3AED" />
+          <!-- blink eyelid -->
+          <rect class="eyelid" x="12" y="-122" width="100" height="130" fill="#02071A" />
+        </g>
+        <ellipse cx="62" cy="70" rx="46" ry="62" stroke="#7C3AED" stroke-width="5" fill="none" />
+
+        <!-- ===== RIGHT EYE ===== -->
+        <g clip-path="url(#rightClip)">
+          <g class="pupil">
+            <ellipse cx="172" cy="84" rx="25" ry="34" fill="#7C3AED" />
+            <circle cx="164" cy="64" r="6.5" fill="#fff" opacity="0.92" />
+          </g>
+          <path d="M134 74 C134 38, 154 11, 182 10 C161 23, 143 46, 134 74 Z" fill="#7C3AED" />
+          <rect class="eyelid" x="128" y="-122" width="100" height="130" fill="#02071A" />
+        </g>
+        <ellipse cx="178" cy="70" rx="46" ry="62" stroke="#7C3AED" stroke-width="5" fill="none" />
+      </svg>
+    </div>
+
+    <!-- Pill -->
+    <div class="zeus-pill" id="pill"><i data-lucide="zap"></i> ZEUS PROSPECTING</div>
+
+    <!-- Headline -->
+    <h1 class="zeus-headline" id="headline">Zeus is Suiting Up.</h1>
+
+    <!-- Subtext -->
+    <p class="zeus-sub" id="sub"><span class="zeus-sub-inner">The most powerful prospecting engine in the game is getting its final battle-test. The gates open soon — Zeus is watching.</span></p>
+
+    <!-- Back -->
+    <button class="zeus-back" id="back" type="button">← Back to NeoLeads</button>
+  </main>
+
+  <script>
+  (function () {
+    "use strict";
+
+    /* ---------- Entrance sequence ---------- */
+    var eyeWrap = document.getElementById('eyeWrap');
+    var pill = document.getElementById('pill');
+    var map = [
+      [eyeWrap, ''],
+      [pill, 'pill'],
+      [document.getElementById('headline'), 'head'],
+      [document.getElementById('sub'), 'sub'],
+      [document.getElementById('back'), 'back']
+    ];
+    map.forEach(function (pair) {
+      pair[0].classList.add('enter');
+      if (pair[1]) pair[0].classList.add(pair[1]);
+    });
+
+    /* ---------- Cursor-tracking eyes (lerp) ---------- */
+    var pupils = document.querySelectorAll('.pupil');
+    var svg = document.getElementById('eyeSvg');
+    var MAX_TRAVEL = 12;       // px in SVG units
+    var LERP = 0.12;
+    var target = { x: 0, y: 0 };
+    var current = { x: 0, y: 0 };
+    var hasPointer = false;
+    var t0 = null;             // time base for mobile drift
+
+    function onMove(e) {
+      hasPointer = true;
+      var rect = svg.getBoundingClientRect();
+      var cx = rect.left + rect.width / 2;
+      var cy = rect.top + rect.height / 2;
+      var dx = e.clientX - cx;
+      var dy = e.clientY - cy;
+      var dist = Math.sqrt(dx * dx + dy * dy);
+      if (dist === 0) { target.x = 0; target.y = 0; return; }
+      // clamp travel to MAX_TRAVEL radius, keep direction
+      var scale = Math.min(MAX_TRAVEL, dist) / dist;
+      target.x = dx * scale;
+      target.y = dy * scale;
+    }
+    window.addEventListener('mousemove', onMove);
+
+    function frame(ts) {
+      if (t0 === null) t0 = ts;
+      if (!hasPointer) {
+        // autonomous figure-8 drift for touch/no-cursor
+        var elapsed = (ts - t0) / 1000;          // seconds
+        var phase = (elapsed / 4) * Math.PI * 2;  // 4s period
+        target.x = Math.sin(phase) * 6;
+        target.y = Math.sin(phase * 2) * 3;       // figure-8 (vertical 2x freq)
+      }
+      current.x += (target.x - current.x) * LERP;
+      current.y += (target.y - current.y) * LERP;
+      var tf = 'translate(' + current.x.toFixed(2) + ',' + current.y.toFixed(2) + ')';
+      for (var i = 0; i < pupils.length; i++) pupils[i].setAttribute('transform', tf);
+      requestAnimationFrame(frame);
+    }
+    var rafId = requestAnimationFrame(frame);
+
+    /* ---------- Blink mechanic ---------- */
+    var eyelids = document.querySelectorAll('.eyelid');
+    var TOP = -122, BOTTOM = 8;   // y range: hidden above -> covering the eye
+    var blinkTimer = null;
+
+    function animateY(from, to, duration, done) {
+      var start = null;
+      function step(ts) {
+        if (start === null) start = ts;
+        var p = Math.min((ts - start) / duration, 1);
+        // ease-in-out
+        var e = p < 0.5 ? 2 * p * p : 1 - Math.pow(-2 * p + 2, 2) / 2;
+        var y = (from + (to - from) * e).toFixed(2);
+        for (var i = 0; i < eyelids.length; i++) eyelids[i].setAttribute('y', y);
+        if (p < 1) requestAnimationFrame(step);
+        else if (done) done();
+      }
+      requestAnimationFrame(step);
+    }
+
+    function blink(done) {
+      animateY(TOP, BOTTOM, 300, function () {
+        animateY(BOTTOM, TOP, 200, done);
+      });
+    }
+
+    function scheduleRandomBlink() {
+      blinkTimer = setTimeout(function () {
+        blink(scheduleRandomBlink);
+      }, 4000 + Math.random() * 4000);
+    }
+
+    // opening blink shortly after the eye scales in, then a second at 3s, then random
+    setTimeout(function () {
+      blink(function () {
+        setTimeout(function () {
+          blink(scheduleRandomBlink);
+        }, 3000);
+      });
+    }, 520);
+
+    // start idle ambient effects once entrance is done
+    setTimeout(function () { pill.classList.add('idle'); }, 1200);
+
+    /* ---------- Back button ---------- */
+    var back = document.getElementById('back');
+    back.addEventListener('click', function () {
+      // optional onBack hook: window.zeusOnBack
+      if (typeof window.zeusOnBack === 'function') { window.zeusOnBack(); return; }
+      if (document.referrer && window.history.length > 1) window.history.back();
+      else window.location.href = 'index.html';
+    });
+
+    /* ---------- Cleanup (for SPA mounts) ---------- */
+    window.zeusCleanup = function () {
+      window.removeEventListener('mousemove', onMove);
+      cancelAnimationFrame(rafId);
+      clearTimeout(blinkTimer);
+    };
+  })();
+  </script>
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+  <script>
+    if (window.lucide) { lucide.createIcons(); }
+  </script>
+</body>
+</html>
